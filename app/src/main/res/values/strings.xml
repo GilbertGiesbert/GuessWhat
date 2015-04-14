@@ -1,4 +1,8 @@
 <resources>
+
+    <string name="_ok">OK</string>
+    <string name="_cancel">Cancel</string>
+
     <string name="app_name">GuessWhat</string>
 
     <string name="action_friends">Friends</string>
@@ -26,5 +30,13 @@
     <string name="friends_bt_pendingRequests">Show pending requests</string>
     <string name="friends_ib_hintPendingRequests">Pending requests available</string>
     <string name="friends_title">Friends</string>
+    <string name="friends_dialog_title">New friend</string>
+    <string name="friends_dialog_hint">Enter your friend\'s e-mail</string>
+
+    
+    <string name="pendingFriends_title">Pending requests</string>
+    <string name="pendingFriends_bt_received">Received</string>
+    <string name="pendingFriends_bt_sent">Sent</string>
+
 
 </resources>

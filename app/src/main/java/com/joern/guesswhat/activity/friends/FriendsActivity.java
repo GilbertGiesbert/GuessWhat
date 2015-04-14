@@ -1,5 +1,7 @@
 package com.joern.guesswhat.activity.friends;
 
+import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -46,17 +48,15 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
             case R.id.bt_addFriend:
 
+                DialogFragment newFragment = new AddFriendDialog();
+                newFragment.show(getFragmentManager(), AddFriendDialog.class.getSimpleName());
+
                 break;
 
             case R.id.bt_pendingFriendRequests:
-
-                ib_pendingFriendRequests.setVisibility(View.VISIBLE);
-
-                break;
-
             case R.id.ib_pendingFriendRequests:
 
-                ib_pendingFriendRequests.setVisibility(View.GONE);
+                startActivity(new Intent(this, PendingFriendsActivity.class));
 
                 break;
         }
