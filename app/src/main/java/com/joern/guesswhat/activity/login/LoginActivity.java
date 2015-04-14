@@ -13,9 +13,9 @@ import android.widget.Toast;
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.main.MainActivity;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.User;
 import com.joern.guesswhat.database.UserDao;
 import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.model.User;
 
 /**
  * Created by joern on 13.04.2015.

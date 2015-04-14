@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.joern.guesswhat.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,12 +110,5 @@ public class UserDaoImpl implements UserDao{
         c.close();
 
         return userList;
-    }
-
-    @Override
-    public List<User> getFriends(User user) {
-
-        //TODO
-        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.joern.guesswhat.database;
+package com.joern.guesswhat.model;
 
 /**
  * Created by joern on 13.04.2015.

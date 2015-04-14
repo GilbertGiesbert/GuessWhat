@@ -1,5 +1,7 @@
 package com.joern.guesswhat.database;
 
+import com.joern.guesswhat.model.User;
+
 import java.util.List;
 
 /**
@@ -13,5 +15,4 @@ public interface UserDao {
     public boolean deleteUser(User user);
 
     public List<User> getAllUsers();
-    public List<User> getFriends(User user);
 }

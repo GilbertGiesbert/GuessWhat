@@ -12,7 +12,7 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.User;
+import com.joern.guesswhat.model.User;
 
 
 public class MainActivity extends ActionBarActivity {

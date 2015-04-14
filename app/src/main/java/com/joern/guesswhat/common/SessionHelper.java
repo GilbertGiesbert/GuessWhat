@@ -3,9 +3,9 @@ package com.joern.guesswhat.common;
 import android.content.Context;
 
 import com.joern.guesswhat.constants.PreferenceType;
-import com.joern.guesswhat.database.User;
 import com.joern.guesswhat.database.UserDao;
 import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.model.User;
 
 /**
  * Created by joern on 13.04.2015.
