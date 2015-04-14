@@ -25,7 +25,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
     private TextView tv_editHint;
-    private Button bt_login, bt_register, bt_lostPassword, bt_submit;
+    private Button bt_login, bt_register, bt_recoverPassword, bt_submit;
     private EditText et_userName, et_email, et_password, et_passwordRepeat;
 
     @Override
@@ -33,18 +33,18 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login_activity);
 
         tv_editHint = (TextView) findViewById(R.id.tv_editHint);
 
         bt_login = (Button) findViewById(R.id.bt_login);
         bt_register = (Button) findViewById(R.id.bt_register);
-        bt_lostPassword = (Button) findViewById(R.id.bt_lostPassword);
+        bt_recoverPassword = (Button) findViewById(R.id.bt_recoverPassword);
         bt_submit = (Button) findViewById(R.id.bt_submit);
 
         bt_login.setOnClickListener(this);
         bt_register.setOnClickListener(this);
-        bt_lostPassword.setOnClickListener(this);
+        bt_recoverPassword.setOnClickListener(this);
         bt_submit.setOnClickListener(this);
 
         et_userName = (EditText) findViewById(R.id.et_userName);
@@ -82,7 +82,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 showRegistrationFields();
                 break;
 
-            case R.id.bt_lostPassword:
+            case R.id.bt_recoverPassword:
                 showPasswordRecoveryFields();
                 break;
 
@@ -100,7 +100,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         bt_login.setVisibility(View.GONE);
         bt_register.setVisibility(View.GONE);
-        bt_lostPassword.setVisibility(View.GONE);
+        bt_recoverPassword.setVisibility(View.GONE);
         bt_submit.setVisibility(View.VISIBLE);
         bt_submit.setText(getResources().getString(R.string.login_bt_login));
 
@@ -115,7 +115,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         bt_login.setVisibility(View.GONE);
         bt_register.setVisibility(View.GONE);
-        bt_lostPassword.setVisibility(View.GONE);
+        bt_recoverPassword.setVisibility(View.GONE);
         bt_submit.setVisibility(View.VISIBLE);
         bt_submit.setText(getResources().getString(R.string.login_bt_register));
 
@@ -132,7 +132,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         bt_login.setVisibility(View.GONE);
         bt_register.setVisibility(View.GONE);
-        bt_lostPassword.setVisibility(View.GONE);
+        bt_recoverPassword.setVisibility(View.GONE);
         bt_submit.setVisibility(View.VISIBLE);
         bt_submit.setText(getResources().getString(R.string.login_bt_submit));
 
@@ -217,6 +217,9 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
             SessionHelper.startSession(this, user);
             goToMain();
+
+        }else{
+            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -254,7 +257,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         bt_login.setVisibility(View.VISIBLE);
         bt_register.setVisibility(View.VISIBLE);
-        bt_lostPassword.setVisibility(View.VISIBLE);
+        bt_recoverPassword.setVisibility(View.VISIBLE);
         bt_submit.setVisibility(View.GONE);
         bt_submit.setText("");
 

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.User;
@@ -22,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         User sessionUser = SessionHelper.getSessionUser(this);
         if(sessionUser == null){
@@ -57,6 +58,11 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_friends) {
+            go2Friends();
+            return true;
+        }
+
         if (id == R.id.action_settings) {
             return true;
         }
@@ -78,5 +84,11 @@ public class MainActivity extends ActionBarActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void go2Friends(){
+
+        Intent intent = new Intent(this, FriendsActivity.class);
+        startActivity(intent);
     }
 }
