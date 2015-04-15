@@ -82,21 +82,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
     private void toggle(){
 
-        if(v_underscoreSent.getVisibility() == View.GONE){
-
-            v_underscoreSent.setVisibility(View.VISIBLE);
-            v_underscoreReceived.setVisibility(View.GONE);
-            updateList(getAllFriendshipsRequestedByUser());
-
-            if(listAdapter.getCount() > 0){
-                tv_hintNoPendingRequests.setVisibility(View.GONE);
-
-            }else{
-                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
-                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
-            }
-
-        }else{
+        if(v_underscoreSent.getVisibility() == View.VISIBLE){
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
@@ -108,6 +94,20 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
             }else{
                 tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
                 tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsReceived));
+            }
+
+        }else{
+
+            v_underscoreSent.setVisibility(View.VISIBLE);
+            v_underscoreReceived.setVisibility(View.GONE);
+            updateList(getAllFriendshipsRequestedByUser());
+
+            if(listAdapter.getCount() > 0){
+                tv_hintNoPendingRequests.setVisibility(View.GONE);
+
+            }else{
+                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
             }
         }
     }
@@ -144,7 +144,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         for(Friendship f: fList){
 
-            result.add(f.geteMailRequester());
+            result.add(f.geteMailAcceptor());
         }
 
         return result;
