@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.joern.guesswhat.activity.friends.PendingFriendshipType;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipRequestState;
 import com.joern.guesswhat.model.User;
@@ -60,14 +61,18 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public List<Friendship> getAllFriendshipsRequestedByUser(User user) {
+    public List<Friendship> getAllPendingFriendships(User user, PendingFriendshipType type) {
+
+
+        String colUserMail = PendingFriendshipType.RECEIVED.equals(type) ? COL_EMAIL_ACCEPTOR : COL_EMAIL_REQUESTER;
+        String colFriendMail = PendingFriendshipType.RECEIVED.equals(type) ? COL_EMAIL_REQUESTER : COL_EMAIL_ACCEPTOR;;
 
         List<Friendship> friendships = new ArrayList<>();
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + TABLE_FRIENDS +
-                " WHERE " + COL_EMAIL_REQUESTER + " = '" + user.getEmail() + "'" +
+                " WHERE " + colUserMail + " = '" + user.getEmail() + "'" +
                 " AND (" + COL_FRIENDSHIP_REQUEST_STATE + " = " + FriendshipRequestState.PENDING_RECOGNITION.getValue() +
                 " OR " + COL_FRIENDSHIP_REQUEST_STATE + " = " + FriendshipRequestState.PENDING_ACCEPTANCE.getValue() + ")";
 
@@ -76,39 +81,15 @@ public class FriendshipDaoImpl implements FriendshipDao {
         if(c.moveToFirst()){
 
             do{
-                String acceptor = c.getString(c.getColumnIndex(COL_EMAIL_ACCEPTOR));
+                String friendMail = c.getString(c.getColumnIndex(colFriendMail));
                 int state = c.getInt(c.getColumnIndex(COL_FRIENDSHIP_REQUEST_STATE));
                 FriendshipRequestState friendshipRequestState = FriendshipRequestState.valueOf(state);
-                friendships.add(new Friendship(user.getEmail(), acceptor, friendshipRequestState));
-            } while (c.moveToNext());
-        }
 
-        c.close();
-
-        return friendships;
-    }
-
-    @Override
-    public List<Friendship> getAllFriendshipsRequestedByOthers(User user) {
-
-        List<Friendship> friendships = new ArrayList<>();
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + TABLE_FRIENDS +
-                " WHERE " + COL_EMAIL_ACCEPTOR + " = '" + user.getEmail() + "'" +
-                " AND (" + COL_FRIENDSHIP_REQUEST_STATE + " = " + FriendshipRequestState.PENDING_RECOGNITION.getValue() +
-                " OR " + COL_FRIENDSHIP_REQUEST_STATE + " = " + FriendshipRequestState.PENDING_ACCEPTANCE.getValue() + ")";
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if(c.moveToFirst()){
-
-            do{
-                String requester = c.getString(c.getColumnIndex(COL_EMAIL_REQUESTER));
-                int state = c.getInt(c.getColumnIndex(COL_FRIENDSHIP_REQUEST_STATE));
-                FriendshipRequestState friendshipRequestState = FriendshipRequestState.valueOf(state);
-                friendships.add(new Friendship(requester, user.getEmail(), friendshipRequestState));
+                if(PendingFriendshipType.RECEIVED.equals(type)){
+                    friendships.add(new Friendship(friendMail, user.getEmail(), friendshipRequestState));
+                }else{
+                    friendships.add(new Friendship(user.getEmail(), friendMail, friendshipRequestState));
+                }
 
             } while (c.moveToNext());
         }
@@ -116,6 +97,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
         c.close();
 
         return friendships;
+
     }
 
     @Override

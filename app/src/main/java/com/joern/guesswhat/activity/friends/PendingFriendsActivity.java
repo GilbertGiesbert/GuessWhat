@@ -4,22 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
-import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.FriendshipDao;
-import com.joern.guesswhat.database.FriendshipDaoImpl;
-import com.joern.guesswhat.database.UserDao;
-import com.joern.guesswhat.database.UserDaoImpl;
-import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by joern on 14.04.2015.
@@ -28,13 +17,10 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
     private static final String LOG_TAG = PendingFriendsActivity.class.getSimpleName();
 
-    private Button bt_received, bt_sent;
     private View v_underscoreReceived, v_underscoreSent;
     private TextView tv_hintNoPendingRequests;
 
-    private ArrayAdapter<String> listAdapter;
-
-    private UserDao userDao;
+    private PendingFriendshipsAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +29,13 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         setContentView(R.layout.pendingfriends_activity);
 
-        userDao = new UserDaoImpl(this);
-
-        ArrayList<String> values = new ArrayList<>();
-        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, values);
+        listAdapter = new PendingFriendshipsAdapter(this, PendingFriendshipType.RECEIVED);
 
         ListView l1 = (ListView) findViewById(R.id.lv_pendingRequsts);
         l1.setAdapter(listAdapter);
 
-        bt_received = (Button) findViewById(R.id.bt_received);
-        bt_sent = (Button) findViewById(R.id.bt_sent);
+        Button bt_received = (Button) findViewById(R.id.bt_received);
+        Button bt_sent = (Button) findViewById(R.id.bt_sent);
 
         bt_received.setOnClickListener(this);
         bt_sent.setOnClickListener(this);
@@ -62,7 +45,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         tv_hintNoPendingRequests = (TextView) findViewById(R.id.tv_hintNoPendingRequests);
 
-        toggle();
+        toggle(PendingFriendshipType.RECEIVED);
     }
 
 
@@ -72,21 +55,24 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
         switch (v.getId()){
 
             case R.id.bt_received:
+                toggle(PendingFriendshipType.RECEIVED);
+                break;
+
             case R.id.bt_sent:
-
-                toggle();
-
+                toggle(PendingFriendshipType.SENT);
                 break;
         }
     }
 
-    private void toggle(){
+    private void toggle(PendingFriendshipType type){
 
-        if(v_underscoreSent.getVisibility() == View.VISIBLE){
+        listAdapter.setType(type);
+
+        if(PendingFriendshipType.RECEIVED.equals(type)){
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
-            updateList(getAllFriendshipsRequestedByOthers());
+            listAdapter.reload();
 
             if(listAdapter.getCount() > 0){
                 tv_hintNoPendingRequests.setVisibility(View.GONE);
@@ -100,7 +86,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
             v_underscoreSent.setVisibility(View.VISIBLE);
             v_underscoreReceived.setVisibility(View.GONE);
-            updateList(getAllFriendshipsRequestedByUser());
+            listAdapter.reload();
 
             if(listAdapter.getCount() > 0){
                 tv_hintNoPendingRequests.setVisibility(View.GONE);
@@ -110,43 +96,5 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
                 tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
             }
         }
-    }
-
-    private void updateList(ArrayList<String> update){
-
-        listAdapter.clear();
-        listAdapter.addAll(update);
-    }
-
-    private ArrayList<String> getAllFriendshipsRequestedByOthers(){
-
-        ArrayList<String> result = new ArrayList<>();
-
-        User sessionUser = SessionHelper.getSessionUser(this);
-        FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> fList = dao.getAllFriendshipsRequestedByOthers(sessionUser);
-
-        for(Friendship f: fList){
-
-            result.add(f.geteMailRequester());
-        }
-
-        return result;
-    }
-
-    private ArrayList<String> getAllFriendshipsRequestedByUser(){
-
-        ArrayList<String> result = new ArrayList<>();
-
-        User sessionUser = SessionHelper.getSessionUser(this);
-        FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> fList = dao.getAllFriendshipsRequestedByUser(sessionUser);
-
-        for(Friendship f: fList){
-
-            result.add(f.geteMailAcceptor());
-        }
-
-        return result;
     }
 }
