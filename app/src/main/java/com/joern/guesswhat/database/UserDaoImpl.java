@@ -17,10 +17,10 @@ public class UserDaoImpl implements UserDao{
 
     private static final String LOG_TAG = UserDaoImpl.class.getName();
 
-    private static final String TABLE_USERS = "users";
-    private static final String COL_NAME = "name";
-    private static final String COL_EMAIL = "email";
-    private static final String COL_PASSWORD = "password";
+    public static final String TABLE_USERS = "users";
+    public static final String COL_NAME = "name";
+    public static final String COL_EMAIL = "email";
+    public static final String COL_PASSWORD = "password";
 
     private DatabaseHelper dbHelper;
 

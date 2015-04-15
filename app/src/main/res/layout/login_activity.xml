@@ -9,29 +9,33 @@
 
     >
 
-    <Button
-        android:id="@+id/bt_login"
-        android:text="@string/login_login"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/borderlessButtonStyle"
-        />
+        android:orientation="vertical"
+        >
 
-    <Button
-        android:id="@+id/bt_register"
-        android:text="@string/login_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/borderlessButtonStyle"
-        />
+        <Button
+            android:id="@+id/bt_login"
+            android:text="@string/login_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
-    <Button
-        android:id="@+id/bt_recoverPassword"
-        android:text="@string/login_recoverPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/borderlessButtonStyle"
-        />
+        <Button
+            android:id="@+id/bt_register"
+            android:text="@string/login_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <Button
+            android:id="@+id/bt_recoverPassword"
+            android:text="@string/login_recoverPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        </LinearLayout>
 
     <TextView
         android:id="@+id/tv_editHint"

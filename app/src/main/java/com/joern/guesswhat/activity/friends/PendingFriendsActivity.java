@@ -9,6 +9,12 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.database.UserDao;
+import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by joern on 14.04.2015.
@@ -20,12 +26,9 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
     private Button bt_received, bt_sent;
     private View v_underscoreReceived, v_underscoreSent;
 
-    String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-            "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-            "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-            "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-            "Android", "iPhone", "WindowsMobile" };
+    private ArrayAdapter<String> listAdapter;
 
+    private UserDao userDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +37,15 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         setContentView(R.layout.pendingfriends_activity);
 
+        userDao = new UserDaoImpl(this);
+
         ListView l1 = (ListView) findViewById(R.id.lv_pendingRequsts);
 
-        ArrayAdapter<String> a1 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
+        ArrayList<String> values = new ArrayList<>();
+        values.addAll(getNameList("r-"));
 
-        l1.setAdapter(a1);
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, values);
+        l1.setAdapter(listAdapter);
 
         bt_received = (Button) findViewById(R.id.bt_received);
         bt_sent = (Button) findViewById(R.id.bt_sent);
@@ -46,8 +53,8 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
         bt_received.setOnClickListener(this);
         bt_sent.setOnClickListener(this);
 
-        v_underscoreReceived = (View) findViewById(R.id.v_underscoreReceived);
-        v_underscoreSent = (View) findViewById(R.id.v_underscoreSent);
+        v_underscoreReceived = findViewById(R.id.v_underscoreReceived);
+        v_underscoreSent = findViewById(R.id.v_underscoreSent);
         v_underscoreSent.setVisibility(View.GONE);
     }
 
@@ -64,7 +71,6 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
                 break;
         }
-
     }
 
     private void toggle(){
@@ -73,12 +79,34 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
             v_underscoreSent.setVisibility(View.VISIBLE);
             v_underscoreReceived.setVisibility(View.GONE);
+            updateList(getNameList("s-"));
 
         }else{
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
-
+            updateList(getNameList("r-"));
         }
+    }
+
+    private void updateList(ArrayList<String> update){
+
+        listAdapter.clear();
+        listAdapter.addAll(update);
+
+    }
+
+    private ArrayList<String> getNameList(String prefix){
+
+        ArrayList<String> nameList = new ArrayList<>();
+
+        List<User> userList = userDao.getAllUsers();
+
+        for(User u: userList){
+
+            nameList.add(prefix + u.getName());
+        }
+
+        return nameList;
     }
 }

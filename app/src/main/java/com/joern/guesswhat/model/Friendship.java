@@ -5,19 +5,18 @@ package com.joern.guesswhat.model;
  */
 public class Friendship {
 
-    public enum RequestState{
-        TRUE, FALSE, PENDING
-    }
-
     private User friendshipRequester;
     private User friendshipAcceptor;
 
-    private RequestState requestState;
+    private boolean terminated;
+
+    private FriendshipRequestState requestState;
 
     public Friendship(User friendshipRequester, User friendshipAcceptor) {
         this.friendshipRequester = friendshipRequester;
         this.friendshipAcceptor = friendshipAcceptor;
-        this.requestState = RequestState.PENDING;
+        this.requestState = FriendshipRequestState.PENDING;
+        this.terminated = false;
     }
 
     public User getFriendshipRequester() {
@@ -36,11 +35,11 @@ public class Friendship {
         this.friendshipAcceptor = friendshipAcceptor;
     }
 
-    public RequestState getRequestState() {
+    public FriendshipRequestState getRequestState() {
         return requestState;
     }
 
-    public void setRequestState(RequestState requestState) {
+    public void setRequestState(FriendshipRequestState requestState) {
         this.requestState = requestState;
     }
 }
