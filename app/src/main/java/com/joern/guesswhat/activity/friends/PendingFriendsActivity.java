@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
@@ -29,6 +30,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
     private Button bt_received, bt_sent;
     private View v_underscoreReceived, v_underscoreSent;
+    private TextView tv_hintNoPendingRequests;
 
     private ArrayAdapter<String> listAdapter;
 
@@ -58,6 +60,8 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
         v_underscoreReceived = findViewById(R.id.v_underscoreReceived);
         v_underscoreSent = findViewById(R.id.v_underscoreSent);
 
+        tv_hintNoPendingRequests = (TextView) findViewById(R.id.tv_hintNoPendingRequests);
+
         toggle();
     }
 
@@ -84,11 +88,27 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
             v_underscoreReceived.setVisibility(View.GONE);
             updateList(getAllFriendshipsRequestedByUser());
 
+            if(listAdapter.getCount() > 0){
+                tv_hintNoPendingRequests.setVisibility(View.GONE);
+
+            }else{
+                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
+            }
+
         }else{
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
             updateList(getAllFriendshipsRequestedByOthers());
+
+            if(listAdapter.getCount() > 0){
+                tv_hintNoPendingRequests.setVisibility(View.GONE);
+
+            }else{
+                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsReceived));
+            }
         }
     }
 

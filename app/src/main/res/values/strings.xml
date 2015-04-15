@@ -38,4 +38,7 @@
     <string name="pendingFriends_bt_received">Received</string>
     <string name="pendingFriends_bt_sent">Sent</string>
 
+    <string name="pendingFriends_tv_hintNoRequestsSent">You\'ve sent no friendship requests recently.</string>
+    <string name="pendingFriends_tv_hintNoRequestsReceived">You\'ve received no friendship requests recently.</string>
+
 </resources>
