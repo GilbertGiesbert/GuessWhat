@@ -5,34 +5,30 @@ package com.joern.guesswhat.model;
  */
 public class Friendship {
 
-    private User friendshipRequester;
-    private User friendshipAcceptor;
-
-    private boolean terminated;
-
+    private String eMailRequester;
+    private String eMailAcceptor;
     private FriendshipRequestState requestState;
 
-    public Friendship(User friendshipRequester, User friendshipAcceptor) {
-        this.friendshipRequester = friendshipRequester;
-        this.friendshipAcceptor = friendshipAcceptor;
-        this.requestState = FriendshipRequestState.PENDING;
-        this.terminated = false;
+    public Friendship(String eMailRequester, String eMailAcceptor, FriendshipRequestState requestState) {
+        this.eMailRequester = eMailRequester;
+        this.eMailAcceptor = eMailAcceptor;
+        this.requestState = requestState;
     }
 
-    public User getFriendshipRequester() {
-        return friendshipRequester;
+    public String geteMailRequester() {
+        return eMailRequester;
     }
 
-    public void setFriendshipRequester(User friendshipRequester) {
-        this.friendshipRequester = friendshipRequester;
+    public void seteMailRequester(String eMailRequester) {
+        this.eMailRequester = eMailRequester;
     }
 
-    public User getFriendshipAcceptor() {
-        return friendshipAcceptor;
+    public String geteMailAcceptor() {
+        return eMailAcceptor;
     }
 
-    public void setFriendshipAcceptor(User friendshipAcceptor) {
-        this.friendshipAcceptor = friendshipAcceptor;
+    public void seteMailAcceptor(String eMailAcceptor) {
+        this.eMailAcceptor = eMailAcceptor;
     }
 
     public FriendshipRequestState getRequestState() {

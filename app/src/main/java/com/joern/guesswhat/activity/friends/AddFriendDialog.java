@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.common.SessionHelper;
+import com.joern.guesswhat.database.FriendshipDao;
+import com.joern.guesswhat.database.FriendshipDaoImpl;
+import com.joern.guesswhat.model.User;
 
 /**
  * Created by joern on 14.04.2015.
@@ -31,7 +35,9 @@ public class AddFriendDialog extends DialogFragment {
 
                 String friendMail = ((EditText) AddFriendDialog.this.getDialog().findViewById(R.id.et_friendMail)).getText().toString();
 
-                Toast.makeText(getActivity(), "Send friend request to "+friendMail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Send friend request to " + friendMail, Toast.LENGTH_SHORT).show();
+
+                addFriend(friendMail);
             }
         })
         .setNegativeButton(R.string._cancel, new DialogInterface.OnClickListener() {
@@ -41,6 +47,16 @@ public class AddFriendDialog extends DialogFragment {
         });
 
         return builder.create();
+    }
 
+    private void addFriend(String friendMail){
+
+        User sessionUser = SessionHelper.getSessionUser(getActivity());
+
+        if(sessionUser != null && !sessionUser.getEmail().equals(friendMail)){
+
+            FriendshipDao dao = new FriendshipDaoImpl(getActivity());
+            dao.createFriendship(sessionUser.getEmail(), friendMail);
+        }
     }
 }

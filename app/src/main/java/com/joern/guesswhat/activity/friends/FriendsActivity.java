@@ -10,6 +10,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.common.SessionHelper;
+import com.joern.guesswhat.database.FriendshipDao;
+import com.joern.guesswhat.database.FriendshipDaoImpl;
+import com.joern.guesswhat.model.Friendship;
+import com.joern.guesswhat.model.User;
+
+import java.util.List;
 
 /**
  * Created by joern on 14.04.2015.
@@ -19,7 +26,7 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
     private static final String LOG_TAG = FriendsActivity.class.getSimpleName();
 
     private Button bt_addFriend, bt_pendingFriendRequests;
-    private ImageButton ib_pendingFriendRequests;
+    private ImageButton ib_pendingFriendRequestsHint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +37,13 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
         bt_addFriend = (Button) findViewById(R.id.bt_addFriend);
         bt_pendingFriendRequests = (Button) findViewById(R.id.bt_pendingFriendRequests);
-        ib_pendingFriendRequests = (ImageButton) findViewById(R.id.ib_pendingFriendRequests);
+        ib_pendingFriendRequestsHint = (ImageButton) findViewById(R.id.ib_pendingFriendRequestsHint);
 
         bt_addFriend.setOnClickListener(this);
         bt_pendingFriendRequests.setOnClickListener(this);
-        ib_pendingFriendRequests.setOnClickListener(this);
+        ib_pendingFriendRequestsHint.setOnClickListener(this);
+
+        setPendingHintVisibility();
 
     }
 
@@ -54,16 +63,22 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
                 break;
 
             case R.id.bt_pendingFriendRequests:
-            case R.id.ib_pendingFriendRequests:
+            case R.id.ib_pendingFriendRequestsHint:
 
                 startActivity(new Intent(this, PendingFriendsActivity.class));
 
                 break;
         }
+    }
 
+    private void setPendingHintVisibility() {
 
+        User sessionUser = SessionHelper.getSessionUser(this);
+        FriendshipDao dao = new FriendshipDaoImpl(this);
+        List<Friendship> fList = dao.getAllFriendshipsRequestedByOthers(sessionUser);
 
-
-
+        if(fList.isEmpty()){
+            ib_pendingFriendRequestsHint.setVisibility(View.GONE);
+        }
     }
 }

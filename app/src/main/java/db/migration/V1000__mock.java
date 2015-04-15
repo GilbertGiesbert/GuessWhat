@@ -18,6 +18,7 @@ public class V1000__mock implements JdbcMigration{
 
         if(USE_MOCK){
             addMockUsers(connection);
+            addMockFriendships(connection);
         }
     }
 
@@ -53,7 +54,12 @@ public class V1000__mock implements JdbcMigration{
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.execute();
-
         }
+    }
+
+    private void addMockFriendships(Connection connection) {
+
+
+
     }
 }

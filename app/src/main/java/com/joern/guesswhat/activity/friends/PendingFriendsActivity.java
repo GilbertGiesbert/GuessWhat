@@ -9,8 +9,12 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.common.SessionHelper;
+import com.joern.guesswhat.database.FriendshipDao;
+import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.database.UserDao;
 import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.User;
 
 import java.util.ArrayList;
@@ -39,12 +43,10 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         userDao = new UserDaoImpl(this);
 
-        ListView l1 = (ListView) findViewById(R.id.lv_pendingRequsts);
-
         ArrayList<String> values = new ArrayList<>();
-        values.addAll(getNameList("r-"));
-
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, values);
+
+        ListView l1 = (ListView) findViewById(R.id.lv_pendingRequsts);
         l1.setAdapter(listAdapter);
 
         bt_received = (Button) findViewById(R.id.bt_received);
@@ -55,7 +57,8 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         v_underscoreReceived = findViewById(R.id.v_underscoreReceived);
         v_underscoreSent = findViewById(R.id.v_underscoreSent);
-        v_underscoreSent.setVisibility(View.GONE);
+
+        toggle();
     }
 
 
@@ -79,13 +82,13 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
             v_underscoreSent.setVisibility(View.VISIBLE);
             v_underscoreReceived.setVisibility(View.GONE);
-            updateList(getNameList("s-"));
+            updateList(getAllFriendshipsRequestedByUser());
 
         }else{
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
-            updateList(getNameList("r-"));
+            updateList(getAllFriendshipsRequestedByOthers());
         }
     }
 
@@ -93,20 +96,37 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         listAdapter.clear();
         listAdapter.addAll(update);
-
     }
 
-    private ArrayList<String> getNameList(String prefix){
+    private ArrayList<String> getAllFriendshipsRequestedByOthers(){
 
-        ArrayList<String> nameList = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
 
-        List<User> userList = userDao.getAllUsers();
+        User sessionUser = SessionHelper.getSessionUser(this);
+        FriendshipDao dao = new FriendshipDaoImpl(this);
+        List<Friendship> fList = dao.getAllFriendshipsRequestedByOthers(sessionUser);
 
-        for(User u: userList){
+        for(Friendship f: fList){
 
-            nameList.add(prefix + u.getName());
+            result.add(f.geteMailRequester());
         }
 
-        return nameList;
+        return result;
+    }
+
+    private ArrayList<String> getAllFriendshipsRequestedByUser(){
+
+        ArrayList<String> result = new ArrayList<>();
+
+        User sessionUser = SessionHelper.getSessionUser(this);
+        FriendshipDao dao = new FriendshipDaoImpl(this);
+        List<Friendship> fList = dao.getAllFriendshipsRequestedByUser(sessionUser);
+
+        for(Friendship f: fList){
+
+            result.add(f.geteMailRequester());
+        }
+
+        return result;
     }
 }
