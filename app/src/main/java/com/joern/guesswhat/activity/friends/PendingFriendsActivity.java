@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.model.FriendshipRequestType;
 
 /**
  * Created by joern on 14.04.2015.
@@ -30,7 +31,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         setContentView(R.layout.pendingfriends_activity);
 
-        listAdapter = new PendingFriendshipsAdapter(this, FriendshipRequester.FRIEND);
+        listAdapter = new PendingFriendshipsAdapter(this, FriendshipRequestType.FRIEND);
 
         ListView list = (ListView) findViewById(R.id.lv_pendingRequsts);
         list.setAdapter(listAdapter);
@@ -56,7 +57,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         tv_hintNoPendingRequests = (TextView) findViewById(R.id.tv_hintNoPendingRequests);
 
-        toggle(FriendshipRequester.FRIEND);
+        toggle(FriendshipRequestType.FRIEND);
     }
 
 
@@ -66,20 +67,20 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
         switch (v.getId()){
 
             case R.id.bt_received:
-                toggle(FriendshipRequester.FRIEND);
+                toggle(FriendshipRequestType.FRIEND);
                 break;
 
             case R.id.bt_sent:
-                toggle(FriendshipRequester.USER);
+                toggle(FriendshipRequestType.USER);
                 break;
         }
     }
 
-    private void toggle(FriendshipRequester type){
+    private void toggle(FriendshipRequestType type){
 
         listAdapter.setFriendshipRequester(type);
 
-        if(FriendshipRequester.FRIEND.equals(type)){
+        if(FriendshipRequestType.FRIEND.equals(type)){
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);

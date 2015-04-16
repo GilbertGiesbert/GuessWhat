@@ -14,6 +14,7 @@ import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
+import com.joern.guesswhat.model.FriendshipRequestType;
 import com.joern.guesswhat.model.User;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
         User sessionUser = SessionHelper.getSessionUser(this);
         FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> fList = dao.getRequestedFriendships(sessionUser, FriendshipRequester.FRIEND);
+        List<Friendship> fList = dao.getRequestedFriendships(sessionUser, FriendshipRequestType.FRIEND);
 
         if(fList.isEmpty()){
             ib_pendingFriendRequestsHint.setVisibility(View.GONE);

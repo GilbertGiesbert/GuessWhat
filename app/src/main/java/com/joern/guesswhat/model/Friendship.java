@@ -7,9 +7,9 @@ public class Friendship {
 
     private String eMailRequester;
     private String eMailAcceptor;
-    private FriendshipRequestState requestState;
+    private FriendshipState requestState;
 
-    public Friendship(String eMailRequester, String eMailAcceptor, FriendshipRequestState requestState) {
+    public Friendship(String eMailRequester, String eMailAcceptor, FriendshipState requestState) {
         this.eMailRequester = eMailRequester;
         this.eMailAcceptor = eMailAcceptor;
         this.requestState = requestState;
@@ -31,11 +31,11 @@ public class Friendship {
         this.eMailAcceptor = eMailAcceptor;
     }
 
-    public FriendshipRequestState getRequestState() {
+    public FriendshipState getRequestState() {
         return requestState;
     }
 
-    public void setRequestState(FriendshipRequestState requestState) {
+    public void setRequestState(FriendshipState requestState) {
         this.requestState = requestState;
     }
 }

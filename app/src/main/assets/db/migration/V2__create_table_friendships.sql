@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS friends
+CREATE TABLE IF NOT EXISTS friendships
 
     (   id INTEGER PRIMARY KEY AUTOINCREMENT,
 
         eMailRequester TEXT NOT NULL,
         eMailAcceptor TEXT NOT NULL,
-        friendshipRequestState INTEGER NOT NULL
+        state INTEGER NOT NULL
     )

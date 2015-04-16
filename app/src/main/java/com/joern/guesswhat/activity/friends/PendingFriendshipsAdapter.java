@@ -12,7 +12,8 @@ import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipRequestState;
+import com.joern.guesswhat.model.FriendshipRequestType;
+import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
 
 import java.util.ArrayList;
@@ -24,12 +25,12 @@ import java.util.List;
 public class PendingFriendshipsAdapter extends BaseAdapter{
 
     private List<Friendship> pendingFriendships;
-    private FriendshipRequester friendshipRequester;
+    private FriendshipRequestType friendshipRequester;
 
     private Context context;
     private LayoutInflater inflater;
 
-    public PendingFriendshipsAdapter(Context context, FriendshipRequester friendshipRequester){
+    public PendingFriendshipsAdapter(Context context, FriendshipRequestType friendshipRequester){
         this.context = context;
         this.friendshipRequester = friendshipRequester;
 
@@ -72,13 +73,13 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
 
         Friendship friendship = pendingFriendships.get(position);
 
-        if(FriendshipRequester.FRIEND.equals(friendshipRequester)){
+        if(FriendshipRequestType.FRIEND.equals(friendshipRequester)){
             viewHolder.tv_friend.setText(friendship.getEMailRequester());
         }else{
             viewHolder.tv_friend.setText(friendship.geteMailAcceptor());
         }
 
-        if(FriendshipRequestState.REJECTED.equals(friendship.getRequestState())){
+        if(FriendshipState.REQUEST_REJECTED.equals(friendship.getRequestState())){
             viewHolder.tv_state.setVisibility(View.VISIBLE);
             String rejected = context.getResources().getString(R.string.pendingFriends_requestState_rejected);
             viewHolder.tv_state.setText(rejected);
@@ -95,11 +96,11 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
         public TextView tv_state;
     }
 
-    public FriendshipRequester getFriendshipRequester() {
+    public FriendshipRequestType getFriendshipRequester() {
         return friendshipRequester;
     }
 
-    public void setFriendshipRequester(FriendshipRequester friendshipRequester) {
+    public void setFriendshipRequester(FriendshipRequestType friendshipRequester) {
         this.friendshipRequester = friendshipRequester;
     }
 

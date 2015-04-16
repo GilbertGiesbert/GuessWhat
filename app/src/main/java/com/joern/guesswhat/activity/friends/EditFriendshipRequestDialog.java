@@ -15,7 +15,8 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipRequestState;
+import com.joern.guesswhat.model.FriendshipRequestType;
+import com.joern.guesswhat.model.FriendshipState;
 
 /**
  * Created by joern on 16.04.2015.
@@ -23,7 +24,7 @@ import com.joern.guesswhat.model.FriendshipRequestState;
 public class EditFriendshipRequestDialog extends DialogFragment{
 
     private Friendship friendshipRequested;
-    private FriendshipRequester friendshipRequester;
+    private FriendshipRequestType friendshipRequester;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         String title = getActivity().getResources().getString(R.string.pendingFriends_dialog_title);
         String requesterMessage = getActivity().getResources().getString(R.string.pendingFriends_dialog_requesterMessage)+friendshipRequested.geteMailAcceptor() + " ?";
         String acceptorMessage = friendshipRequested.getEMailRequester() + getActivity().getResources().getString(R.string.pendingFriends_dialog_acceptorMessage);
-        String message = FriendshipRequester.USER.equals(friendshipRequester) ?
+        String message = FriendshipRequestType.USER.equals(friendshipRequester) ?
                             requesterMessage : acceptorMessage;
 
 
@@ -41,7 +42,7 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         TextView tv_message = (TextView) root.findViewById(R.id.tv_message);
         tv_message.setText(message);
 
-        if(FriendshipRequester.FRIEND.equals(friendshipRequester)){
+        if(FriendshipRequestType.FRIEND.equals(friendshipRequester)){
 
             Drawable profilePic = getProfilePic(friendshipRequested.getEMailRequester());
             if(profilePic!=null){
@@ -50,9 +51,9 @@ public class EditFriendshipRequestDialog extends DialogFragment{
             }
         }
 
-        final String positiveButton = FriendshipRequester.USER.equals(friendshipRequester) ?
+        final String positiveButton = FriendshipRequestType.USER.equals(friendshipRequester) ?
                 getActivity().getResources().getString(R.string._discard) : getActivity().getResources().getString(R.string._accept);
-        final String negativeButton = FriendshipRequester.USER.equals(friendshipRequester) ?
+        final String negativeButton = FriendshipRequestType.USER.equals(friendshipRequester) ?
                 getActivity().getResources().getString(R.string._cancel) : getActivity().getResources().getString(R.string._reject);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -62,10 +63,10 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (FriendshipRequester.USER.equals(friendshipRequester)) {
-                    friendshipRequested.setRequestState(FriendshipRequestState.CANCELLED);
+                if (FriendshipRequestType.USER.equals(friendshipRequester)) {
+                    friendshipRequested.setRequestState(FriendshipState.REQUEST_CANCELLED);
                 } else {
-                    friendshipRequested.setRequestState(FriendshipRequestState.ACCEPTED);
+                    friendshipRequested.setRequestState(FriendshipState.ACCEPTED);
                 }
 
                 FriendshipDao dao = new FriendshipDaoImpl(getActivity());
@@ -76,8 +77,8 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (FriendshipRequester.FRIEND.equals(friendshipRequester)) {
-                    friendshipRequested.setRequestState(FriendshipRequestState.REJECTED);
+                if (FriendshipRequestType.FRIEND.equals(friendshipRequester)) {
+                    friendshipRequested.setRequestState(FriendshipState.REQUEST_REJECTED);
                     FriendshipDao dao = new FriendshipDaoImpl(getActivity());
                     dao.updateFriendship(friendshipRequested);
                 }
@@ -97,7 +98,7 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         this.friendshipRequested = friendshipRequested;
     }
 
-    public void setFriendshipRequester(FriendshipRequester friendshipRequester) {
+    public void setFriendshipRequester(FriendshipRequestType friendshipRequester) {
         this.friendshipRequester = friendshipRequester;
     }
 }

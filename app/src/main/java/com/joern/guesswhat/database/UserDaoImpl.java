@@ -85,7 +85,6 @@ public class UserDaoImpl implements UserDao{
         return 0 < db.delete(TABLE_USERS, COL_EMAIL + " = ?", new String[]{user.getEmail()} );
     }
 
-    @Override
     public List<User> getAllUsers() {
 
         List<User> userList = null;
@@ -110,5 +109,9 @@ public class UserDaoImpl implements UserDao{
         c.close();
 
         return userList;
+    }
+
+    public List<User> getAllFriends(User user){
+
     }
 }

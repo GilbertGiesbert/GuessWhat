@@ -13,8 +13,7 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
-import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipRequestState;
+import com.joern.guesswhat.model.FriendshipRequestType;
 import com.joern.guesswhat.model.User;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class FriendlistAdapter extends BaseAdapter{
         public TextView tv_eMail;
     }
 
-    public FriendlistAdapter(Context context, FriendshipRequester friendshipRequester){
+    public FriendlistAdapter(Context context, FriendshipRequestType friendshipRequester){
 
         this.context = context;
         this.friendList = new ArrayList<>();
