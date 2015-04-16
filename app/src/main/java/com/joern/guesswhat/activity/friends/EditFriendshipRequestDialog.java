@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.database.FriendshipDao;
+import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
+import com.joern.guesswhat.model.FriendshipRequestState;
 
 /**
  * Created by joern on 16.04.2015.
@@ -60,15 +62,25 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                Toast.makeText(getActivity(), "clicked "+positiveButton, Toast.LENGTH_SHORT).show();
+                if (FriendshipRequester.USER.equals(friendshipRequester)) {
+                    friendshipRequested.setRequestState(FriendshipRequestState.CANCELLED);
+                } else {
+                    friendshipRequested.setRequestState(FriendshipRequestState.ACCEPTED);
+                }
 
+                FriendshipDao dao = new FriendshipDaoImpl(getActivity());
+                dao.updateFriendship(friendshipRequested);
             }
         })
 
         .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                Toast.makeText(getActivity(), "clicked " + negativeButton, Toast.LENGTH_SHORT).show();
+                if (FriendshipRequester.FRIEND.equals(friendshipRequester)) {
+                    friendshipRequested.setRequestState(FriendshipRequestState.REJECTED);
+                    FriendshipDao dao = new FriendshipDaoImpl(getActivity());
+                    dao.updateFriendship(friendshipRequested);
+                }
             }
         });
 

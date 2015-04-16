@@ -46,8 +46,14 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public boolean updateFriendship(User user1, User user2) {
-        return false;
+    public boolean updateFriendship(Friendship friendship) {
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_FRIENDSHIP_REQUEST_STATE, friendship.getRequestState().getValue());
+
+        return 0 < db.update(TABLE_FRIENDS, values, COL_EMAIL_REQUESTER + " = ? AND " + COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
     }
 
     @Override
@@ -113,5 +119,11 @@ public class FriendshipDaoImpl implements FriendshipDao {
     @Override
     public List<Friendship> getAllFriendshipsToAccept(User user) {
         return null;
+    }
+
+    List<User> getFriends(User user){
+
+        
+
     }
 }

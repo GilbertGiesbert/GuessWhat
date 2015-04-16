@@ -12,7 +12,7 @@ import java.util.List;
 public interface FriendshipDao {
 
     public boolean createFriendship(String eMailRequester, String eMailAcceptor);
-    public boolean updateFriendship(User user1, User user2);
+    public boolean updateFriendship(Friendship friendship);
     public boolean deleteFriendship(Friendship friendship);
 
     public List<Friendship> getAllFriendships(User user);
@@ -20,4 +20,6 @@ public interface FriendshipDao {
     List<Friendship> getRequestedFriendships(User user, FriendshipRequester from);
 
     public List<Friendship> getAllFriendshipsToAccept(User user);
+
+    List<User> getFriends(User user);
 }
