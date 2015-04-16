@@ -75,7 +75,7 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
         User sessionUser = SessionHelper.getSessionUser(this);
         FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> fList = dao.getAllPendingFriendships(sessionUser, PendingFriendshipType.RECEIVED);
+        List<Friendship> fList = dao.getRequestedFriendships(sessionUser, FriendshipRequester.FRIEND);
 
         if(fList.isEmpty()){
             ib_pendingFriendRequestsHint.setVisibility(View.GONE);

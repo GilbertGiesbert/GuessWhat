@@ -12,6 +12,7 @@ import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
+import com.joern.guesswhat.model.FriendshipRequestState;
 import com.joern.guesswhat.model.User;
 
 import java.util.ArrayList;
@@ -23,14 +24,14 @@ import java.util.List;
 public class PendingFriendshipsAdapter extends BaseAdapter{
 
     private List<Friendship> pendingFriendships;
-    private PendingFriendshipType type;
+    private FriendshipRequester friendshipRequester;
 
     private Context context;
     private LayoutInflater inflater;
 
-    public PendingFriendshipsAdapter(Context context, PendingFriendshipType type){
+    public PendingFriendshipsAdapter(Context context, FriendshipRequester friendshipRequester){
         this.context = context;
-        this.type = type;
+        this.friendshipRequester = friendshipRequester;
 
         pendingFriendships = new ArrayList<>();
         inflater = LayoutInflater.from(context);
@@ -58,38 +59,48 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
 
         if(convertView == null){
 
-            convertView = inflater.inflate(R.layout.pendingfriends_row, parent, false);
+            convertView = inflater.inflate(R.layout.pendingfriends_list_item, parent, false);
 
             viewHolder = new ViewHolder();
-            viewHolder.tv = (TextView) convertView.findViewById(R.id.tv_item);
+            viewHolder.tv_friend = (TextView) convertView.findViewById(R.id.tv_friend);
+            viewHolder.tv_state = (TextView) convertView.findViewById(R.id.tv_state);
             convertView.setTag(viewHolder);
 
         }else{
-
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         Friendship friendship = pendingFriendships.get(position);
 
-        if(PendingFriendshipType.RECEIVED.equals(type)){
-            viewHolder.tv.setText(friendship.geteMailRequester());
+        if(FriendshipRequester.FRIEND.equals(friendshipRequester)){
+            viewHolder.tv_friend.setText(friendship.getEMailRequester());
         }else{
-            viewHolder.tv.setText(friendship.geteMailAcceptor());
+            viewHolder.tv_friend.setText(friendship.geteMailAcceptor());
+        }
+
+        if(FriendshipRequestState.REJECTED.equals(friendship.getRequestState())){
+            viewHolder.tv_state.setVisibility(View.VISIBLE);
+            String rejected = context.getResources().getString(R.string.pendingFriends_requestState_rejected);
+            viewHolder.tv_state.setText(rejected);
+        }else{
+            viewHolder.tv_state.setVisibility(View.GONE);
+            viewHolder.tv_state.setText("");
         }
 
         return convertView;
     }
 
     private class ViewHolder{
-        public TextView tv;
+        public TextView tv_friend;
+        public TextView tv_state;
     }
 
-    public PendingFriendshipType getType() {
-        return type;
+    public FriendshipRequester getFriendshipRequester() {
+        return friendshipRequester;
     }
 
-    public void setType(PendingFriendshipType type) {
-        this.type = type;
+    public void setFriendshipRequester(FriendshipRequester friendshipRequester) {
+        this.friendshipRequester = friendshipRequester;
     }
 
     public void  reload(){
@@ -98,7 +109,7 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
 
         User sessionUser = SessionHelper.getSessionUser(context);
         FriendshipDao dao = new FriendshipDaoImpl(context);
-        List<Friendship> fList = dao.getAllPendingFriendships(sessionUser, type);
+        List<Friendship> fList = dao.getRequestedFriendships(sessionUser, friendshipRequester);
 
         pendingFriendships.addAll(fList);
     }

@@ -1,6 +1,6 @@
 package com.joern.guesswhat.database;
 
-import com.joern.guesswhat.activity.friends.PendingFriendshipType;
+import com.joern.guesswhat.activity.friends.FriendshipRequester;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.User;
 
@@ -13,11 +13,11 @@ public interface FriendshipDao {
 
     public boolean createFriendship(String eMailRequester, String eMailAcceptor);
     public boolean updateFriendship(User user1, User user2);
-    public boolean deleteFriendship(User user1, User user2);
+    public boolean deleteFriendship(Friendship friendship);
 
     public List<Friendship> getAllFriendships(User user);
 
-    List<Friendship> getAllPendingFriendships(User user, PendingFriendshipType type);
+    List<Friendship> getRequestedFriendships(User user, FriendshipRequester from);
 
     public List<Friendship> getAllFriendshipsToAccept(User user);
 }

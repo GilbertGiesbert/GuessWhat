@@ -15,11 +15,11 @@ public class Friendship {
         this.requestState = requestState;
     }
 
-    public String geteMailRequester() {
+    public String getEMailRequester() {
         return eMailRequester;
     }
 
-    public void seteMailRequester(String eMailRequester) {
+    public void setEMailRequester(String eMailRequester) {
         this.eMailRequester = eMailRequester;
     }
 
@@ -27,7 +27,7 @@ public class Friendship {
         return eMailAcceptor;
     }
 
-    public void seteMailAcceptor(String eMailAcceptor) {
+    public void setEMailAcceptor(String eMailAcceptor) {
         this.eMailAcceptor = eMailAcceptor;
     }
 
