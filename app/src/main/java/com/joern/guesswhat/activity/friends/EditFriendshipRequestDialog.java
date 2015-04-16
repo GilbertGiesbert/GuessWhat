@@ -18,7 +18,7 @@ import com.joern.guesswhat.model.Friendship;
 /**
  * Created by joern on 16.04.2015.
  */
-public class EditFriendshipRequestDialog extends DialogFragment implements View.OnClickListener{
+public class EditFriendshipRequestDialog extends DialogFragment{
 
     private Friendship friendshipRequested;
     private FriendshipRequester friendshipRequester;
@@ -26,9 +26,9 @@ public class EditFriendshipRequestDialog extends DialogFragment implements View.
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        String title = "Request for friendship";
-        String requesterMessage = "Discard friendship request for "+friendshipRequested.geteMailAcceptor() + " ?";
-        String acceptorMessage = friendshipRequested.getEMailRequester() + " is requesting your friendship";
+        String title = getActivity().getResources().getString(R.string.pendingFriends_dialog_title);
+        String requesterMessage = getActivity().getResources().getString(R.string.pendingFriends_dialog_requesterMessage)+friendshipRequested.geteMailAcceptor() + " ?";
+        String acceptorMessage = friendshipRequested.getEMailRequester() + getActivity().getResources().getString(R.string.pendingFriends_dialog_acceptorMessage);
         String message = FriendshipRequester.USER.equals(friendshipRequester) ?
                             requesterMessage : acceptorMessage;
 
@@ -48,8 +48,10 @@ public class EditFriendshipRequestDialog extends DialogFragment implements View.
             }
         }
 
-        final String positiveButton = FriendshipRequester.USER.equals(friendshipRequester) ? "Discard" : "Accept";
-        final String negativeButton = FriendshipRequester.USER.equals(friendshipRequester) ? "Cancel" : "Reject";
+        final String positiveButton = FriendshipRequester.USER.equals(friendshipRequester) ?
+                getActivity().getResources().getString(R.string._discard) : getActivity().getResources().getString(R.string._accept);
+        final String negativeButton = FriendshipRequester.USER.equals(friendshipRequester) ?
+                getActivity().getResources().getString(R.string._cancel) : getActivity().getResources().getString(R.string._reject);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(root)
@@ -70,19 +72,6 @@ public class EditFriendshipRequestDialog extends DialogFragment implements View.
             }
         });
 
-
-
-
-
-
-
-
-
-//        Button b = (Button) root.findViewById(R.id.bt_accept);
-//
-//
-//        Toast.makeText(getActivity(), "b!=null: "+(b!=null), Toast.LENGTH_SHORT).show();
-
         return builder.create();
     }
 
@@ -98,10 +87,5 @@ public class EditFriendshipRequestDialog extends DialogFragment implements View.
 
     public void setFriendshipRequester(FriendshipRequester friendshipRequester) {
         this.friendshipRequester = friendshipRequester;
-    }
-
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(getActivity(), "clicked: "+getActivity().getResources().getResourceEntryName(v.getId()), Toast.LENGTH_SHORT).show();
     }
 }

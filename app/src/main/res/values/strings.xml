@@ -1,7 +1,10 @@
 <resources>
 
-    <string name="_ok">OK</string>
+    <string name="_accept">Accept</string>
     <string name="_cancel">Cancel</string>
+    <string name="_discard">Discard</string>
+    <string name="_reject">Reject</string>
+    <string name="_ok">OK</string>
 
     <string name="app_name">GuessWhat</string>
 
@@ -39,7 +42,10 @@
     <string name="pendingFriends_bt_sent">Sent</string>
     <string name="pendingFriends_tv_hintNoRequestsSent">You\'ve sent no friendship requests recently.</string>
     <string name="pendingFriends_tv_hintNoRequestsReceived">You\'ve received no friendship requests recently.</string>
-
     <string name="pendingFriends_requestState_rejected">Rejected</string>
+
+    <string name="pendingFriends_dialog_title">Request for friendship</string>
+    <string name="pendingFriends_dialog_requesterMessage">"Discard friendship request for "</string>
+    <string name="pendingFriends_dialog_acceptorMessage">" is requesting your friendship."</string>
 
 </resources>
