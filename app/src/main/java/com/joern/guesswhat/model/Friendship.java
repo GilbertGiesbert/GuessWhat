@@ -7,12 +7,12 @@ public class Friendship {
 
     private String eMailRequester;
     private String eMailAcceptor;
-    private FriendshipState requestState;
+    private FriendshipState friendshipState;
 
-    public Friendship(String eMailRequester, String eMailAcceptor, FriendshipState requestState) {
+    public Friendship(String eMailRequester, String eMailAcceptor, FriendshipState friendshipState) {
         this.eMailRequester = eMailRequester;
         this.eMailAcceptor = eMailAcceptor;
-        this.requestState = requestState;
+        this.friendshipState = friendshipState;
     }
 
     public String getEMailRequester() {
@@ -31,11 +31,11 @@ public class Friendship {
         this.eMailAcceptor = eMailAcceptor;
     }
 
-    public FriendshipState getRequestState() {
-        return requestState;
+    public FriendshipState getFriendshipState() {
+        return friendshipState;
     }
 
-    public void setRequestState(FriendshipState requestState) {
-        this.requestState = requestState;
+    public void setFriendshipState(FriendshipState friendshipState) {
+        this.friendshipState = friendshipState;
     }
 }

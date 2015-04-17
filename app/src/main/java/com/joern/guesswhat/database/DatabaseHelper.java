@@ -21,7 +21,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static boolean migrationDone = false;
 
-
     private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }

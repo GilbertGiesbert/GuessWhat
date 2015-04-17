@@ -1,7 +1,7 @@
 package db.migration;
 
 
-import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.constants.DB;
 
 import org.flywaydb.core.api.migration.jdbc.JdbcMigration;
 
@@ -49,7 +49,7 @@ public class V1000__mock implements JdbcMigration{
             String email = (user.substring(0,1)+user.substring(user.length()-1,user.length())+"@").toLowerCase();
             String pswd = (user.substring(0,1)).toLowerCase();
 
-            String query = "INSERT INTO " + UserDaoImpl.TABLE_USERS + " ("+UserDaoImpl.COL_NAME+","+UserDaoImpl.COL_EMAIL+","+UserDaoImpl.COL_PASSWORD+") "+
+            String query = "INSERT INTO " + DB.USERS.TABLE_NAME + " ("+DB.USERS.COL_NAME+","+DB.USERS.COL_EMAIL+","+DB.USERS.COL_PASSWORD+") "+
                             "VALUES ('"+user+"','"+email+"','"+pswd+"');";
 
             PreparedStatement statement = connection.prepareStatement(query);

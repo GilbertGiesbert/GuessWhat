@@ -11,9 +11,8 @@ import android.widget.TextView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.FriendshipDao;
-import com.joern.guesswhat.database.FriendshipDaoImpl;
-import com.joern.guesswhat.model.FriendshipRequestType;
+import com.joern.guesswhat.database.UserDao;
+import com.joern.guesswhat.database.UserDaoImpl;
 import com.joern.guesswhat.model.User;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class FriendlistAdapter extends BaseAdapter{
         public TextView tv_eMail;
     }
 
-    public FriendlistAdapter(Context context, FriendshipRequestType friendshipRequester){
+    public FriendlistAdapter(Context context){
 
         this.context = context;
         this.friendList = new ArrayList<>();
@@ -100,8 +99,8 @@ public class FriendlistAdapter extends BaseAdapter{
         friendList.clear();
 
         User sessionUser = SessionHelper.getSessionUser(context);
-        FriendshipDao dao = new FriendshipDaoImpl(context);
-        List<User> fList = dao.getFriends(sessionUser);
+        UserDao dao = new UserDaoImpl(context);
+        List<User> fList = dao.getFriendships(sessionUser);
 
         friendList.addAll(fList);
     }

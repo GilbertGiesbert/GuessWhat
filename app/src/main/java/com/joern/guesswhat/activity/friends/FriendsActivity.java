@@ -15,6 +15,7 @@ import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipRequestType;
+import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
 
 import java.util.List;
@@ -26,8 +27,7 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
     private static final String LOG_TAG = FriendsActivity.class.getSimpleName();
 
-    private Button bt_addFriend, bt_pendingFriendRequests;
-    private ImageButton ib_pendingFriendRequestsHint;
+    private FriendlistAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +36,13 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
         setContentView(R.layout.friends_activity);
 
-        bt_addFriend = (Button) findViewById(R.id.bt_addFriend);
-        bt_pendingFriendRequests = (Button) findViewById(R.id.bt_pendingFriendRequests);
-        ib_pendingFriendRequestsHint = (ImageButton) findViewById(R.id.ib_pendingFriendRequestsHint);
+        Button bt_addFriend = (Button) findViewById(R.id.bt_addFriend);
+        Button bt_pendingFriendRequests = (Button) findViewById(R.id.bt_pendingFriendRequests);
 
         bt_addFriend.setOnClickListener(this);
         bt_pendingFriendRequests.setOnClickListener(this);
-        ib_pendingFriendRequestsHint.setOnClickListener(this);
 
-        setPendingHintVisibility();
+        initNewRequestsHint();
 
     }
 
@@ -64,7 +62,7 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
                 break;
 
             case R.id.bt_pendingFriendRequests:
-            case R.id.ib_pendingFriendRequestsHint:
+            case R.id.ib_newRequestsHint:
 
                 startActivity(new Intent(this, PendingFriendsActivity.class));
 
@@ -72,14 +70,17 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
         }
     }
 
-    private void setPendingHintVisibility() {
+    private void initNewRequestsHint() {
+
+        ImageButton ib_newRequestsHint = (ImageButton) findViewById(R.id.ib_newRequestsHint);
+        ib_newRequestsHint.setOnClickListener(this);
 
         User sessionUser = SessionHelper.getSessionUser(this);
         FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> fList = dao.getRequestedFriendships(sessionUser, FriendshipRequestType.FRIEND);
+        List<Friendship> fList = dao.getFriendships(sessionUser, FriendshipRequestType.RECEIVED, FriendshipState.REQUEST_SEND);
 
         if(fList.isEmpty()){
-            ib_pendingFriendRequestsHint.setVisibility(View.GONE);
+            ib_newRequestsHint.setVisibility(View.GONE);
         }
     }
 }

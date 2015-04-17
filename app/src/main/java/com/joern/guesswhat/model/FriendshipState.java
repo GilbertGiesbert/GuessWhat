@@ -12,7 +12,7 @@ public enum FriendshipState {
 
     // request has been accepted by receiver
     // friendship is now active
-    ACCEPTED(3),
+    ACTIVE(3),
 
     // request has been rejected by receiver
     REQUEST_REJECTED(4),

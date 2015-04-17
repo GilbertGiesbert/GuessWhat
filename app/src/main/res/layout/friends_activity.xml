@@ -35,7 +35,7 @@
 
 
             <ImageButton
-                android:id="@+id/ib_pendingFriendRequestsHint"
+                android:id="@+id/ib_newRequestsHint"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

@@ -25,14 +25,14 @@ import java.util.List;
 public class PendingFriendshipsAdapter extends BaseAdapter{
 
     private List<Friendship> pendingFriendships;
-    private FriendshipRequestType friendshipRequester;
+    private FriendshipRequestType friendshipRequestType;
 
     private Context context;
     private LayoutInflater inflater;
 
-    public PendingFriendshipsAdapter(Context context, FriendshipRequestType friendshipRequester){
+    public PendingFriendshipsAdapter(Context context, FriendshipRequestType friendshipRequestType){
         this.context = context;
-        this.friendshipRequester = friendshipRequester;
+        this.friendshipRequestType = friendshipRequestType;
 
         pendingFriendships = new ArrayList<>();
         inflater = LayoutInflater.from(context);
@@ -73,13 +73,13 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
 
         Friendship friendship = pendingFriendships.get(position);
 
-        if(FriendshipRequestType.FRIEND.equals(friendshipRequester)){
+        if(FriendshipRequestType.RECEIVED.equals(friendshipRequestType)){
             viewHolder.tv_friend.setText(friendship.getEMailRequester());
         }else{
             viewHolder.tv_friend.setText(friendship.geteMailAcceptor());
         }
 
-        if(FriendshipState.REQUEST_REJECTED.equals(friendship.getRequestState())){
+        if(FriendshipState.REQUEST_REJECTED.equals(friendship.getFriendshipState())){
             viewHolder.tv_state.setVisibility(View.VISIBLE);
             String rejected = context.getResources().getString(R.string.pendingFriends_requestState_rejected);
             viewHolder.tv_state.setText(rejected);
@@ -96,12 +96,12 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
         public TextView tv_state;
     }
 
-    public FriendshipRequestType getFriendshipRequester() {
-        return friendshipRequester;
+    public FriendshipRequestType getFriendshipRequestType() {
+        return friendshipRequestType;
     }
 
-    public void setFriendshipRequester(FriendshipRequestType friendshipRequester) {
-        this.friendshipRequester = friendshipRequester;
+    public void setFriendshipRequestType(FriendshipRequestType friendshipRequestType) {
+        this.friendshipRequestType = friendshipRequestType;
     }
 
     public void  reload(){
@@ -110,7 +110,16 @@ public class PendingFriendshipsAdapter extends BaseAdapter{
 
         User sessionUser = SessionHelper.getSessionUser(context);
         FriendshipDao dao = new FriendshipDaoImpl(context);
-        List<Friendship> fList = dao.getRequestedFriendships(sessionUser, friendshipRequester);
+
+        List<Friendship> fList;
+
+        if(FriendshipRequestType.RECEIVED.equals(friendshipRequestType)){
+            fList = dao.getFriendships(sessionUser, friendshipRequestType,
+                    FriendshipState.REQUEST_SEND, FriendshipState.REQUEST_RECEIVED, FriendshipState.REQUEST_REJECTED);
+        }else{
+            fList = dao.getFriendships(sessionUser, friendshipRequestType,
+                    FriendshipState.REQUEST_SEND, FriendshipState.REQUEST_RECEIVED, FriendshipState.REQUEST_REJECTED);
+        }
 
         pendingFriendships.addAll(fList);
     }

@@ -14,5 +14,5 @@ public interface UserDao {
     public boolean updateUser(User oldUser, User newUser);
     public boolean deleteUser(User user);
 
-    public List<User> getAllFriends(User user);
+    public List<User> getFriendships(User user);
 }

@@ -5,8 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.joern.guesswhat.model.FriendshipRequestType;
+import com.joern.guesswhat.constants.DB;
 import com.joern.guesswhat.model.Friendship;
+import com.joern.guesswhat.model.FriendshipRequestType;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
 
@@ -19,11 +20,6 @@ import java.util.List;
 public class FriendshipDaoImpl implements FriendshipDao {
 
     private static final String LOG_TAG = FriendshipDaoImpl.class.getName();
-
-    private static final String TABLE_FRIENDSHIPS = "friendships";
-    private static final String COL_EMAIL_REQUESTER = "eMailRequester";
-    private static final String COL_EMAIL_ACCEPTOR = "eMailAcceptor";
-    private static final String COL_STATE = "state";
 
     private DatabaseHelper dbHelper;
 
@@ -38,11 +34,11 @@ public class FriendshipDaoImpl implements FriendshipDao {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_EMAIL_REQUESTER, eMailRequester);
-        values.put(COL_EMAIL_ACCEPTOR, eMailAcceptor);
-        values.put(COL_STATE, FriendshipState.REQUEST_SEND.getValue());
+        values.put(DB.FRIENDSHIPS.COL_EMAIL_REQUESTER, eMailRequester);
+        values.put(DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR, eMailAcceptor);
+        values.put(DB.FRIENDSHIPS.COL_STATE, FriendshipState.REQUEST_SEND.getValue());
 
-        return -1 != db.insert(TABLE_FRIENDSHIPS, null, values);
+        return -1 != db.insert(DB.FRIENDSHIPS.TABLE_NAME, null, values);
     }
 
     @Override
@@ -51,9 +47,9 @@ public class FriendshipDaoImpl implements FriendshipDao {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_STATE, friendship.getRequestState().getValue());
+        values.put(DB.FRIENDSHIPS.COL_STATE, friendship.getFriendshipState().getValue());
 
-        return 0 < db.update(TABLE_FRIENDSHIPS, values, COL_EMAIL_REQUESTER + " = ? AND " + COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
+        return 0 < db.update(DB.FRIENDSHIPS.TABLE_NAME, values, DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = ? AND " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
     }
 
     @Override
@@ -61,14 +57,14 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        return 0 < db.delete(TABLE_FRIENDSHIPS, COL_EMAIL_REQUESTER + " = ? AND " + COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
+        return 0 < db.delete(DB.FRIENDSHIPS.TABLE_NAME, DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = ? AND " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
     }
 
     @Override
     public List<Friendship> getFriendships(User user, FriendshipRequestType type, FriendshipState... states){
 
-        String colUserMail = FriendshipRequestType.RECEIVED.equals(type) ? COL_EMAIL_ACCEPTOR : COL_EMAIL_REQUESTER;
-        String colFriendMail = FriendshipRequestType.SENT.equals(type) ? COL_EMAIL_ACCEPTOR : COL_EMAIL_REQUESTER;
+        String colUserMail = FriendshipRequestType.RECEIVED.equals(type) ? DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR : DB.FRIENDSHIPS.COL_EMAIL_REQUESTER;
+        String colFriendMail = FriendshipRequestType.SENT.equals(type) ? DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR : DB.FRIENDSHIPS.COL_EMAIL_REQUESTER;
 
         StringBuilder columns = new StringBuilder();
 
@@ -77,7 +73,10 @@ public class FriendshipDaoImpl implements FriendshipDao {
             if(i==0 && states.length > 1){
                 columns.append("(");
             }
-            columns.append(COL_STATE + " = " + states[i].getValue());
+
+            columns.append(DB.FRIENDSHIPS.COL_STATE);
+            columns.append(" = ");
+            columns.append(states[i].getValue());
 
             if(states.length > 1){
                 boolean isLastLoop = i == states.length-1;
@@ -90,7 +89,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
         }
 
         String selectQuery =
-                "SELECT  * FROM " + TABLE_FRIENDSHIPS +
+                "SELECT  * FROM " + DB.FRIENDSHIPS.TABLE_NAME +
                 " WHERE " + colUserMail + " = '" + user.getEmail() + "'" +
                 " AND " + columns
                 ;
@@ -105,7 +104,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
             do{
                 String friendMail = c.getString(c.getColumnIndex(colFriendMail));
-                int state = c.getInt(c.getColumnIndex(COL_STATE));
+                int state = c.getInt(c.getColumnIndex(DB.FRIENDSHIPS.COL_STATE));
                 FriendshipState friendshipState = FriendshipState.valueOf(state);
 
                 if(FriendshipRequestType.SENT.equals(type)){
@@ -120,6 +119,5 @@ public class FriendshipDaoImpl implements FriendshipDao {
         c.close();
 
         return friendships;
-
     }
 }

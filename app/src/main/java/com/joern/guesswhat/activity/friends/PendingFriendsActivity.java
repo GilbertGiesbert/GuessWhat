@@ -10,7 +10,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.common.SessionHelper;
+import com.joern.guesswhat.database.FriendshipDao;
+import com.joern.guesswhat.database.FriendshipDaoImpl;
+import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipRequestType;
+import com.joern.guesswhat.model.FriendshipState;
+import com.joern.guesswhat.model.User;
+
+import java.util.List;
 
 /**
  * Created by joern on 14.04.2015.
@@ -31,7 +39,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         setContentView(R.layout.pendingfriends_activity);
 
-        listAdapter = new PendingFriendshipsAdapter(this, FriendshipRequestType.FRIEND);
+        listAdapter = new PendingFriendshipsAdapter(this, FriendshipRequestType.RECEIVED);
 
         ListView list = (ListView) findViewById(R.id.lv_pendingRequsts);
         list.setAdapter(listAdapter);
@@ -41,7 +49,7 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
                 EditFriendshipRequestDialog dialog = new EditFriendshipRequestDialog();
                 dialog.setFriendshipRequested(listAdapter.getItem(position));
-                dialog.setFriendshipRequester(listAdapter.getFriendshipRequester());
+                dialog.setFriendshipRequester(listAdapter.getFriendshipRequestType());
                 dialog.show(getFragmentManager(), EditFriendshipRequestDialog.class.getSimpleName());
             }
         });
@@ -57,7 +65,20 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
 
         tv_hintNoPendingRequests = (TextView) findViewById(R.id.tv_hintNoPendingRequests);
 
-        toggle(FriendshipRequestType.FRIEND);
+        toggle(FriendshipRequestType.RECEIVED);
+    }
+
+    @Override
+    public void onStop(){
+
+        User sessionUser = SessionHelper.getSessionUser(this);
+        FriendshipDao dao = new FriendshipDaoImpl(this);
+        List<Friendship> newOnes = dao.getFriendships(sessionUser, FriendshipRequestType.RECEIVED, FriendshipState.REQUEST_SEND);
+
+        for(Friendship f: newOnes){
+            f.setFriendshipState(FriendshipState.REQUEST_RECEIVED);
+            dao.updateFriendship(f);
+        }
     }
 
 
@@ -67,20 +88,20 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
         switch (v.getId()){
 
             case R.id.bt_received:
-                toggle(FriendshipRequestType.FRIEND);
+                toggle(FriendshipRequestType.RECEIVED);
                 break;
 
             case R.id.bt_sent:
-                toggle(FriendshipRequestType.USER);
+                toggle(FriendshipRequestType.SENT);
                 break;
         }
     }
 
     private void toggle(FriendshipRequestType type){
 
-        listAdapter.setFriendshipRequester(type);
+        listAdapter.setFriendshipRequestType(type);
 
-        if(FriendshipRequestType.FRIEND.equals(type)){
+        if(FriendshipRequestType.RECEIVED.equals(type)){
 
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
