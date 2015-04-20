@@ -120,16 +120,25 @@ public class UserDaoImpl implements UserDao{
 
         List<User> userList = null;
 
-        // TODO do not select * from users
-        // do select * excluding user from method argument
-        String selectQuery = "SELECT "+
+        String selectQueryAcceptedFriends =
+                "SELECT "+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_NAME+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_EMAIL+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD+
-                " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME + " ON " +
-                "(" + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " OR " +
-                "(" + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + ")" +
-                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE;
+                " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME +
+                " ON " + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER +
+                " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = " + user.getEmail() +
+                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE + ")";
+
+        String selectQueryRequestedFriends =
+                "SELECT "+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_NAME+","+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_EMAIL+","+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD+
+                " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME +
+                " ON " + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR +
+                " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = " + user.getEmail() +
+                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE + ")";
 
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
