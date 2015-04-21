@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
@@ -30,6 +33,8 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
     private FriendlistAdapter listAdapter;
 
+    private TextView tv_emptyListHint;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
@@ -43,12 +48,20 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
         bt_addFriend.setOnClickListener(this);
         bt_pendingFriendRequests.setOnClickListener(this);
 
-        initNewRequestsHint();
-
         listAdapter = new FriendlistAdapter(this);
         ListView list = (ListView) findViewById(R.id.lv_friendList);
         list.setAdapter(listAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                String friend = listAdapter.getItem(position).getName();
+
+                Toast.makeText(FriendsActivity.this, friend, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        tv_emptyListHint = (TextView) findViewById(R.id.tv_emptyListHint);
     }
 
     @Override
@@ -56,7 +69,8 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
         super.onResume();
 
         listAdapter.reload();
-
+        refreshNewRequestsHint();
+        refreshEmptyListHint();
     }
 
     @Override
@@ -83,7 +97,7 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
         }
     }
 
-    private void initNewRequestsHint() {
+    private void refreshNewRequestsHint() {
 
         ImageButton ib_newRequestsHint = (ImageButton) findViewById(R.id.ib_newRequestsHint);
         ib_newRequestsHint.setOnClickListener(this);
@@ -94,6 +108,14 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
 
         if(fList.isEmpty()){
             ib_newRequestsHint.setVisibility(View.GONE);
+        }
+    }
+
+    private void refreshEmptyListHint(){
+        if(listAdapter.getCount() > 0){
+            tv_emptyListHint.setVisibility(View.GONE);
+        }else{
+            tv_emptyListHint.setVisibility(View.VISIBLE);
         }
     }
 }
