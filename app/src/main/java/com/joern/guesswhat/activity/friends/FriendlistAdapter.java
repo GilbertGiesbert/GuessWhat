@@ -77,7 +77,7 @@ public class FriendlistAdapter extends BaseAdapter{
 
         User friend = friendList.get(position);
 
-        Drawable profilePicture = getProfilePicture();
+        Drawable profilePicture = getProfilePicture(position);
         if(profilePicture != null){
             viewHolder.iv_profilePicture.setImageDrawable(profilePicture);
         }
@@ -87,9 +87,13 @@ public class FriendlistAdapter extends BaseAdapter{
         return convertView;
     }
 
-    private Drawable getProfilePicture() {
+    private Drawable getProfilePicture(int position) {
 
-        // TODO
+//        if(position % 2 == 0){
+//            return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), THUMBSIZE, THUMBSIZE)
+//        }else{
+//            return context.getResources().getDrawable(R.drawable.test_pic_large_vertical);
+//        }
         return null;
     }
 

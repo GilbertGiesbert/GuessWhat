@@ -1,16 +1,20 @@
 package com.joern.guesswhat.activity.main;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
+import com.joern.guesswhat.common.ImageHelper;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.model.User;
 
@@ -38,9 +42,45 @@ public class MainActivity extends ActionBarActivity {
                     "Pswd: "+sessionUser.getPassword();
 
 
-            TextView tv_userInfo = (TextView) findViewById(R.id.tv_userInfo);
-            tv_userInfo.setText(userInfo);
+            TextView tv_test = (TextView) findViewById(R.id.tv_test);
+            tv_test.setText(userInfo);
+
+            String imagePath = "/sdcard/Download/test_pic_large_horizontal.jpg";
+
+//            File imageFile = new File(imagePath);
+//            String absolutePath = imageFile.getAbsolutePath();
+//            Log.d(LOG_TAG, "absolutePath="+absolutePath);
+//            BitmapDrawable d = new BitmapDrawable(getResources(), absolutePath);
+//
+
+            float dp = 100;
+            float px = ImageHelper.dpToPx(dp, this);
+            Log.d(LOG_TAG, "px="+px);
+            Log.d(LOG_TAG, "px2="+ImageHelper.dpToPx2(dp, this));
+
+
+
+//            Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), (int)px,(int)px);
+            Bitmap bitmap = ImageHelper.loadFromFile(imagePath, (int) px, (int) px, ImageHelper.PreferredScalingDeviation.smallerThanTarget);
+            Log.d(LOG_TAG, "bitmap width in px="+ bitmap.getWidth());
+            Log.d(LOG_TAG, "bitmap height in px="+ bitmap.getHeight());
+            Log.d(LOG_TAG, "bitmap width in dp="+ ImageHelper.pxToDp(bitmap.getWidth(), this));
+            Log.d(LOG_TAG, "bitmap height in dp="+ ImageHelper.pxToDp(bitmap.getHeight(), this));
+
+            BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
+
+            ImageView iv_test = (ImageView) findViewById(R.id.iv_test);
+            iv_test.setImageDrawable(d);
+
+
+
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
     }
 
     @Override

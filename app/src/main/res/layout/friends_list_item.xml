@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/iv_profilePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
         android:src="@mipmap/profile2"
         android:tint="#000000"
         android:layout_gravity="center"
