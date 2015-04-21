@@ -1,0 +1,4 @@
+
+
+
+- A SQLiteConnection object for database '/data/data/com.joern.guesswhat/databases/appDatabase' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.

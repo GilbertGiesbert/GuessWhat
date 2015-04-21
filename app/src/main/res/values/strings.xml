@@ -24,7 +24,7 @@
     <string name="login_tv_hintRecoveryMail">Send recovery mail to</string>
     <string name="login_bt_login">Login</string>
     <string name="login_bt_register">Register</string>
-    <string name="login_bt_submit">Submit</string>
+    <string name="login_bt_recoverPassword">Recover password</string>
     <string name="login_title">Login</string>
 
     <string name="main_title">Home</string>

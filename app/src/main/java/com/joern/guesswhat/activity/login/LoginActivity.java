@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -52,8 +54,11 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         et_password = (EditText) findViewById(R.id.et_password);
         et_passwordRepeat = (EditText) findViewById(R.id.et_passwordRepeat);
 
-        resetToInitialView();
+        et_passwordRepeat.setImeOptions(EditorInfo.IME_ACTION_GO);
 
+        setImeActionListeners();
+
+        resetToInitialView();
     }
 
     @Override
@@ -89,11 +94,56 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
             case R.id.bt_submit:
                 bt_submit();
                 break;
-
         }
     }
 
+    private void setImeActionListeners(){
+
+        // for login
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean actionHandled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    bt_submit();
+                    actionHandled = true;
+                }
+                return actionHandled;
+            }
+        });
+
+        // for register
+        et_passwordRepeat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean actionHandled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    bt_submit();
+                    actionHandled = true;
+                }
+                return actionHandled;
+            }
+        });
+
+        // for password recovery
+        et_email.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean actionHandled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    bt_submit();
+                    actionHandled = true;
+                }
+                return actionHandled;
+            }
+        });
+    }
+
     private void showLoginFields(){
+        Log.d(LOG_TAG, "showLoginFields()");
 
         tv_editHint.setVisibility(View.VISIBLE);
         tv_editHint.setText(getResources().getString(R.string.login_tv_hintLoginExistingUser));
@@ -106,9 +156,13 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         et_email.setVisibility(View.VISIBLE);
         et_password.setVisibility(View.VISIBLE);
+
+        et_email.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        et_password.setImeOptions(EditorInfo.IME_ACTION_GO);
     }
 
     private void showRegistrationFields(){
+        Log.d(LOG_TAG, "showRegistrationFields()");
 
         tv_editHint.setVisibility(View.VISIBLE);
         tv_editHint.setText(getResources().getString(R.string.login_tv_hintNewUser));
@@ -123,9 +177,13 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         et_email.setVisibility(View.VISIBLE);
         et_password.setVisibility(View.VISIBLE);
         et_passwordRepeat.setVisibility(View.VISIBLE);
+
+        et_email.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        et_password.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     }
 
     private void showPasswordRecoveryFields(){
+        Log.d(LOG_TAG, "showPasswordRecoveryFields()");
 
         tv_editHint.setVisibility(View.VISIBLE);
         tv_editHint.setText(getResources().getString(R.string.login_tv_hintRecoveryMail));
@@ -134,9 +192,10 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         bt_register.setVisibility(View.GONE);
         bt_recoverPassword.setVisibility(View.GONE);
         bt_submit.setVisibility(View.VISIBLE);
-        bt_submit.setText(getResources().getString(R.string.login_bt_submit));
+        bt_submit.setText(getResources().getString(R.string.login_bt_recoverPassword));
 
         et_email.setVisibility(View.VISIBLE);
+        et_email.setImeOptions(EditorInfo.IME_ACTION_SEND);
     }
 
     private void bt_submit() {
