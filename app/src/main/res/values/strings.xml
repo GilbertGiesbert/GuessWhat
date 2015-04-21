@@ -35,6 +35,10 @@
     <string name="friends_title">Friends</string>
     <string name="friends_dialog_title">New friend</string>
     <string name="friends_dialog_hint">Enter your friend\'s e-mail</string>
+    <string name="friends_dialog_existingFriend">"You are already friends with "</string>
+    <string name="friends_dialog_existingRequestReceived">"You are now friends with "</string>
+    <string name="friends_dialog_existingRequestSent">"You already sent a request to "</string>
+    <string name="friends_dialog_requestSent">"Send friend request to "</string>
 
 
     <string name="pendingFriends_title">Pending</string>

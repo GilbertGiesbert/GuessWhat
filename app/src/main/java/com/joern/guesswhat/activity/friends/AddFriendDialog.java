@@ -34,10 +34,7 @@ public class AddFriendDialog extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
 
                 String friendMail = ((EditText) AddFriendDialog.this.getDialog().findViewById(R.id.et_friendMail)).getText().toString();
-
-                Toast.makeText(getActivity(), "Send friend request to " + friendMail, Toast.LENGTH_SHORT).show();
-
-                addFriend(friendMail);
+                handleFriendRequest(friendMail);
             }
         })
         .setNegativeButton(R.string._cancel, new DialogInterface.OnClickListener() {
@@ -49,14 +46,42 @@ public class AddFriendDialog extends DialogFragment {
         return builder.create();
     }
 
-    private void addFriend(String friendMail){
+    private void handleFriendRequest(String friendMail){
 
         User sessionUser = SessionHelper.getSessionUser(getActivity());
 
         if(sessionUser != null && !sessionUser.getEmail().equals(friendMail)){
 
-            FriendshipDao dao = new FriendshipDaoImpl(getActivity());
-            dao.createFriendship(sessionUser.getEmail(), friendMail);
+            if(isExistingFriend(friendMail)){
+                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingFriend) + friendMail, Toast.LENGTH_SHORT).show();
+
+            }else if(isExistingFriendRequestReceived(friendMail)) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingRequestReceived) + friendMail, Toast.LENGTH_SHORT).show();
+
+            }else if(isExistingFriendRequestSent(friendMail)) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingRequestSent) + friendMail, Toast.LENGTH_SHORT).show();
+
+            }else{
+                FriendshipDao dao = new FriendshipDaoImpl(getActivity());
+                dao.createFriendship(sessionUser.getEmail(), friendMail);
+
+                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_requestSent) + friendMail, Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private boolean isExistingFriend(String friendMail) {
+        //TODO
+        return false;
+    }
+
+    private boolean isExistingFriendRequestReceived(String friendMail) {
+        //TODO
+        return false;
+    }
+
+    private boolean isExistingFriendRequestSent(String friendMail) {
+        //TODO
+        return false;
     }
 }
