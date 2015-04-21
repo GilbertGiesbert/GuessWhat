@@ -118,7 +118,7 @@ public class UserDaoImpl implements UserDao{
 //        select * from users inner join friendships on users.email = friendships.eMailRequester where (friendships.eMailAcceptor = 'b0@' and friendships.state = 3);
 //        select * from users inner join friendships on users.email = friendships.emailAcceptor where (friendships.eMailRequester = 'b0@' and friendships.state = 3);
 
-        List<User> userList = null;
+        List<User> userList = new ArrayList<>();
 
         String selectQueryAcceptedFriends =
                 "SELECT "+
@@ -127,8 +127,8 @@ public class UserDaoImpl implements UserDao{
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD+
                 " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME +
                 " ON " + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER +
-                " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = " + user.getEmail() +
-                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE + ")";
+                " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = '" + user.getEmail() + "'" +
+                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE.getValue() + ")";
 
         String selectQueryRequestedFriends =
                 "SELECT "+
@@ -137,12 +137,25 @@ public class UserDaoImpl implements UserDao{
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD+
                 " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME +
                 " ON " + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR +
-                " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = " + user.getEmail() +
-                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE + ")";
+                " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = '" + user.getEmail() + "'" +
+                " AND " + DB.FRIENDSHIPS.COL_STATE + " = " + FriendshipState.ACTIVE.getValue() + ")";
 
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery(selectQuery, null);
+
+        Cursor c = db.rawQuery(selectQueryAcceptedFriends, null);
+        userList.addAll(getFriendships(user, c));
+
+        c = db.rawQuery(selectQueryRequestedFriends, null);
+        userList.addAll(getFriendships(user, c));
+
+        c.close();
+        return userList;
+    }
+
+    public List<User> getFriendships(User user, Cursor c){
+
+        List<User> userList = new ArrayList<>();
 
         if (c.moveToFirst()) {
 
@@ -152,16 +165,12 @@ public class UserDaoImpl implements UserDao{
                 String email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
                 if(email != null && !email.equals(user.getEmail())){
 
+                    String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
+                    String password = c.getString(c.getColumnIndex(DB.USERS.COL_PASSWORD));
+                    userList.add(new User(name, email, password));
                 }
-                String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
-                String password = c.getString(c.getColumnIndex(DB.USERS.COL_PASSWORD));
-                userList.add(new User(name, email, password));
-
             } while (c.moveToNext());
         }
-
-        c.close();
         return userList;
-
     }
 }

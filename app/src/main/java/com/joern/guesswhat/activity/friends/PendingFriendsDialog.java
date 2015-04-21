@@ -1,11 +1,13 @@
 package com.joern.guesswhat.activity.friends;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,10 +23,30 @@ import com.joern.guesswhat.model.FriendshipState;
 /**
  * Created by joern on 16.04.2015.
  */
-public class EditFriendshipRequestDialog extends DialogFragment{
+public class PendingFriendsDialog extends DialogFragment{
+
+    private static final String LOG_TAG = PendingFriendsDialog.class.getSimpleName();
+
+    public interface Listener {
+        public void onDialogClose();
+    }
 
     private Friendship friendshipRequested;
     private FriendshipRequestType friendshipRequester;
+    private Listener dialogListener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            dialogListener = (Listener) activity;
+
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement "+Listener.class.getSimpleName());
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -62,6 +84,8 @@ public class EditFriendshipRequestDialog extends DialogFragment{
 
         .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Log.d(LOG_TAG, "onClick");
+                Log.d(LOG_TAG, "id="+id);
 
                 if (FriendshipRequestType.SENT.equals(friendshipRequester)) {
                     friendshipRequested.setFriendshipState(FriendshipState.REQUEST_CANCELLED);
@@ -71,17 +95,22 @@ public class EditFriendshipRequestDialog extends DialogFragment{
 
                 FriendshipDao dao = new FriendshipDaoImpl(getActivity());
                 dao.updateFriendship(friendshipRequested);
+                dialogListener.onDialogClose();
             }
         })
 
         .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Log.d(LOG_TAG, "onClick");
+                Log.d(LOG_TAG, "id="+id);
 
                 if (FriendshipRequestType.RECEIVED.equals(friendshipRequester)) {
                     friendshipRequested.setFriendshipState(FriendshipState.REQUEST_REJECTED);
                     FriendshipDao dao = new FriendshipDaoImpl(getActivity());
                     dao.updateFriendship(friendshipRequested);
+                    dialogListener.onDialogClose();
                 }
+
             }
         });
 
@@ -94,11 +123,11 @@ public class EditFriendshipRequestDialog extends DialogFragment{
         return null;
     }
 
-    public void setFriendshipRequested(Friendship friendshipRequested) {
+    public void setFriendship(Friendship friendshipRequested) {
         this.friendshipRequested = friendshipRequested;
     }
 
-    public void setFriendshipRequester(FriendshipRequestType friendshipRequester) {
+    public void setFriendshipRequestType(FriendshipRequestType friendshipRequester) {
         this.friendshipRequester = friendshipRequester;
     }
 }

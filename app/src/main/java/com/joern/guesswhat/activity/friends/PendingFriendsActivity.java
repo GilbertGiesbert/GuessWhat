@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by joern on 14.04.2015.
  */
-public class PendingFriendsActivity extends ActionBarActivity implements View.OnClickListener {
+public class PendingFriendsActivity extends ActionBarActivity implements View.OnClickListener, PendingFriendsDialog.Listener {
 
     private static final String LOG_TAG = PendingFriendsActivity.class.getSimpleName();
 
@@ -47,10 +47,10 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                EditFriendshipRequestDialog dialog = new EditFriendshipRequestDialog();
-                dialog.setFriendshipRequested(listAdapter.getItem(position));
-                dialog.setFriendshipRequester(listAdapter.getFriendshipRequestType());
-                dialog.show(getFragmentManager(), EditFriendshipRequestDialog.class.getSimpleName());
+                PendingFriendsDialog dialog = new PendingFriendsDialog();
+                dialog.setFriendship(listAdapter.getItem(position));
+                dialog.setFriendshipRequestType(listAdapter.getFriendshipRequestType());
+                dialog.show(getFragmentManager(), PendingFriendsDialog.class.getSimpleName());
             }
         });
 
@@ -64,8 +64,14 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
         v_underscoreSent = findViewById(R.id.v_underscoreSent);
 
         tv_hintNoPendingRequests = (TextView) findViewById(R.id.tv_hintNoPendingRequests);
+    }
 
-        toggle(FriendshipRequestType.RECEIVED);
+    @Override
+    public void onResume(){
+        Log.d(LOG_TAG, "onResume()");
+        super.onResume();
+
+        toggle(listAdapter.getFriendshipRequestType());
     }
 
     @Override
@@ -79,6 +85,8 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
             f.setFriendshipState(FriendshipState.REQUEST_RECEIVED);
             dao.updateFriendship(f);
         }
+
+        super.onStop();
     }
 
 
@@ -129,5 +137,11 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
                 tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
             }
         }
+    }
+
+    @Override
+    public void onDialogClose() {
+        Log.d(LOG_TAG, "onDialogClose()");
+        toggle(listAdapter.getFriendshipRequestType());
     }
 }

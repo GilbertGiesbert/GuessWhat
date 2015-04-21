@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
@@ -43,6 +44,18 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
         bt_pendingFriendRequests.setOnClickListener(this);
 
         initNewRequestsHint();
+
+        listAdapter = new FriendlistAdapter(this);
+        ListView list = (ListView) findViewById(R.id.lv_friendList);
+        list.setAdapter(listAdapter);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        listAdapter.reload();
 
     }
 
