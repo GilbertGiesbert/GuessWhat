@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
-import com.joern.guesswhat.common.ImageHelper;
+import com.joern.guesswhat.common.ImageLoader;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.model.User;
 
@@ -54,18 +54,18 @@ public class MainActivity extends ActionBarActivity {
 //
 
             float dp = 100;
-            float px = ImageHelper.dpToPx(dp, this);
+            float px = ImageLoader.dpToPx(dp, this);
             Log.d(LOG_TAG, "px="+px);
-            Log.d(LOG_TAG, "px2="+ImageHelper.dpToPx2(dp, this));
+            Log.d(LOG_TAG, "px2="+ ImageLoader.dpToPx2(dp, this));
 
 
 
 //            Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), (int)px,(int)px);
-            Bitmap bitmap = ImageHelper.loadFromFile(imagePath, (int) px, (int) px, ImageHelper.PreferredScalingDeviation.smallerThanTarget);
+            Bitmap bitmap = ImageLoader.loadFromFile(imagePath, (int) px, (int) px);
             Log.d(LOG_TAG, "bitmap width in px="+ bitmap.getWidth());
             Log.d(LOG_TAG, "bitmap height in px="+ bitmap.getHeight());
-            Log.d(LOG_TAG, "bitmap width in dp="+ ImageHelper.pxToDp(bitmap.getWidth(), this));
-            Log.d(LOG_TAG, "bitmap height in dp="+ ImageHelper.pxToDp(bitmap.getHeight(), this));
+            Log.d(LOG_TAG, "bitmap width in dp="+ ImageLoader.pxToDp(bitmap.getWidth(), this));
+            Log.d(LOG_TAG, "bitmap height in dp="+ ImageLoader.pxToDp(bitmap.getHeight(), this));
 
             BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
 
