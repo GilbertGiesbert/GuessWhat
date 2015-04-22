@@ -46,8 +46,6 @@ public class ImageLoader {
 
         if(scaleFactor < 1){
 
-            Log.d(LOG_TAG, "scaling down");
-
             // -----------------------------------------
             // some Info on sampleSize and BitmapFactory:
             //
@@ -84,6 +82,12 @@ public class ImageLoader {
             // rather 'floor' than 'ceil' to avoid scaled size is smaller than targetSize
             int sampleSize = (int) (Math.floor(1.0 / scaleFactor));
             Log.d(LOG_TAG, "sampleSize="+sampleSize);
+
+            if(sampleSize > 1){
+                Log.d(LOG_TAG, "scaling down");
+            }else{
+                Log.d(LOG_TAG, "not scaling");
+            }
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = sampleSize;
