@@ -1,7 +1,9 @@
 package com.joern.guesswhat.activity.friends;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,8 @@ import java.util.List;
  * Created by joern on 14.04.2015.
  */
 public class FriendlistAdapter extends BaseAdapter{
+
+    private static final String LOG_TAG = FriendlistAdapter.class.getSimpleName();
 
     private List<User> friendList;
 
@@ -76,10 +80,14 @@ public class FriendlistAdapter extends BaseAdapter{
         }
 
         User friend = friendList.get(position);
+        Log.d(LOG_TAG, "Friend: "+friend.getName()+", Pos: "+position);
 
         Drawable profilePicture = getProfilePicture(position);
         if(profilePicture != null){
+            viewHolder.iv_profilePicture.clearColorFilter();
             viewHolder.iv_profilePicture.setImageDrawable(profilePicture);
+        }else{
+            viewHolder.iv_profilePicture.setColorFilter(Color.argb(255, 0, 0, 0)); // black tint
         }
         viewHolder.tv_name.setText(friend.getName());
         viewHolder.tv_eMail.setText(friend.getEmail());
@@ -89,11 +97,7 @@ public class FriendlistAdapter extends BaseAdapter{
 
     private Drawable getProfilePicture(int position) {
 
-//        if(position % 2 == 0){
-//            return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), THUMBSIZE, THUMBSIZE)
-//        }else{
-//            return context.getResources().getDrawable(R.drawable.test_pic_large_vertical);
-//        }
+        //TODO
         return null;
     }
 

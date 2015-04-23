@@ -13,124 +13,71 @@ public class ImageLoader {
 
     private static final String LOG_TAG = ImageLoader.class.getSimpleName();
 
-    public static Bitmap loadFromFile(String filePath, int targetWidth, int targetHeight){
+    public static Bitmap loadFromFile(String filePath, int containerWidth, int containerHeight){
         Log.d(LOG_TAG, "loadFromFile()");
         Log.d(LOG_TAG, "filePath="+filePath);
-        Log.d(LOG_TAG, "targetWidth="+targetWidth);
-        Log.d(LOG_TAG, "targetHeight="+targetHeight);
+        Log.d(LOG_TAG, "containerWidth="+containerWidth);
+        Log.d(LOG_TAG, "containerHeight="+containerHeight);
 
-        ImageBounds imageBounds = new ImageBounds();
-        imageBounds.loadFromFile(filePath);
+        BitmapFactory.Options options = new BitmapFactory.Options();
 
-        // convert bounds to double so that results of calculations with bounds are no integer
-        double sourceWidth = imageBounds.getWidth();
-        double sourceHeight = imageBounds.getHeight();
+        // don't load image, just check bounds
+        options.inJustDecodeBounds = true;
 
+        BitmapFactory.decodeFile(filePath, options);
+        int sourceWidth = options.outWidth;
+        int sourceHeight = options.outHeight;
         Log.d(LOG_TAG, "sourceWidth="+sourceWidth);
         Log.d(LOG_TAG, "sourceHeight="+sourceHeight);
 
+        // load real image, not just bounds
+        options.inJustDecodeBounds = false;
 
-        double scaleFactor = targetWidth / sourceWidth;
-        double scaledWidth;
-        double scaledHeight = sourceHeight * scaleFactor;
-
-        // if new height is out of bounds --> rescale to fit height
-        if(scaledHeight > targetHeight){
-            scaleFactor = targetHeight / sourceHeight;
-            Log.d(LOG_TAG, "scaling to fit height");
-        }else{
-            Log.d(LOG_TAG, "scaling to fit width");
+        if(sourceWidth > containerWidth || sourceHeight > containerHeight){
+            options.inSampleSize = calculateInSampleSize(sourceWidth, sourceHeight, containerWidth, containerHeight);
         }
 
-        Bitmap bitmap;
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
 
-        if(scaleFactor < 1){
+        Log.d(LOG_TAG, "loadedWidth="+bitmap.getWidth());
+        Log.d(LOG_TAG, "loadedHeight="+bitmap.getHeight());
 
-            // -----------------------------------------
-            // some Info on sampleSize and BitmapFactory:
-            //
-            // BitmapFactory can load an smaller image to save memory
-            // therefore it uses sampleSize like:
-            // originalImage / sampleSize = smallerImage
-            // or in other words
-            // originalImage is x times greater than smallerImage where x = sampleSize
-            //
-            // per documentation sampleSize must be an Integer AND a power of 2
-            //
-            // if sampleSize = 1 BitmapFactory loads image with original size
-            // -----------------------------------------
+        float scaleFactor =(float) containerWidth / (float) bitmap.getWidth();
+        int scaledWidth = (int)(bitmap.getWidth() * scaleFactor);
+        int scaledHeight = (int)(bitmap.getHeight() * scaleFactor);
 
-            // ----------------------------------------------
-            // some Info on ImageLoader loading large Images:
-            //
-            // if ImageLoader must load an image larger than target size
-            // it downscales original image as often as result is still larger than target size
-            // rest of downscaling to exact target size will be done by ImageView
-            //
-            // downscaling below target size is not preferred because this would require
-            // an upscale of an small image which gives a blurry result
-            //
-            // note:
-            // ImageLoader can't downscale original image to exact target size
-            // because downscaling factor is no exact double value
-            // in fact downscaling factor is sampleSize of BitmapFactory
-            // so steps of downscaling are rather large (see documentation on sampleSize)
-            // ----------------------------------------------
-
-
-            // 'floor' because sampleSize needs to be an int
-            // rather 'floor' than 'ceil' to avoid scaled size is smaller than targetSize
-            int sampleSize = (int) (Math.floor(1.0 / scaleFactor));
-            Log.d(LOG_TAG, "sampleSize="+sampleSize);
-
-            if(sampleSize > 1){
-                Log.d(LOG_TAG, "scaling down");
-            }else{
-                Log.d(LOG_TAG, "not scaling");
-            }
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = sampleSize;
-            options.inJustDecodeBounds = false;
-            bitmap = BitmapFactory.decodeFile(filePath, options);
-
-            // just for logging
-            scaleFactor = 1.0 / sampleSize;
-            scaledWidth = sourceWidth * scaleFactor;
-            scaledHeight = sourceHeight * scaleFactor;
-
-        }else{
-            Log.d(LOG_TAG, "scaling up");
-
-            // 'ceil' because scaledWidth and scaledHeight need to be integers
-            // rather 'ceil' than 'floor' to avoid scaled size is smaller than targetSize
-            scaleFactor = Math.ceil(scaleFactor);
-
-            scaledWidth = sourceWidth * scaleFactor;
-            scaledHeight = sourceHeight * scaleFactor;
-
-            // original bitmap
-            bitmap = BitmapFactory.decodeFile(filePath);
-            // scaled bitmap
-            bitmap = Bitmap.createScaledBitmap(bitmap, (int)scaledWidth, (int)scaledHeight, false);
+        if(scaledHeight > containerHeight){
+            scaleFactor = (float)containerHeight / (float)bitmap.getHeight();
+            scaledWidth = (int)(bitmap.getWidth() * scaleFactor);
+            scaledHeight = (int)(bitmap.getHeight() * scaleFactor);
         }
 
-        Log.d(LOG_TAG, "scaleFactor=" + getReadableDouble(scaleFactor, 2));
-        Log.d(LOG_TAG, "scaledWidth="+ getReadableDouble(scaledWidth, 2));
-        Log.d(LOG_TAG, "scaledHeight="+ getReadableDouble(scaledHeight, 2));
+        // re-use bitmap to save memory
+        bitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false);
+
+        Log.d(LOG_TAG, "scaledWidth="+bitmap.getWidth());
+        Log.d(LOG_TAG, "scaledHeight="+bitmap.getHeight());
 
         return bitmap;
     }
 
-    public static String getReadableDouble(double d, int decimalPlacesCount){
-        return String.format("%."+decimalPlacesCount+"f", d);
+    // BitmapFactory.Options uses inSampleSize as a shrinking factor
+    // to load images x times smaller than the original
+    // (x = inSampleSize)
+    // inSampleSize should be as great as possible to load smallest image size possible
+    // and to save most memory possible
+    // however resultingLength (=sourceLength / inSampleSize) should always be greater than requestedLength
+    private static int calculateInSampleSize(double sourceWidth, double sourceHeight, int requestedWidth, int requestedHeight) {
+
+        int inSampleSizeX = Math.round((float)sourceWidth/ (float)requestedWidth);
+        int inSampleSizeY = Math.round((float)sourceHeight/ (float)requestedHeight);
+
+        // smaller inSampleSize makes sure that resultingWidth AND resultingHeight
+        // are greater than requestedWidth and requestedHeight
+        return inSampleSizeX < inSampleSizeY ? inSampleSizeX : inSampleSizeY;
     }
 
     public static float dpToPx(float dp, Context context){
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
-
-    public static float pxToDp(float px, Context context){
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, context.getResources().getDisplayMetrics());
     }
 }

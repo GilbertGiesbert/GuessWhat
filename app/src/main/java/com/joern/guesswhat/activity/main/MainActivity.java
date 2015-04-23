@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
@@ -44,42 +45,14 @@ public class MainActivity extends ActionBarActivity {
 
             TextView tv_test = (TextView) findViewById(R.id.tv_test);
             tv_test.setText(userInfo);
-
-            String imagePath = "/sdcard/Download/test_pic_large_horizontal.jpg";
-
-//            File imageFile = new File(imagePath);
-//            String absolutePath = imageFile.getAbsolutePath();
-//            Log.d(LOG_TAG, "absolutePath="+absolutePath);
-//            BitmapDrawable d = new BitmapDrawable(getResources(), absolutePath);
-//
-
-            float dp = 100;
-            float px = ImageLoader.dpToPx(dp, this);
-            Log.d(LOG_TAG, "px="+px);
-            Log.d(LOG_TAG, "px2="+ ImageLoader.dpToPx2(dp, this));
-
-
-
-//            Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), (int)px,(int)px);
-            Bitmap bitmap = ImageLoader.loadFromFile(imagePath, (int) px, (int) px);
-            Log.d(LOG_TAG, "bitmap width in px="+ bitmap.getWidth());
-            Log.d(LOG_TAG, "bitmap height in px="+ bitmap.getHeight());
-            Log.d(LOG_TAG, "bitmap width in dp="+ ImageLoader.pxToDp(bitmap.getWidth(), this));
-            Log.d(LOG_TAG, "bitmap height in dp="+ ImageLoader.pxToDp(bitmap.getHeight(), this));
-
-            BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
-
-            ImageView iv_test = (ImageView) findViewById(R.id.iv_test);
-            iv_test.setImageDrawable(d);
-
-
-
         }
     }
 
     @Override
     public void onResume(){
         super.onResume();
+
+        doImageTest();
 
     }
 
@@ -130,5 +103,33 @@ public class MainActivity extends ActionBarActivity {
 
         Intent intent = new Intent(this, FriendsActivity.class);
         startActivity(intent);
+    }
+
+    private void doImageTest(){
+
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl_redBase);
+
+        ImageView iv_test = (ImageView) findViewById(R.id.iv_test);
+
+
+        String imagePath = "/sdcard/Download/test_pic_large_horizontal.jpg";
+
+        float dp = 120;
+        float px = ImageLoader.dpToPx(dp, this);
+        Log.d(LOG_TAG, "px="+px);
+
+
+
+//            Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), (int)px,(int)px);
+        Bitmap bitmap = ImageLoader.loadFromFile(imagePath, (int) px, (int) px);
+
+
+        BitmapDrawable d = new BitmapDrawable(getResources(), bitmap);
+
+
+            iv_test.setImageDrawable(d);
+
+
+
     }
 }
