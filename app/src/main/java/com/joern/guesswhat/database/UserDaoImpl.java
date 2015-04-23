@@ -26,35 +26,36 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public boolean createUser(String name, String email, String password) {
+    public boolean createLocalUser(String name, String eMail, int passwordHash) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DB.USERS.COL_NAME, name);
-        values.put(DB.USERS.COL_EMAIL, email);
-        values.put(DB.USERS.COL_PASSWORD, password);
+        values.put(DB.LOCAL_USERS.COL_NAME, name);
+        values.put(DB.LOCAL_USERS.COL_EMAIL, eMail);
+        values.put(DB.LOCAL_USERS.COL_PASSWORDHASH, passwordHash);
 
-        return -1 != db.insert(DB.USERS.TABLE_NAME, null, values);
+        return -1 != db.insert(DB.LOCAL_USERS.TABLE_NAME, null, values);
     }
 
     @Override
-    public User readUser(String email) {
+    public User readLocalUser(String eMail) {
 
         User userToReturn = null;
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + DB.USERS.TABLE_NAME + " WHERE "
-                + DB.USERS.COL_EMAIL + " = '" + email + "'";
+        String selectQuery = "SELECT  * FROM " + DB.LOCAL_USERS.TABLE_NAME + " WHERE "
+                + DB.LOCAL_USERS.COL_EMAIL + " = '" + eMail + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
         if(c.moveToFirst()){
 
-            String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
-            String password = c.getString(c.getColumnIndex(DB.USERS.COL_PASSWORD));
-            userToReturn = new User(name, email, password);
+            int id = c.getInt(c.getColumnIndex(DB.LOCAL_USERS.COL_ID));
+            String name = c.getString(c.getColumnIndex(DB.LOCAL_USERS.COL_NAME));
+            int passwordHash = c.getInt(c.getColumnIndex(DB.LOCAL_USERS.COL_PASSWORDHASH));
+            userToReturn = new User(id, false, name, eMail, passwordHash);
         }
 
         c.close();
@@ -63,13 +64,13 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public boolean updateUser(User oldUser, User newUser) {
+    public boolean updateLocalUser(User user) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DB.USERS.COL_NAME, newUser.getName());
-        values.put(DB.USERS.COL_EMAIL, newUser.getEmail());
+        values.put(DB.LOCAL_USERS.COL_NAME, user.getName());
+        values.put(DB.LOCAL_USERS.COL_EMAIL, user.getEmail());
 
         return 0 < db.update(DB.USERS.TABLE_NAME, values, DB.USERS.COL_EMAIL + " = ?", new String[]{oldUser.getEmail()});
     }

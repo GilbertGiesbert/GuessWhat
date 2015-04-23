@@ -5,14 +5,34 @@ package com.joern.guesswhat.model;
  */
 public class User {
 
+    private int id;
+    private boolean registered;
     private String name;
     private String email;
-    private String password;
+    private int passwordHash;
 
-    public User(String name, String email, String password) {
+    public User(int id, boolean registered, String name, String email, int passwordHash) {
+        this.id = id;
+        this.registered = registered;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.passwordHash = passwordHash;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     public String getName() {
@@ -31,11 +51,11 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public int getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(int passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
