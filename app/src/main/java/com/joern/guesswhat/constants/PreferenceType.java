@@ -6,6 +6,6 @@ package com.joern.guesswhat.constants;
 public enum PreferenceType {
 
     APP_PREFERENCES,
-    PREF_SESSION_USER_MAIL
+    PREF_SESSION_USER
 
 }

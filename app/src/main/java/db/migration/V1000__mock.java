@@ -1,6 +1,9 @@
 package db.migration;
 
 
+import android.util.Log;
+
+import com.joern.guesswhat.activity.login.PasswordFactory;
 import com.joern.guesswhat.constants.DB;
 
 import org.flywaydb.core.api.migration.jdbc.JdbcMigration;
@@ -11,13 +14,20 @@ import java.util.ArrayList;
 
 public class V1000__mock implements JdbcMigration{
 
+    private static final String LOG_TAG = V1000__mock.class.getSimpleName();
+
     private static final boolean USE_MOCK = false;
 
     @Override
     public void migrate(Connection connection) throws Exception {
 
         if(USE_MOCK){
-            addMockUsers(connection);
+            try{
+                addMockUsers(connection);
+            }catch(Exception ex){
+                Log.d(LOG_TAG, "problems adding mock users");
+            }
+
             addMockFriendships(connection);
         }
     }
@@ -49,8 +59,10 @@ public class V1000__mock implements JdbcMigration{
             String email = (user.substring(0,1)+user.substring(user.length()-1,user.length())+"@").toLowerCase();
             String pswd = (user.substring(0,1)).toLowerCase();
 
-            String query = "INSERT INTO " + DB.USERS.TABLE_NAME + " ("+DB.USERS.COL_NAME+","+DB.USERS.COL_EMAIL+","+DB.USERS.COL_PASSWORD+") "+
-                            "VALUES ('"+user+"','"+email+"','"+pswd+"');";
+            Integer pswdHash = PasswordFactory.buildPasswordHash(pswd, user, email);
+
+            String query = "INSERT INTO " + DB.USERS.TABLE_NAME + " ("+DB.USERS.COL_NAME+","+DB.USERS.COL_EMAIL+","+DB.USERS.COL_PASSWORD_HASH+") "+
+                            "VALUES ('"+user+"','"+email+"',"+pswdHash+");";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.execute();

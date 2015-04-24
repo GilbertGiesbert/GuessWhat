@@ -5,26 +5,16 @@ package com.joern.guesswhat.constants;
  */
 public class DB {
 
-    public static final class LOCAL_USERS{
+    public static final class USERS{
 
-        public static final String TABLE_NAME = "local_users";
-
-        public static final String COL_ID = "id";
-        public static final String COL_NAME = "name";
-        public static final String COL_EMAIL = "email";
-        public static final String COL_PASSWORDHASH = "password_hash";
-    }
-
-    public static final class REGISTERED_USERS{
-
-        public static final String TABLE_NAME = "registered_users";
+        public static final String TABLE_NAME = "users";
 
         public static final String COL_ID = "id";
+        public static final String COL_STABLE_ALIAS = "stable_alias";
         public static final String COL_NAME = "name";
         public static final String COL_EMAIL = "email";
-        public static final String COL_PASSWORDHASH = "password_hash";
+        public static final String COL_PASSWORD_HASH = "password_hash";
     }
-
 
     public static final class FRIENDSHIPS{
 

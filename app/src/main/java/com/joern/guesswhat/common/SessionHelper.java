@@ -14,16 +14,16 @@ public class SessionHelper {
 
     public static User getSessionUser(Context context){
 
-        String sessionUserMail = SharedPreferencesHelper.getPreference(context, PreferenceType.PREF_SESSION_USER_MAIL);
+        String sessionUser = SharedPreferencesHelper.getPreference(context, PreferenceType.PREF_SESSION_USER);
         UserDao userDao = new UserDaoImpl(context);
-        return userDao.readUser(sessionUserMail);
+        return userDao.readUser(sessionUser);
     }
 
     public static void startSession(Context context, User user){
-        SharedPreferencesHelper.setPreference(context, PreferenceType.PREF_SESSION_USER_MAIL, user.getEmail());
+        SharedPreferencesHelper.setPreference(context, PreferenceType.PREF_SESSION_USER, user.getName());
     }
 
     public static void stopSession(Context context){
-        SharedPreferencesHelper.setPreference(context, PreferenceType.PREF_SESSION_USER_MAIL, "");
+        SharedPreferencesHelper.setPreference(context, PreferenceType.PREF_SESSION_USER, "");
     }
 }

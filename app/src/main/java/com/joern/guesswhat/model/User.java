@@ -6,14 +6,14 @@ package com.joern.guesswhat.model;
 public class User {
 
     private int id;
-    private boolean registered;
+    private String stableAlias;
     private String name;
     private String email;
     private int passwordHash;
 
-    public User(int id, boolean registered, String name, String email, int passwordHash) {
+    public User(int id, String stableAlias, String name, String email, int passwordHash) {
         this.id = id;
-        this.registered = registered;
+        this.stableAlias = stableAlias;
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
@@ -27,12 +27,12 @@ public class User {
         this.id = id;
     }
 
-    public boolean isRegistered() {
-        return registered;
+    public String getStableAlias() {
+        return stableAlias;
     }
 
-    public void setRegistered(boolean registered) {
-        this.registered = registered;
+    public void setStableAlias(String stableAlias) {
+        this.stableAlias = stableAlias;
     }
 
     public String getName() {

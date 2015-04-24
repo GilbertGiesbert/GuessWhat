@@ -24,6 +24,12 @@ import com.joern.guesswhat.model.User;
  */
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener {
 
+    private enum State{
+        INITIAL, LOGIN, REGISTRATION, PASSWORD_RECOVERY
+    }
+
+    private State state;
+
     private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
     private TextView tv_editHint;
@@ -58,6 +64,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         setImeActionListeners();
 
+        state = State.INITIAL;
         resetToInitialView();
     }
 
@@ -65,10 +72,11 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     public void onBackPressed(){
         Log.d(LOG_TAG, "onBackPressed()");
 
-        if(isInitialView()){
+        if(State.INITIAL.equals(state)){
             super.onBackPressed();
 
         }else{
+            state = State.INITIAL;
             resetToInitialView();
         }
     }
@@ -80,14 +88,17 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         switch(v.getId()){
 
             case R.id.bt_login:
+                state = State.LOGIN;
                 showLoginFields();
                 break;
 
             case R.id.bt_register:
+                state = State.REGISTRATION;
                 showRegistrationFields();
                 break;
 
             case R.id.bt_recoverPassword:
+                state = State.PASSWORD_RECOVERY;
                 showPasswordRecoveryFields();
                 break;
 
@@ -100,7 +111,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     private void setImeActionListeners(){
 
         // for login
-        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        et_userName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
@@ -113,7 +124,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
             }
         });
 
-        // for register
+        // for registration
         et_passwordRepeat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -154,10 +165,10 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         bt_submit.setVisibility(View.VISIBLE);
         bt_submit.setText(getResources().getString(R.string.login_bt_login));
 
-        et_email.setVisibility(View.VISIBLE);
+        et_userName.setVisibility(View.VISIBLE);
         et_password.setVisibility(View.VISIBLE);
 
-        et_email.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        et_userName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_password.setImeOptions(EditorInfo.IME_ACTION_GO);
     }
 
@@ -200,13 +211,32 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
     private void bt_submit() {
 
-        if( View.VISIBLE == et_passwordRepeat.getVisibility() ){
+        switch(state){
+
+            case LOGIN:
+                doLogin();
+                break;
+
+            case REGISTRATION:
+                doRegisterNewUser();
+                break;
+
+            case PASSWORD_RECOVERY:
+                doPasswordRecovery();
+                break;
+
+            default:
+                resetToInitialView();
+                break;
+        }
+
+        if( State.LOGIN.equals(state) ){
 
             doRegisterNewUser();
 
         }else if( View.VISIBLE == et_password.getVisibility() ){
 
-            doLogin();
+
 
         }else{
             doPasswordRecovery();
@@ -244,40 +274,53 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
             UserDao userDao = new UserDaoImpl(this);
 
-            boolean userCreated = userDao.createUser(userName, email, password);
-            if(userCreated){
-
-                User user = userDao.readUser(email);
-                SessionHelper.startSession(this, user);
-                goToMain();
-
+            Integer passwordHash = PasswordFactory.buildPasswordHash(password, userName, email);
+            if(passwordHash == null){
+                Toast.makeText(this, "Failed to register.", Toast.LENGTH_SHORT).show();
             }else{
 
-                if(userDao.readUser(email) != null){
+                boolean userCreated = userDao.createUser(userName, email, passwordHash);
+                if(userCreated){
 
-                    et_email.setError("E-Mail already assigned");
+                    User user = userDao.readUser(userName);
+                    SessionHelper.startSession(this, user);
+                    goToMain();
 
                 }else{
 
-                    Toast.makeText(this, "Failed to create new user", Toast.LENGTH_SHORT).show();
+                    if(userDao.readUser(userName) != null){
+
+                        et_email.setError("User name already assigned");
+
+                    }else{
+
+                        Toast.makeText(this, "Failed to create new user", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
     }
 
     private void doLogin(){
-        String email = et_email.getText().toString();
+        String name = et_userName.getText().toString();
         String password = et_password.getText().toString();
 
         UserDao userDao = new UserDaoImpl(this);
-        User user = userDao.readUser(email);
+        User user = userDao.readUser(name);
 
-        if(user != null && user.getPassword().equals(password)){
+        boolean loginSuccessful = false;
 
-            SessionHelper.startSession(this, user);
-            goToMain();
+        if(user != null) {
 
-        }else{
+            Integer passwordHash = PasswordFactory.buildPasswordHash(password, user);
+            if (user.getPasswordHash() == passwordHash) {
+                SessionHelper.startSession(this, user);
+                goToMain();
+                loginSuccessful = true;
+            }
+        }
+
+        if(!loginSuccessful){
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
         }
     }
@@ -293,7 +336,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         if(user != null){
 
-            msg = "Password: "+user.getPassword();
+            msg = "Password recovery mail will be sent to "+email;
         }
 
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -330,11 +373,5 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         et_password.setText("");
         et_passwordRepeat.setText("");
 
-    }
-
-    private boolean isInitialView() {
-        Log.d(LOG_TAG, "isInitialView()");
-
-        return View.GONE == bt_submit.getVisibility();
     }
 }

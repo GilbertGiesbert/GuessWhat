@@ -6,6 +6,11 @@
     <string name="_reject">Reject</string>
     <string name="_ok">OK</string>
 
+    <string name="_validation_hint_fieldEmpty">This field can\'t be empty.</string>
+    <string name="_validation_hint_invalidEmail">This is not a valid email.</string>
+    <string name="_validation_hint_validUserName">User name must contain only letters, numbers \'.\' and \'_\'</string>
+    <string name="_validation_hint_validPassword">Password must contain letters and numbers. Minimum length is 8 characters.</string>
+
     <string name="app_name">GuessWhat</string>
 
     <string name="action_friends">Friends</string>
@@ -19,13 +24,14 @@
     <string name="login_userName">User name</string>
     <string name="login_password">Password</string>
     <string name="login_passwordRepeat">Password (confirm)</string>
-    <string name="login_tv_hintLoginExistingUser">Login in existing user</string>
+    <string name="login_tv_hintLoginExistingUser">Login with existing user</string>
     <string name="login_tv_hintNewUser">Create new user</string>
     <string name="login_tv_hintRecoveryMail">Send recovery mail to</string>
     <string name="login_bt_login">Login</string>
     <string name="login_bt_register">Register</string>
     <string name="login_bt_recoverPassword">Recover password</string>
     <string name="login_title">Login</string>
+
 
     <string name="main_title">Home</string>
 

@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface UserDao {
 
-    public boolean createLocalUser(String name, String eMail, int passwordHash);
-    public User readLocalUser(String email);
-    public boolean updateUser(User oldUser, User newUser);
+    public boolean createUser(String name, String eMail, int passwordHash);
+    public User readUser(String name);
+    public boolean updateUser(User user);
     public boolean deleteUser(User user);
 
     public List<User> getFriendships(User user);

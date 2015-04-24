@@ -26,36 +26,37 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public boolean createLocalUser(String name, String eMail, int passwordHash) {
+    public boolean createUser(String name, String email, int passwordHash) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DB.LOCAL_USERS.COL_NAME, name);
-        values.put(DB.LOCAL_USERS.COL_EMAIL, eMail);
-        values.put(DB.LOCAL_USERS.COL_PASSWORDHASH, passwordHash);
+        values.put(DB.USERS.COL_NAME, name);
+        values.put(DB.USERS.COL_EMAIL, email);
+        values.put(DB.USERS.COL_PASSWORD_HASH, passwordHash);
 
-        return -1 != db.insert(DB.LOCAL_USERS.TABLE_NAME, null, values);
+        return -1 != db.insert(DB.USERS.TABLE_NAME, null, values);
     }
 
     @Override
-    public User readLocalUser(String eMail) {
+    public User readUser(String name) {
 
         User userToReturn = null;
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + DB.LOCAL_USERS.TABLE_NAME + " WHERE "
-                + DB.LOCAL_USERS.COL_EMAIL + " = '" + eMail + "'";
+        String selectQuery = "SELECT  * FROM " + DB.USERS.TABLE_NAME + " WHERE "
+                + DB.USERS.COL_NAME + " = '" + name + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
         if(c.moveToFirst()){
 
-            int id = c.getInt(c.getColumnIndex(DB.LOCAL_USERS.COL_ID));
-            String name = c.getString(c.getColumnIndex(DB.LOCAL_USERS.COL_NAME));
-            int passwordHash = c.getInt(c.getColumnIndex(DB.LOCAL_USERS.COL_PASSWORDHASH));
-            userToReturn = new User(id, false, name, eMail, passwordHash);
+            int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
+            String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
+            String email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
+            int passwordHash = c.getInt(c.getColumnIndex(DB.USERS.COL_PASSWORD_HASH));
+            userToReturn = new User(id, stableAlias, name, email, passwordHash);
         }
 
         c.close();
@@ -64,15 +65,17 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public boolean updateLocalUser(User user) {
+    public boolean updateUser(User user) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DB.LOCAL_USERS.COL_NAME, user.getName());
-        values.put(DB.LOCAL_USERS.COL_EMAIL, user.getEmail());
+        values.put(DB.USERS.COL_STABLE_ALIAS, user.getStableAlias());
+        values.put(DB.USERS.COL_NAME, user.getName());
+        values.put(DB.USERS.COL_EMAIL, user.getEmail());
+        values.put(DB.USERS.COL_PASSWORD_HASH, user.getPasswordHash());
 
-        return 0 < db.update(DB.USERS.TABLE_NAME, values, DB.USERS.COL_EMAIL + " = ?", new String[]{oldUser.getEmail()});
+        return 0 < db.update(DB.USERS.TABLE_NAME, values, DB.USERS.COL_ID + " = ?", new String[]{""+user.getId()});
     }
 
     @Override
@@ -80,33 +83,7 @@ public class UserDaoImpl implements UserDao{
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        return 0 < db.delete(DB.USERS.TABLE_NAME, DB.USERS.COL_EMAIL + " = ?", new String[]{user.getEmail()} );
-    }
-
-    public List<User> getAllUsers() {
-
-        List<User> userList = null;
-
-        String selectQuery = "SELECT * FROM " + DB.USERS.TABLE_NAME;
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c.moveToFirst()) {
-
-            userList = new ArrayList<>();
-
-            do {
-                String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
-                String email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
-                String password = c.getString(c.getColumnIndex(DB.USERS.COL_PASSWORD));
-                userList.add(new User(name, email, password));
-
-            } while (c.moveToNext());
-        }
-
-        c.close();
-
-        return userList;
+        return 0 < db.delete(DB.USERS.TABLE_NAME, DB.USERS.COL_ID + " = ?", new String[]{""+user.getId()} );
     }
 
     public List<User> getFriendships(User user){
@@ -125,7 +102,7 @@ public class UserDaoImpl implements UserDao{
                 "SELECT "+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_NAME+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_EMAIL+","+
-                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD_HASH+
                 " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME +
                 " ON " + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER +
                 " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = '" + user.getEmail() + "'" +
@@ -133,9 +110,11 @@ public class UserDaoImpl implements UserDao{
 
         String selectQueryRequestedFriends =
                 "SELECT "+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_ID+","+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_STABLE_ALIAS+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_NAME+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_EMAIL+","+
-                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD_HASH+
                 " FROM " + DB.USERS.TABLE_NAME + " INNER JOIN " + DB.FRIENDSHIPS.TABLE_NAME +
                 " ON " + DB.USERS.COL_EMAIL + " = " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR +
                 " WHERE  (" + DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = '" + user.getEmail() + "'" +
@@ -166,9 +145,11 @@ public class UserDaoImpl implements UserDao{
                 String email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
                 if(email != null && !email.equals(user.getEmail())){
 
+                    int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
+                    String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
                     String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
-                    String password = c.getString(c.getColumnIndex(DB.USERS.COL_PASSWORD));
-                    userList.add(new User(name, email, password));
+                    int passwordHash = c.getInt(c.getColumnIndex(DB.USERS.COL_PASSWORD_HASH));
+                    userList.add(new User(id, stableAlias, name, email, passwordHash));
                 }
             } while (c.moveToNext());
         }

@@ -38,10 +38,11 @@ public class MainActivity extends ActionBarActivity {
 
             String userInfo =
                     "User info:" + "\n" +
+                    "Id: "+sessionUser.getId() + "\n" +
+                    "Alias: "+sessionUser.getStableAlias() + "\n" +
                     "Name: "+sessionUser.getName() + "\n" +
                     "Mail: "+sessionUser.getEmail() + "\n" +
-                    "Pswd: "+sessionUser.getPassword();
-
+                    "Pswd#: "+sessionUser.getPasswordHash();
 
             TextView tv_test = (TextView) findViewById(R.id.tv_test);
             tv_test.setText(userInfo);
@@ -52,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
     public void onResume(){
         super.onResume();
 
-        doImageTest();
+//        doImageTest();
 
     }
 
