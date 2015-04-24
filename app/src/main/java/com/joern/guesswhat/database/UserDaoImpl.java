@@ -64,6 +64,30 @@ public class UserDaoImpl implements UserDao{
         return userToReturn;
     }
 
+    public User getUserByMail(String email){
+        User userToReturn = null;
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DB.USERS.TABLE_NAME + " WHERE "
+                + DB.USERS.COL_EMAIL + " = '" + email + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c.moveToFirst()){
+
+            int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
+            String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
+            String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
+            int passwordHash = c.getInt(c.getColumnIndex(DB.USERS.COL_PASSWORD_HASH));
+            userToReturn = new User(id, stableAlias, name, email, passwordHash);
+        }
+
+        c.close();
+
+        return userToReturn;
+    }
+
     @Override
     public boolean updateUser(User user) {
 

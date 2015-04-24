@@ -15,9 +15,6 @@ import android.widget.Toast;
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.main.MainActivity;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.UserDao;
-import com.joern.guesswhat.database.UserDaoImpl;
-import com.joern.guesswhat.model.User;
 
 /**
  * Created by joern on 13.04.2015.
@@ -168,6 +165,9 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         et_userName.setVisibility(View.VISIBLE);
         et_password.setVisibility(View.VISIBLE);
 
+        et_userName.setError(null);
+        et_password.setError(null);
+
         et_userName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_password.setImeOptions(EditorInfo.IME_ACTION_GO);
     }
@@ -189,6 +189,11 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         et_password.setVisibility(View.VISIBLE);
         et_passwordRepeat.setVisibility(View.VISIBLE);
 
+        et_userName.setError(null);
+        et_email.setError(null);
+        et_password.setError(null);
+        et_passwordRepeat.setError(null);
+
         et_email.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_password.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     }
@@ -206,6 +211,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         bt_submit.setText(getResources().getString(R.string.login_bt_recoverPassword));
 
         et_email.setVisibility(View.VISIBLE);
+        et_email.setError(null);
         et_email.setImeOptions(EditorInfo.IME_ACTION_SEND);
     }
 
@@ -243,6 +249,20 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         }
     }
 
+    private void doLogin() {
+
+        String userName = et_userName.getText().toString();
+        String password = et_password.getText().toString();
+
+        et_userName.setError(LoginValidator.validateInput(userName, LoginValidator.InputType.GENERAL, this));
+        et_password.setError(LoginValidator.validateInput(password, LoginValidator.InputType.GENERAL, this));
+
+        if( et_userName.getError() == null && et_password.getError() == null){
+            LoginTask loginTask = new LoginTask(LoginTask.TaskType.LOGIN, this, this);
+            loginTask.execute(userName, password);
+        }
+    }
+
     private void doRegisterNewUser(){
 
         String userName = et_userName.getText().toString();
@@ -250,94 +270,48 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         String password = et_password.getText().toString();
         String passwordRepeat = et_passwordRepeat.getText().toString();
 
-        boolean inputErrors = false;
+        et_userName.setError(LoginValidator.validateInput(userName, LoginValidator.InputType.USER_NAME_FOR_REGISTRATION, this));
+        et_email.setError(LoginValidator.validateInput(email, LoginValidator.InputType.EMAIL, this));
+        et_password.setError(LoginValidator.validateInput(password, LoginValidator.InputType.PASSWORD_FOR_REGISTRATION, this));
+        et_passwordRepeat.setError(LoginValidator.validatePasswordConfirmation(password, passwordRepeat, this));
 
-        if(userName.isEmpty()){
-            inputErrors = true;
-            et_userName.setError("Empty name");
 
-        }else if(!email.contains("@")) {
-            inputErrors = true;
-            et_email.setError("Invalid mail");
+        if( et_userName.getError() == null &&
+            et_email.getError() == null &&
+            et_password.getError() == null &&
+            et_passwordRepeat.getError() == null){
 
-        }else if(password.isEmpty()){
-
-            inputErrors = true;
-            et_password.setError("Empty password");
-
-        }else if(!password.equals(passwordRepeat)){
-            inputErrors = true;
-            et_passwordRepeat.setError("Password mismatch");
-        }
-
-        if(!inputErrors){
-
-            UserDao userDao = new UserDaoImpl(this);
-
-            Integer passwordHash = PasswordFactory.buildPasswordHash(password, userName, email);
-            if(passwordHash == null){
-                Toast.makeText(this, "Failed to register.", Toast.LENGTH_SHORT).show();
-            }else{
-
-                boolean userCreated = userDao.createUser(userName, email, passwordHash);
-                if(userCreated){
-
-                    User user = userDao.readUser(userName);
-                    SessionHelper.startSession(this, user);
-                    goToMain();
-
-                }else{
-
-                    if(userDao.readUser(userName) != null){
-
-                        et_email.setError("User name already assigned");
-
-                    }else{
-
-                        Toast.makeText(this, "Failed to create new user", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }
-    }
-
-    private void doLogin() {
-
-        String userName = et_userName.getText().toString();
-        String password = et_password.getText().toString();
-
-        LoginTask loginTask = new LoginTask(this, this);
-        loginTask.execute(userName, password);
-    }
-
-    @Override
-    public void onLoginTaskDone(LoginResult result) {
-
-        if(result.isLoginSuccessful()){
-            SessionHelper.startSession(this, result.getUser());
-            goToMain();
-
-        }else{
-            Toast.makeText(this, result.getErrorMessage(), Toast.LENGTH_SHORT).show();
+            LoginTask loginTask = new LoginTask(LoginTask.TaskType.REGISTRATION, this, this);
+            loginTask.execute(userName, email, password);
         }
     }
 
     private void doPasswordRecovery(){
 
         String email = et_email.getText().toString();
+        et_email.setError(LoginValidator.validateInput(email, LoginValidator.InputType.EMAIL, this));
 
-        UserDao userDao = new UserDaoImpl(this);
-        User user = userDao.readUser(email);
+        if( et_email.getError() == null){
 
-        String msg = "Processing password recovery";
-
-        if(user != null){
-
-            msg = "Password recovery mail will be sent to "+email;
+            LoginTask loginTask = new LoginTask(LoginTask.TaskType.PASSWORD_RECOVERY, this, this);
+            loginTask.execute(email);
         }
+    }
 
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        resetToInitialView();
+    @Override
+    public void onLoginTaskDone(LoginTaskResult result) {
+
+        if(!result.isSuccessful()){
+            Toast.makeText(this, result.getErrorMessage(), Toast.LENGTH_SHORT).show();
+        }else{
+
+            if(LoginTask.TaskType.LOGIN.equals(result.getType()) || LoginTask.TaskType.REGISTRATION.equals(result.getType())){
+                SessionHelper.startSession(this, result.getUser());
+                goToMain();
+            }else{
+                resetToInitialView();
+            }
+        }
     }
 
     private void goToMain(){

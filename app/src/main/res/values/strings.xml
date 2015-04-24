@@ -9,7 +9,8 @@
     <string name="_validation_hint_fieldEmpty">This field can\'t be empty.</string>
     <string name="_validation_hint_invalidEmail">This is not a valid email.</string>
     <string name="_validation_hint_validUserName">User name must contain only letters, numbers \'.\' and \'_\'</string>
-    <string name="_validation_hint_validPassword">Password must contain letters and numbers. Minimum length is 8 characters.</string>
+    <string name="_validation_hint_validPassword">Password must contain letters and numbers.\nMinimum length is 8 characters.</string>
+    <string name="_validation_hint_passwordMismatch">Password mismatch.</string>
 
     <string name="app_name">GuessWhat</string>
 

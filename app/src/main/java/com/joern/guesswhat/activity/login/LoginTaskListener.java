@@ -5,5 +5,5 @@ package com.joern.guesswhat.activity.login;
  */
 public interface LoginTaskListener {
 
-    public void onLoginTaskDone(LoginResult result);
+    public void onLoginTaskDone(LoginTaskResult result);
 }

@@ -14,5 +14,6 @@ public interface UserDao {
     public boolean updateUser(User user);
     public boolean deleteUser(User user);
 
+    public User getUserByMail(String name);
     public List<User> getFriendships(User user);
 }
