@@ -22,7 +22,7 @@ import com.joern.guesswhat.model.User;
 /**
  * Created by joern on 13.04.2015.
  */
-public class LoginActivity extends ActionBarActivity implements View.OnClickListener {
+public class LoginActivity extends ActionBarActivity implements View.OnClickListener, LoginTaskListener {
 
     private enum State{
         INITIAL, LOGIN, REGISTRATION, PASSWORD_RECOVERY
@@ -301,27 +301,24 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         }
     }
 
-    private void doLogin(){
-        String name = et_userName.getText().toString();
+    private void doLogin() {
+
+        String userName = et_userName.getText().toString();
         String password = et_password.getText().toString();
 
-        UserDao userDao = new UserDaoImpl(this);
-        User user = userDao.readUser(name);
+        LoginTask loginTask = new LoginTask(this, this);
+        loginTask.execute(userName, password);
+    }
 
-        boolean loginSuccessful = false;
+    @Override
+    public void onLoginTaskDone(LoginResult result) {
 
-        if(user != null) {
+        if(result.isLoginSuccessful()){
+            SessionHelper.startSession(this, result.getUser());
+            goToMain();
 
-            Integer passwordHash = PasswordFactory.buildPasswordHash(password, user);
-            if (user.getPasswordHash() == passwordHash) {
-                SessionHelper.startSession(this, user);
-                goToMain();
-                loginSuccessful = true;
-            }
-        }
-
-        if(!loginSuccessful){
-            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, result.getErrorMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

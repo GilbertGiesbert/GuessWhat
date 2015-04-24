@@ -5,23 +5,25 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.joern.guesswhat.database.UserDao;
 import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.model.User;
 
 /**
  * Created by joern on 13.04.2015.
  */
-public class LoginTask extends AsyncTask<String, String, String>{
+public class LoginTask extends AsyncTask<String, String, LoginResult>{
 
     private static final String LOG_TAG = LoginTask.class.getSimpleName();
 
     private Context context;
     private ProgressDialog dialog;
-    private LoginResultListener loginResultListener;
+    private LoginTaskListener loginTaskListener;
 
-    public LoginTask(Context context, LoginResultListener loginResultListener){
+    public LoginTask(Context context, LoginTaskListener loginTaskListener){
         super();
         this.context=context;
-        this.loginResultListener = loginResultListener;
+        this.loginTaskListener = loginTaskListener;
     }
 
     @Override
@@ -33,27 +35,43 @@ public class LoginTask extends AsyncTask<String, String, String>{
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected LoginResult doInBackground(String... params) {
         Log.d(LOG_TAG, "doInBackground()");
 
-        String result = null;
+        LoginResult result = new LoginResult();
 
         if(params == null || params.length < 2){
-            Log.d(LOG_TAG, "missing user name, email or password in params");
+            result.setErrorMessage("Internal error");
 
         }else{
 
             String userName = params[0];
             String password = params[1];
 
-            UserDaoImpl userDao = new UserDaoImpl(context);
+            UserDao userDao = new UserDaoImpl(context);
+            User user = userDao.readUser(userName);
 
+            if(user == null) {
+                result.setErrorMessage("No such user!");
+            }else{
 
+                Integer passwordHash = PasswordFactory.buildPasswordHash(password, user);
+                if (user.getPasswordHash() == passwordHash) {
+                    result.setLoginSuccessful(true);
+                    result.setUser(user);
+                }else{
+                    result.setErrorMessage("Wrong password!");
+                }
+            }
         }
-
 
         return result;
     }
 
+    @Override
+    protected void onPostExecute(LoginResult result) {
 
+        loginTaskListener.onLoginTaskDone(result);
+        dialog.dismiss();
+    }
 }

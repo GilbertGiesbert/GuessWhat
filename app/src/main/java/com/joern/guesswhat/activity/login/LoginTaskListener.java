@@ -3,7 +3,7 @@ package com.joern.guesswhat.activity.login;
 /**
  * Created by joern on 13.04.2015.
  */
-public interface LoginResultListener {
+public interface LoginTaskListener {
 
-    public void onLoginResult(String loginResult);
+    public void onLoginTaskDone(LoginResult result);
 }
