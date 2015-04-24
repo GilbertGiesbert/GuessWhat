@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- blacks -->
+    <color name="black">#000000</color>
+
+    <!-- greys -->
     <color name="light_grey">#F2F2F2</color>
     <color name="grey">#CCCCCC</color>
+
+    <!-- whites -->
+    <color name="white">#FFFFFF</color>
 </resources>

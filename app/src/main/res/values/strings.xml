@@ -47,6 +47,15 @@
     <string name="friends_dialog_existingRequestSent">"You already sent a request to "</string>
     <string name="friends_dialog_requestSent">"Send friend request to "</string>
 
+    <string name="navigation_item_home">Home</string>
+    <string name="navigation_item_games">Games</string>
+    <string name="navigation_item_friends">Friends</string>
+    <string name="navigation_item_settings">Settings</string>
+    <string name="navigation_item_helpFeedback"><![CDATA[Help & Feedback]]></string>
+    <string name="navigation_item_about">About</string>
+    <string name="navigation_openDrawer">Open navigation drawer</string>
+    <string name="navigation_closeDrawer">Close navigation drawer</string>
+
 
     <string name="pendingFriends_title">Pending</string>
     <string name="pendingFriends_bt_received">Received</string>
@@ -54,7 +63,6 @@
     <string name="pendingFriends_tv_hintNoRequestsSent">You\'ve sent no friendship requests recently.</string>
     <string name="pendingFriends_tv_hintNoRequestsReceived">You\'ve received no friendship requests recently.</string>
     <string name="pendingFriends_requestState_rejected">Rejected</string>
-
     <string name="pendingFriends_dialog_title">Request for friendship</string>
     <string name="pendingFriends_dialog_requesterMessage">"Discard friendship request for "</string>
     <string name="pendingFriends_dialog_acceptorMessage">" is requesting your friendship."</string>

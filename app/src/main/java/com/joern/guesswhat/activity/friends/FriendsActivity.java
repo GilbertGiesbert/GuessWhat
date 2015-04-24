@@ -3,7 +3,6 @@ package com.joern.guesswhat.activity.friends;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by joern on 14.04.2015.
  */
-public class FriendsActivity extends ActionBarActivity implements View.OnClickListener {
+public class FriendsActivity extends NavigationDrawerActivity implements View.OnClickListener {
 
     private static final String LOG_TAG = FriendsActivity.class.getSimpleName();
 
@@ -36,11 +36,14 @@ public class FriendsActivity extends ActionBarActivity implements View.OnClickLi
     private TextView tv_emptyListHint;
 
     @Override
+    protected int getMainContentLayoutId() {
+        return R.layout.friends_activity;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.friends_activity);
 
         Button bt_addFriend = (Button) findViewById(R.id.bt_addFriend);
         Button bt_pendingFriendRequests = (Button) findViewById(R.id.bt_pendingFriendRequests);

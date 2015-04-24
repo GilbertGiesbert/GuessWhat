@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,20 +14,29 @@ import android.widget.TextView;
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
+import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
 import com.joern.guesswhat.common.ImageLoader;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.model.User;
 
+/**
+ * should be an overview
 
-public class MainActivity extends ActionBarActivity {
+ */
+public class MainActivity extends NavigationDrawerActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    @Override
+    protected int getMainContentLayoutId() {
+        return R.layout.main_activity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+
 
         User sessionUser = SessionHelper.getSessionUser(this);
         if(sessionUser == null){
