@@ -48,7 +48,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.navigation_row, parent, false);
+            convertView = inflater.inflate(R.layout.navigation_list_item, parent, false);
 
             viewHolder.icon = (ImageView) convertView.findViewById(R.id.iv_navigationItem_icon);
             viewHolder.text = (TextView) convertView.findViewById(R.id.tv_navigationItem_text);

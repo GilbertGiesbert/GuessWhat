@@ -37,75 +37,29 @@ public class MainActivity extends NavigationDrawerActivity {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-
-        User sessionUser = SessionHelper.getSessionUser(this);
-        if(sessionUser == null){
-            go2Login();
-
-        }else{
+        if(sessionUser != null){
 
             String userInfo =
                     "User info:" + "\n" +
-                    "Id: "+sessionUser.getId() + "\n" +
-                    "Alias: "+sessionUser.getStableAlias() + "\n" +
-                    "Name: "+sessionUser.getName() + "\n" +
-                    "Mail: "+sessionUser.getEmail() + "\n" +
-                    "Pswd#: "+sessionUser.getPasswordHash();
+                            "Id: "+sessionUser.getId() + "\n" +
+                            "Alias: "+sessionUser.getStableAlias() + "\n" +
+                            "Name: "+sessionUser.getName() + "\n" +
+                            "Mail: "+sessionUser.getEmail() + "\n" +
+                            "Pswd#: "+sessionUser.getPasswordHash();
 
             TextView tv_test = (TextView) findViewById(R.id.tv_test);
             tv_test.setText(userInfo);
+
         }
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        Log.d(LOG_TAG, "onCreate()");
 
 //        doImageTest();
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_friends) {
-            go2Friends();
-            return true;
-        }
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_logout) {
-
-            SessionHelper.stopSession(this);
-            go2Login();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void go2Login(){
-        Log.d(LOG_TAG, "go2Login()");
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 
     private void go2Friends(){

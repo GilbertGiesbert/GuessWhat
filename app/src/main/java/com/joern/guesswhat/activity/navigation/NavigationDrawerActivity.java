@@ -15,43 +15,53 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.activity.login.LoginActivity;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.model.User;
 
 /**
  * Activities that inherit from NavigationDrawerActivity have the ability to show and use a NavigationDrawer.
  */
-public abstract class NavigationDrawerActivity extends ActionBarActivity {
+public abstract class NavigationDrawerActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private static final String TAG = NavigationDrawerActivity.class.getSimpleName();
+    private static final String LOG_TAG = NavigationDrawerActivity.class.getSimpleName();
 
     private NavigationDrawerAdapter drawerAdapter;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
 
+    protected User sessionUser;
+
     protected abstract int getMainContentLayoutId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate()");
+        Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.navigation_activity);
-        setMainContentView();
+        sessionUser = SessionHelper.getSessionUser(this);
+        if(sessionUser == null) {
+            go2Login();
+        }else{
 
-        initNavigationDrawer();
-        getSupportActionBar().setTitle(getTitle());
+            setContentView(R.layout.navigation_activity);
+            setMainContentView();
 
-        User sessionUser = SessionHelper.getSessionUser(this);
-        if(sessionUser != null){
+            initNavigationDrawer();
+            getSupportActionBar().setTitle(getTitle());
+
             TextView tv_profile_name = (TextView) findViewById(R.id.tv_profile_name);
             tv_profile_name.setText(sessionUser.getName());
+
+            TextView tv_logout = (TextView) findViewById(R.id.tv_logout);
+            tv_logout.setOnClickListener(this);
+
         }
     }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState){
-        Log.d(TAG, "onPostCreate()");
+        Log.d(LOG_TAG, "onPostCreate()");
         super.onPostCreate(savedInstanceState);
 
         drawerToggle.syncState();
@@ -59,12 +69,12 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected()");
+        Log.d(LOG_TAG, "onOptionsItemSelected()");
 
         int itemId = item.getItemId();
 
         String s_itemId = getResources().getResourceEntryName(itemId);// to view in debugger
-        Log.d(TAG, "itemId="+s_itemId);
+        Log.d(LOG_TAG, "itemId="+s_itemId);
 
         if(drawerToggle.onOptionsItemSelected(item))
             return true;
@@ -73,7 +83,7 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
     }
 
     private void setMainContentView(){
-        Log.d(TAG, "setMainContentView()");
+        Log.d(LOG_TAG, "setMainContentView()");
 
         ViewStub stub = (ViewStub)findViewById(R.id.vs_mainView);
         stub.setLayoutResource(getMainContentLayoutId());
@@ -81,7 +91,7 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
     }
 
     private void initNavigationDrawer(){
-        Log.d(TAG, "initNavigationDrawer()");
+        Log.d(LOG_TAG, "initNavigationDrawer()");
 
         drawerAdapter = new NavigationDrawerAdapter(this);
 
@@ -91,7 +101,7 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick()");
+                Log.d(LOG_TAG, "onItemClick()");
 
                 handleNavigationDrawerItemClick(position);
             }
@@ -105,21 +115,21 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         boolean isTopLevelActivity = isTopLevelActivity();
-        Log.d(TAG, "isTopLevelActivity="+isTopLevelActivity);
+        Log.d(LOG_TAG, "isTopLevelActivity="+isTopLevelActivity);
         drawerToggle.setDrawerIndicatorEnabled(isTopLevelActivity);
     }
 
     private boolean isTopLevelActivity(){
-        Log.d(TAG, "isTopLevelActivity()");
+        Log.d(LOG_TAG, "isTopLevelActivity()");
         return NavigationDrawerItem.valueOf(this.getClass()) != null;
     }
 
     private void handleNavigationDrawerItemClick(int position){
-        Log.d(TAG, "handleNavigationDrawerItemClick()");
-        Log.d(TAG, "position="+position);
+        Log.d(LOG_TAG, "handleNavigationDrawerItemClick()");
+        Log.d(LOG_TAG, "position="+position);
 
         NavigationDrawerItem clickedItem = (NavigationDrawerItem) drawerAdapter.getItem(position);
-        Log.d(TAG, "clickedItem="+clickedItem);
+        Log.d(LOG_TAG, "clickedItem="+clickedItem);
 
         drawerLayout.closeDrawers();
 
@@ -127,6 +137,16 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
 
             Intent intent = new Intent(this, clickedItem.getTargetActivityClass());
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d(LOG_TAG, "onClick()");
+
+        if(v.getId() == R.id.tv_logout){
+            SessionHelper.stopSession(this);
+            go2Login();
         }
     }
 
@@ -138,7 +158,7 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
 
         @Override
         public void onDrawerOpened(View drawerView) {
-            Log.d(TAG, "onDrawerOpened()");
+            Log.d(LOG_TAG, "onDrawerOpened()");
             super.onDrawerOpened(drawerView);
 
             if(!isTopLevelActivity()){
@@ -150,12 +170,21 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
 
         @Override
         public void onDrawerClosed(View drawerView) {
-            Log.d(TAG, "onDrawerClosed()");
+            Log.d(LOG_TAG, "onDrawerClosed()");
             super.onDrawerClosed(drawerView);
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             getSupportActionBar().setTitle(getTitle());
         }
+    }
+
+    private void go2Login(){
+        Log.d(LOG_TAG, "go2Login()");
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

@@ -26,8 +26,8 @@
         </activity>
 
         <activity
-            android:name=".activity.games.GamesActivity"
-            android:label="@string/games_title"/>
+            android:name=".activity.play.PlayActivity"
+            android:label="@string/play_title"/>
 
         <activity
             android:name=".activity.friends.FriendsActivity"
