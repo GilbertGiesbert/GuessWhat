@@ -26,15 +26,12 @@
         </activity>
 
         <activity
-            android:name=".activity.friends.FriendsActivity"
-            android:label="@string/friends_title"
-            android:parentActivityName=".activity.main.MainActivity" >
-            <!-- The meta-data element is needed for versions lower than 4.1=sdk16 -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.main.MainActivity" />
-        </activity>
+            android:name=".activity.games.GamesActivity"
+            android:label="@string/games_title"/>
 
+        <activity
+            android:name=".activity.friends.FriendsActivity"
+            android:label="@string/friends_title"/>
 
         <activity
             android:name=".activity.friends.PendingFriendsActivity"
@@ -46,7 +43,17 @@
                 android:value=".activity.friends.FriendsActivity" />
         </activity>
 
+        <activity
+            android:name=".activity.settings.SettingsActivity"
+            android:label="@string/settings_title"/>
 
+        <activity
+            android:name=".activity.help.HelpActivity"
+            android:label="@string/help_title"/>
+
+        <activity
+            android:name=".activity.about.AboutActivity"
+            android:label="@string/about_title"/>
 
     </application>
 

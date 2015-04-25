@@ -4,28 +4,37 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.activity.about.AboutActivity;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
+import com.joern.guesswhat.activity.games.GamesActivity;
+import com.joern.guesswhat.activity.help.HelpActivity;
 import com.joern.guesswhat.activity.main.MainActivity;
+import com.joern.guesswhat.activity.settings.SettingsActivity;
 
 public enum NavigationDrawerItem {
 
-    HOME            (R.mipmap.home,         R.string.navigation_item_home,   MainActivity.class),
-    GAMES           (R.mipmap.puzzle,       R.string.navigation_item_games,   MainActivity.class),
-    FRIENDS         (R.mipmap.friends,      R.string.navigation_item_friends,   FriendsActivity.class),
-    SETTINGS        (R.mipmap.gear,         R.string.navigation_item_settings,        MainActivity.class),
-    HELP_FEEDBACK   (R.drawable.question,   R.string.navigation_item_helpFeedback,  MainActivity.class),
-    ABOUT           (R.mipmap.info,         R.string.navigation_item_about,             MainActivity.class);
+    HOME        (MainActivity.class ,       R.mipmap.home,         R.string.navigation_item_home),
+    GAMES       (GamesActivity.class,       R.mipmap.puzzle,       R.string.navigation_item_games),
+    FRIENDS     (FriendsActivity.class,     R.mipmap.friends,      R.string.navigation_item_friends),
+    SETTINGS    (SettingsActivity.class,    R.mipmap.gear,         R.string.navigation_item_settings),
+    HELP        (HelpActivity.class,        R.drawable.question,   R.string.navigation_item_helpFeedback),
+    ABOUT       (AboutActivity.class,       R.mipmap.info,         R.string.navigation_item_about);
 
-    private static final String TAG = NavigationDrawerItem.class.getSimpleName();
+    private static final String LOG_TAG = NavigationDrawerItem.class.getSimpleName();
 
+    private Class targetActivityClass;
     private int iconId;
     private int labelId;
-    private Class targetActivityClass;
 
-    private NavigationDrawerItem(int iconId, int labelId, Class<? extends Activity> targetActivityClass){
+
+    private NavigationDrawerItem(Class<? extends Activity> targetActivityClass, int iconId, int labelId){
+        this.targetActivityClass = targetActivityClass;
         this.iconId = iconId;
         this.labelId = labelId;
-        this.targetActivityClass = targetActivityClass;
+    }
+
+    public Class getTargetActivityClass(){
+        return targetActivityClass;
     }
 
     public int getIconId(){
@@ -36,16 +45,8 @@ public enum NavigationDrawerItem {
         return labelId;
     }
 
-    public Class getTargetActivityClass(){
-        return targetActivityClass;
-    }
-
-    public int getPosition(){
-        return ordinal();
-    }
-
     public static NavigationDrawerItem valueOf(Class<? extends Activity> activityClass){
-        Log.d(TAG, "valueOf()");
+        Log.d(LOG_TAG, "valueOf()");
 
         for(NavigationDrawerItem item: NavigationDrawerItem.values()){
             if(item.getTargetActivityClass() == activityClass){

@@ -1,5 +1,9 @@
 <resources>
 
+    <!-- app -->
+    <string name="app_name">GuessWhat</string>
+
+    <!-- common -->
     <string name="_accept">Accept</string>
     <string name="_cancel">Cancel</string>
     <string name="_discard">Discard</string>
@@ -12,11 +16,28 @@
     <string name="_validation_hint_validPassword">Password must contain letters and numbers.\nMinimum length is 8 characters.</string>
     <string name="_validation_hint_passwordMismatch">Password mismatch.</string>
 
-    <string name="app_name">GuessWhat</string>
+    <!-- menu -->
+    <string name="menu_friends">Friends</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_logout">Logout</string>
 
-    <string name="action_friends">Friends</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_logout">Logout</string>
+    <!-- activities -->
+    <string name="about_title">About</string>
+
+    <string name="friends_bt_addFriend">Add new friend</string>
+    <string name="friends_bt_pendingRequests">Show pending requests</string>
+    <string name="friends_ib_hintPendingRequests">Pending requests available</string>
+    <string name="friends_title">Friends</string>
+    <string name="friends_dialog_title">New friend</string>
+    <string name="friends_dialog_hint">Enter your friend\'s e-mail</string>
+    <string name="friends_dialog_existingFriend">"You are already friends with "</string>
+    <string name="friends_dialog_existingRequestReceived">"You are now friends with "</string>
+    <string name="friends_dialog_existingRequestSent">"You already sent a request to "</string>
+    <string name="friends_dialog_requestSent">"Send friend request to "</string>
+
+    <string name="games_title">Games</string>
+
+    <string name="help_title">Help</string>
 
     <string name="login_login">Login</string>
     <string name="login_register">Register</string>
@@ -36,16 +57,7 @@
 
     <string name="main_title">Home</string>
 
-    <string name="friends_bt_addFriend">Add new friend</string>
-    <string name="friends_bt_pendingRequests">Show pending requests</string>
-    <string name="friends_ib_hintPendingRequests">Pending requests available</string>
-    <string name="friends_title">Friends</string>
-    <string name="friends_dialog_title">New friend</string>
-    <string name="friends_dialog_hint">Enter your friend\'s e-mail</string>
-    <string name="friends_dialog_existingFriend">"You are already friends with "</string>
-    <string name="friends_dialog_existingRequestReceived">"You are now friends with "</string>
-    <string name="friends_dialog_existingRequestSent">"You already sent a request to "</string>
-    <string name="friends_dialog_requestSent">"Send friend request to "</string>
+
 
     <string name="navigation_item_home">Home</string>
     <string name="navigation_item_games">Games</string>
@@ -66,5 +78,7 @@
     <string name="pendingFriends_dialog_title">Request for friendship</string>
     <string name="pendingFriends_dialog_requesterMessage">"Discard friendship request for "</string>
     <string name="pendingFriends_dialog_acceptorMessage">" is requesting your friendship."</string>
+
+    <string name="settings_title">Settings</string>
 
 </resources>

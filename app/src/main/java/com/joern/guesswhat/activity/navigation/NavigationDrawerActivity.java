@@ -43,8 +43,10 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(getTitle());
 
         User sessionUser = SessionHelper.getSessionUser(this);
-        TextView tv_profile_name = (TextView) findViewById(R.id.tv_profile_name);
-        tv_profile_name.setText(sessionUser.getName());
+        if(sessionUser != null){
+            TextView tv_profile_name = (TextView) findViewById(R.id.tv_profile_name);
+            tv_profile_name.setText(sessionUser.getName());
+        }
     }
 
     @Override
