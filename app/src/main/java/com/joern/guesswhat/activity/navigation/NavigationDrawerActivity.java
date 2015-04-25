@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,8 +54,8 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity impleme
             TextView tv_profile_name = (TextView) findViewById(R.id.tv_profile_name);
             tv_profile_name.setText(sessionUser.getName());
 
-            TextView tv_logout = (TextView) findViewById(R.id.tv_logout);
-            tv_logout.setOnClickListener(this);
+            LinearLayout ll_logout = (LinearLayout) findViewById(R.id.ll_logout);
+            ll_logout.setOnClickListener(this);
 
         }
     }
@@ -144,7 +145,7 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity impleme
     public void onClick(View v) {
         Log.d(LOG_TAG, "onClick()");
 
-        if(v.getId() == R.id.tv_logout){
+        if(v.getId() == R.id.ll_logout){
             SessionHelper.stopSession(this);
             go2Login();
         }

@@ -53,10 +53,13 @@
         />
 
     <LinearLayout
+        android:id="@+id/ll_logout"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="50dp"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
         >
 
         <ImageView
@@ -69,12 +72,9 @@
             />
 
         <TextView
-            android:id="@+id/tv_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Logout"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_gravity="center"
             />
 
