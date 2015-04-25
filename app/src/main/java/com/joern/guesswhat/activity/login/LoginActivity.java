@@ -235,18 +235,6 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 resetToInitialView();
                 break;
         }
-
-        if( State.LOGIN.equals(state) ){
-
-            doRegisterNewUser();
-
-        }else if( View.VISIBLE == et_password.getVisibility() ){
-
-
-
-        }else{
-            doPasswordRecovery();
-        }
     }
 
     private void doLogin() {
