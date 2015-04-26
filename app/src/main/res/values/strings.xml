@@ -37,24 +37,21 @@
 
     <string name="help_title">Help</string>
 
-    <string name="login_login">Login</string>
-    <string name="login_register">Register</string>
-    <string name="login_recoverPassword">Recover password</string>
-    <string name="login_email">E-mail</string>
+    <string name="login_email">Email</string>
     <string name="login_userName">User name</string>
     <string name="login_password">Password</string>
     <string name="login_passwordRepeat">Password (confirm)</string>
-    <string name="login_tv_hintLoginExistingUser">Login with existing user</string>
-    <string name="login_tv_hintNewUser">Create new user</string>
-    <string name="login_tv_hintRecoveryMail">Send recovery mail to</string>
-    <string name="login_bt_login">Login</string>
-    <string name="login_bt_register">Register</string>
+    <string name="login_tv_hintCreateAccount">Create new account</string>
+    <string name="login_tv_hintRecoverPassword">Send recovery mail to</string>
+    <string name="login_bt_signIn">Sign in</string>
+    <string name="login_bt_newHere">New here ?</string>
+    <string name="login_bt_lostPassword">Lost password ?</string>
+    <string name="login_bt_createAccount">Create account</string>
     <string name="login_bt_recoverPassword">Recover password</string>
-    <string name="login_title">Login</string>
+    <string name="login_title">Welcome</string>
 
 
     <string name="main_title">Home</string>
-
 
 
     <string name="navigation_item_home">Home</string>
@@ -80,5 +77,6 @@
     <string name="play_title">Play</string>
 
     <string name="settings_title">Settings</string>
+    <string name="navigation_item_logout">Logout</string>
 
 </resources>

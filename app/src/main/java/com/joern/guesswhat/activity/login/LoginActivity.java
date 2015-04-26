@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,16 +24,17 @@ import com.joern.guesswhat.common.SessionHelper;
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener, LoginTaskListener {
 
     private enum State{
-        INITIAL, LOGIN, REGISTRATION, PASSWORD_RECOVERY
+        INITIAL, SIGN_IN, CREATE_ACCOUNT, RECOVER_PASSWORD
     }
 
     private State state;
 
     private static final String LOG_TAG = LoginActivity.class.getSimpleName();
 
-    private TextView tv_editHint;
-    private Button bt_login, bt_register, bt_recoverPassword, bt_submit;
-    private EditText et_userName, et_email, et_password, et_passwordRepeat;
+    private TextView tv_inputHint;
+    private Button bt_signIn, bt_createAccount, bt_recoverPassword;
+    private EditText et_userName, et_email, et_password, et_passwordConfirm;
+    private LinearLayout ll_buttonContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,26 +43,26 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         setContentView(R.layout.login_activity);
 
-        tv_editHint = (TextView) findViewById(R.id.tv_editHint);
+        tv_inputHint = (TextView) findViewById(R.id.tv_editHint);
 
-        bt_login = (Button) findViewById(R.id.bt_login);
-        bt_register = (Button) findViewById(R.id.bt_register);
+        ll_buttonContainer = (LinearLayout) findViewById(R.id.ll_buttonContainer);
+
+        bt_signIn = (Button) findViewById(R.id.bt_signIn);
+        bt_createAccount = (Button) findViewById(R.id.bt_createAccount);
         bt_recoverPassword = (Button) findViewById(R.id.bt_recoverPassword);
-        bt_submit = (Button) findViewById(R.id.bt_submit);
 
-        bt_login.setOnClickListener(this);
-        bt_register.setOnClickListener(this);
+        bt_signIn.setOnClickListener(this);
+        bt_createAccount.setOnClickListener(this);
         bt_recoverPassword.setOnClickListener(this);
-        bt_submit.setOnClickListener(this);
 
         et_userName = (EditText) findViewById(R.id.et_userName);
         et_email = (EditText) findViewById(R.id.et_email);
         et_password = (EditText) findViewById(R.id.et_password);
-        et_passwordRepeat = (EditText) findViewById(R.id.et_passwordRepeat);
+        et_passwordConfirm = (EditText) findViewById(R.id.et_passwordRepeat);
 
-        et_passwordRepeat.setImeOptions(EditorInfo.IME_ACTION_GO);
+        et_passwordConfirm.setImeOptions(EditorInfo.IME_ACTION_GO);
 
-        setImeActionListeners();
+        initImeActionListeners();
 
         state = State.INITIAL;
         resetToInitialView();
@@ -84,83 +87,79 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         switch(v.getId()){
 
-            case R.id.bt_login:
-                state = State.LOGIN;
-                showLoginFields();
+            case R.id.bt_signIn:
+                if(State.SIGN_IN.equals(state)){
+                    doSignIn();
+                }else{
+                    state = State.SIGN_IN;
+                    showSignIn();
+                }
                 break;
 
-            case R.id.bt_register:
-                state = State.REGISTRATION;
-                showRegistrationFields();
+            case R.id.bt_createAccount:
+                if(State.CREATE_ACCOUNT.equals(state)){
+                    doCreateAccount();
+                }else{
+                    state = State.CREATE_ACCOUNT;
+                    showCreateAccount();
+                }
                 break;
 
             case R.id.bt_recoverPassword:
-                state = State.PASSWORD_RECOVERY;
-                showPasswordRecoveryFields();
-                break;
-
-            case R.id.bt_submit:
-                bt_submit();
+                if(State.RECOVER_PASSWORD.equals(state)){
+                    doRecoverPassword();
+                }else{
+                    state = State.RECOVER_PASSWORD;
+                    showPasswordRecoveryFields();
+                }
                 break;
         }
     }
 
-    private void setImeActionListeners(){
+    private void bt_submit() {
 
-        // for login
-        et_userName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch(state){
 
-                boolean actionHandled = false;
-                if (actionId == EditorInfo.IME_ACTION_GO) {
-                    bt_submit();
-                    actionHandled = true;
-                }
-                return actionHandled;
-            }
-        });
+            case SIGN_IN:
 
-        // for registration
-        et_passwordRepeat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                break;
 
-                boolean actionHandled = false;
-                if (actionId == EditorInfo.IME_ACTION_GO) {
-                    bt_submit();
-                    actionHandled = true;
-                }
-                return actionHandled;
-            }
-        });
+            case CREATE_ACCOUNT:
+                doCreateAccount();
+                break;
 
-        // for password recovery
-        et_email.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            case RECOVER_PASSWORD:
+                doRecoverPassword();
+                break;
 
-                boolean actionHandled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    bt_submit();
-                    actionHandled = true;
-                }
-                return actionHandled;
-            }
-        });
+            default:
+                resetToInitialView();
+                break;
+        }
     }
 
-    private void showLoginFields(){
-        Log.d(LOG_TAG, "showLoginFields()");
+    private void initImeActionListeners(){
 
-        tv_editHint.setVisibility(View.VISIBLE);
-        tv_editHint.setText(getResources().getString(R.string.login_tv_hintLoginExistingUser));
+        EditText[] submitFields = new EditText[]{et_password, et_passwordConfirm, et_email};
 
-        bt_login.setVisibility(View.GONE);
-        bt_register.setVisibility(View.GONE);
-        bt_recoverPassword.setVisibility(View.GONE);
-        bt_submit.setVisibility(View.VISIBLE);
-        bt_submit.setText(getResources().getString(R.string.login_bt_login));
+        for(EditText et: submitFields){
+            et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                    boolean actionHandled = false;
+                    if (actionId == EditorInfo.IME_ACTION_GO) {
+                        bt_submit();
+                        actionHandled = true;
+                    }
+                    return actionHandled;
+                }
+            });
+        }
+    }
+
+    private void showSignIn(){
+        Log.d(LOG_TAG, "showSignIn()");
 
         et_userName.setVisibility(View.VISIBLE);
         et_password.setVisibility(View.VISIBLE);
@@ -170,74 +169,59 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         et_userName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_password.setImeOptions(EditorInfo.IME_ACTION_GO);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_buttonContainer.getLayoutParams();
+        params.gravity = Gravity.RIGHT;
+
+        bt_createAccount.setVisibility(View.GONE);
+        bt_recoverPassword.setVisibility(View.GONE);
     }
 
-    private void showRegistrationFields(){
-        Log.d(LOG_TAG, "showRegistrationFields()");
+    private void showCreateAccount(){
+        Log.d(LOG_TAG, "showCreateAccount()");
 
-        tv_editHint.setVisibility(View.VISIBLE);
-        tv_editHint.setText(getResources().getString(R.string.login_tv_hintNewUser));
-
-        bt_login.setVisibility(View.GONE);
-        bt_register.setVisibility(View.GONE);
-        bt_recoverPassword.setVisibility(View.GONE);
-        bt_submit.setVisibility(View.VISIBLE);
-        bt_submit.setText(getResources().getString(R.string.login_bt_register));
+        tv_inputHint.setVisibility(View.VISIBLE);
+        tv_inputHint.setText(getResources().getString(R.string.login_tv_hintCreateAccount));
 
         et_userName.setVisibility(View.VISIBLE);
         et_email.setVisibility(View.VISIBLE);
         et_password.setVisibility(View.VISIBLE);
-        et_passwordRepeat.setVisibility(View.VISIBLE);
-
-        et_userName.setError(null);
-        et_email.setError(null);
-        et_password.setError(null);
-        et_passwordRepeat.setError(null);
+        et_passwordConfirm.setVisibility(View.VISIBLE);
 
         et_email.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_password.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_buttonContainer.getLayoutParams();
+        params.gravity = Gravity.RIGHT;
+
+        bt_createAccount.setText(getResources().getString(R.string.login_bt_createAccount));
+
+        bt_signIn.setVisibility(View.GONE);
+        bt_recoverPassword.setVisibility(View.GONE);
     }
 
     private void showPasswordRecoveryFields(){
         Log.d(LOG_TAG, "showPasswordRecoveryFields()");
 
-        tv_editHint.setVisibility(View.VISIBLE);
-        tv_editHint.setText(getResources().getString(R.string.login_tv_hintRecoveryMail));
-
-        bt_login.setVisibility(View.GONE);
-        bt_register.setVisibility(View.GONE);
-        bt_recoverPassword.setVisibility(View.GONE);
-        bt_submit.setVisibility(View.VISIBLE);
-        bt_submit.setText(getResources().getString(R.string.login_bt_recoverPassword));
+        tv_inputHint.setVisibility(View.VISIBLE);
+        tv_inputHint.setText(getResources().getString(R.string.login_tv_hintRecoverPassword));
 
         et_email.setVisibility(View.VISIBLE);
         et_email.setError(null);
         et_email.setImeOptions(EditorInfo.IME_ACTION_SEND);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_buttonContainer.getLayoutParams();
+        params.gravity = Gravity.RIGHT;
+
+        bt_signIn.setVisibility(View.GONE);
+        bt_createAccount.setVisibility(View.GONE);
+
+        bt_recoverPassword.setText(getResources().getString(R.string.login_bt_recoverPassword));
     }
 
-    private void bt_submit() {
 
-        switch(state){
 
-            case LOGIN:
-                doLogin();
-                break;
-
-            case REGISTRATION:
-                doRegisterNewUser();
-                break;
-
-            case PASSWORD_RECOVERY:
-                doPasswordRecovery();
-                break;
-
-            default:
-                resetToInitialView();
-                break;
-        }
-    }
-
-    private void doLogin() {
+    private void doSignIn() {
 
         String userName = et_userName.getText().toString();
         String password = et_password.getText().toString();
@@ -251,30 +235,30 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         }
     }
 
-    private void doRegisterNewUser(){
+    private void doCreateAccount(){
 
         String userName = et_userName.getText().toString();
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
-        String passwordRepeat = et_passwordRepeat.getText().toString();
+        String passwordRepeat = et_passwordConfirm.getText().toString();
 
         et_userName.setError(LoginValidator.validateInput(userName, LoginValidator.InputType.USER_NAME_FOR_REGISTRATION, this));
         et_email.setError(LoginValidator.validateInput(email, LoginValidator.InputType.EMAIL, this));
         et_password.setError(LoginValidator.validateInput(password, LoginValidator.InputType.PASSWORD_FOR_REGISTRATION, this));
-        et_passwordRepeat.setError(LoginValidator.validatePasswordConfirmation(password, passwordRepeat, this));
+        et_passwordConfirm.setError(LoginValidator.validatePasswordConfirmation(password, passwordRepeat, this));
 
 
         if( et_userName.getError() == null &&
             et_email.getError() == null &&
             et_password.getError() == null &&
-            et_passwordRepeat.getError() == null){
+            et_passwordConfirm.getError() == null){
 
             LoginTask loginTask = new LoginTask(LoginTask.TaskType.REGISTRATION, this, this);
             loginTask.execute(userName, email, password);
         }
     }
 
-    private void doPasswordRecovery(){
+    private void doRecoverPassword(){
 
         String email = et_email.getText().toString();
         et_email.setError(LoginValidator.validateInput(email, LoginValidator.InputType.EMAIL, this));
@@ -313,24 +297,32 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     private void resetToInitialView() {
         Log.d(LOG_TAG, "resetToInitialView()");
 
-        tv_editHint.setVisibility(View.GONE);
-        tv_editHint.setText("");
-
-        bt_login.setVisibility(View.VISIBLE);
-        bt_register.setVisibility(View.VISIBLE);
-        bt_recoverPassword.setVisibility(View.VISIBLE);
-        bt_submit.setVisibility(View.GONE);
-        bt_submit.setText("");
+        tv_inputHint.setVisibility(View.GONE);
+        tv_inputHint.setText("");
 
         et_userName.setVisibility(View.GONE);
         et_email.setVisibility(View.GONE);
         et_password.setVisibility(View.GONE);
-        et_passwordRepeat.setVisibility(View.GONE);
+        et_passwordConfirm.setVisibility(View.GONE);
 
         et_userName.setText("");
         et_email.setText("");
         et_password.setText("");
-        et_passwordRepeat.setText("");
+        et_passwordConfirm.setText("");
 
+        et_userName.setError(null);
+        et_email.setError(null);
+        et_password.setError(null);
+        et_passwordConfirm.setError(null);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_buttonContainer.getLayoutParams();
+        params.gravity = Gravity.CENTER;
+
+        bt_signIn.setVisibility(View.VISIBLE);
+        bt_createAccount.setVisibility(View.VISIBLE);
+        bt_recoverPassword.setVisibility(View.VISIBLE);
+
+        bt_createAccount.setText(getResources().getString(R.string.login_bt_newHere));
+        bt_recoverPassword.setText(getResources().getString(R.string.login_bt_lostPassword));
     }
 }

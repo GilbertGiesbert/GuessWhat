@@ -52,32 +52,4 @@
         android:dividerHeight="1dp"
         />
 
-    <LinearLayout
-        android:id="@+id/ll_logout"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="50dp"
-        android:clickable="true"
-        android:background="?android:attr/selectableItemBackground"
-        >
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@mipmap/logout_left"
-            android:tint="@color/grey"
-            android:padding="15dp"
-            android:scaleType="centerCrop"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:layout_gravity="center"
-            />
-
-    </LinearLayout>
-
 </LinearLayout>

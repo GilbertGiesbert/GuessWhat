@@ -23,7 +23,7 @@ import com.joern.guesswhat.model.User;
 /**
  * Activities that inherit from NavigationDrawerActivity have the ability to show and use a NavigationDrawer.
  */
-public abstract class NavigationDrawerActivity extends ActionBarActivity implements View.OnClickListener {
+public abstract class NavigationDrawerActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = NavigationDrawerActivity.class.getSimpleName();
 
@@ -53,10 +53,6 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity impleme
 
             TextView tv_profile_name = (TextView) findViewById(R.id.tv_profile_name);
             tv_profile_name.setText(sessionUser.getName());
-
-            LinearLayout ll_logout = (LinearLayout) findViewById(R.id.ll_logout);
-            ll_logout.setOnClickListener(this);
-
         }
     }
 
@@ -136,18 +132,14 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity impleme
 
         if(this.getClass() != clickedItem.getTargetActivityClass()){
 
-            Intent intent = new Intent(this, clickedItem.getTargetActivityClass());
-            startActivity(intent);
-        }
-    }
+            if(LoginActivity.class == clickedItem.getTargetActivityClass()){
+                SessionHelper.stopSession(this);
+                go2Login();
 
-    @Override
-    public void onClick(View v) {
-        Log.d(LOG_TAG, "onClick()");
-
-        if(v.getId() == R.id.ll_logout){
-            SessionHelper.stopSession(this);
-            go2Login();
+            }else{
+                Intent intent = new Intent(this, clickedItem.getTargetActivityClass());
+                startActivity(intent);
+            }
         }
     }
 

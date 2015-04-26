@@ -6,36 +6,8 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
-
+    android:animateLayoutChanges="true"
     >
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-        <Button
-            android:id="@+id/bt_login"
-            android:text="@string/login_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-        <Button
-            android:id="@+id/bt_register"
-            android:text="@string/login_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-        <Button
-            android:id="@+id/bt_recoverPassword"
-            android:text="@string/login_recoverPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-        </LinearLayout>
 
     <TextView
         android:id="@+id/tv_editHint"
@@ -72,11 +44,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/bt_submit"
+    <LinearLayout
+        android:id="@+id/ll_buttonContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        />
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/bt_signIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_bt_signIn"
+            />
+
+        <Button
+            android:id="@+id/bt_createAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <Button
+            android:id="@+id/bt_recoverPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        </LinearLayout>
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.about.AboutActivity;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.help.HelpActivity;
+import com.joern.guesswhat.activity.login.LoginActivity;
 import com.joern.guesswhat.activity.main.MainActivity;
 import com.joern.guesswhat.activity.play.PlayActivity;
 import com.joern.guesswhat.activity.settings.SettingsActivity;
@@ -18,7 +19,8 @@ public enum NavigationDrawerItem {
     FRIENDS     (FriendsActivity.class,     R.mipmap.friends,       R.string.navigation_item_friends),
     SETTINGS    (SettingsActivity.class,    R.mipmap.gear,          R.string.navigation_item_settings),
     HELP        (HelpActivity.class,        R.drawable.question,    R.string.navigation_item_helpFeedback),
-    ABOUT       (AboutActivity.class,       R.mipmap.info,          R.string.navigation_item_about);
+    ABOUT       (AboutActivity.class,       R.mipmap.info,          R.string.navigation_item_about),
+    LOGOUT      (LoginActivity.class,       R.mipmap.logout_left,   R.string.navigation_item_logout);
 
     private static final String LOG_TAG = NavigationDrawerItem.class.getSimpleName();
 
