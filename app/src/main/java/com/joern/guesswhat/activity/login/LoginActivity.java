@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joern.guesswhat.R;
-import com.joern.guesswhat.activity.play.PlayActivity;
+import com.joern.guesswhat.activity.game.GamesActivity;
 import com.joern.guesswhat.common.SessionHelper;
 
 /**
@@ -288,7 +288,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
     private void goToMain(){
         Log.d(LOG_TAG, "goToMain()");
-        Intent intent = new Intent(this, PlayActivity.class);
+        Intent intent = new Intent(this, GamesActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

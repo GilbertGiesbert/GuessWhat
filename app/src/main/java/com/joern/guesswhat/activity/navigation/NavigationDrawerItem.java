@@ -7,12 +7,12 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.about.AboutActivity;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
-import com.joern.guesswhat.activity.play.PlayActivity;
+import com.joern.guesswhat.activity.game.GamesActivity;
 import com.joern.guesswhat.activity.settings.SettingsActivity;
 
 public enum NavigationDrawerItem {
 
-    PLAY        (PlayActivity.class,        R.mipmap.gamepad,       R.string.navigation_item_play),
+    GAMES       (GamesActivity.class,       R.mipmap.gamepad,       R.string.navigation_item_games),
     FRIENDS     (FriendsActivity.class,     R.mipmap.friends,       R.string.navigation_item_friends),
     SETTINGS    (SettingsActivity.class,    R.mipmap.gear,          R.string.navigation_item_settings),
     ABOUT       (AboutActivity.class,       R.mipmap.info,          R.string.navigation_item_about),

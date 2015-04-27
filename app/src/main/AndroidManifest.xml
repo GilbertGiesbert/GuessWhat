@@ -17,13 +17,23 @@
         </activity>
 
         <activity
-            android:name=".activity.play.PlayActivity"
-            android:label="@string/play_title">
+            android:name=".activity.game.GamesActivity"
+            android:label="@string/games_title">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.game.CreateGameActivity"
+            android:label="@string/createGame_title"
+            android:parentActivityName=".activity.game.GamesActivity" >
+            <!-- The meta-data element is needed for versions lower than 4.1=sdk16 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.game.GamesActivity" />
         </activity>
 
         <activity
