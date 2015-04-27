@@ -45,6 +45,11 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         tv_inputHint = (TextView) findViewById(R.id.tv_editHint);
 
+        et_userName = (EditText) findViewById(R.id.et_userName);
+        et_email = (EditText) findViewById(R.id.et_email);
+        et_password = (EditText) findViewById(R.id.et_password);
+        et_passwordConfirm = (EditText) findViewById(R.id.et_passwordRepeat);
+
         ll_buttonContainer = (LinearLayout) findViewById(R.id.ll_buttonContainer);
 
         bt_signIn = (Button) findViewById(R.id.bt_signIn);
@@ -54,13 +59,6 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         bt_signIn.setOnClickListener(this);
         bt_createAccount.setOnClickListener(this);
         bt_recoverPassword.setOnClickListener(this);
-
-        et_userName = (EditText) findViewById(R.id.et_userName);
-        et_email = (EditText) findViewById(R.id.et_email);
-        et_password = (EditText) findViewById(R.id.et_password);
-        et_passwordConfirm = (EditText) findViewById(R.id.et_passwordRepeat);
-
-        et_passwordConfirm.setImeOptions(EditorInfo.IME_ACTION_GO);
 
         initImeActionListeners();
 
@@ -116,46 +114,46 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         }
     }
 
-    private void bt_submit() {
-
-        switch(state){
-
-            case SIGN_IN:
-
-                break;
-
-            case CREATE_ACCOUNT:
-                doCreateAccount();
-                break;
-
-            case RECOVER_PASSWORD:
-                doRecoverPassword();
-                break;
-
-            default:
-                resetToInitialView();
-                break;
-        }
-    }
-
     private void initImeActionListeners(){
 
-        EditText[] submitFields = new EditText[]{et_password, et_passwordConfirm, et_email};
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-        for(EditText et: submitFields){
-            et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-                    boolean actionHandled = false;
-                    if (actionId == EditorInfo.IME_ACTION_GO) {
-                        bt_submit();
-                        actionHandled = true;
-                    }
-                    return actionHandled;
+                boolean actionHandled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    onClick(bt_signIn);
+                    actionHandled = true;
                 }
-            });
-        }
+                return actionHandled;
+            }
+        });
+
+        et_passwordConfirm.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean actionHandled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    onClick(bt_createAccount);
+                    actionHandled = true;
+                }
+                return actionHandled;
+            }
+        });
+
+        et_email.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                boolean actionHandled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    onClick(bt_recoverPassword);
+                    actionHandled = true;
+                }
+                return actionHandled;
+            }
+        });
     }
 
     private void showSignIn(){
@@ -188,8 +186,10 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         et_password.setVisibility(View.VISIBLE);
         et_passwordConfirm.setVisibility(View.VISIBLE);
 
+        et_userName.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_email.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et_password.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        et_passwordConfirm.setImeOptions(EditorInfo.IME_ACTION_GO);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_buttonContainer.getLayoutParams();
         params.gravity = Gravity.RIGHT;
@@ -208,7 +208,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         et_email.setVisibility(View.VISIBLE);
         et_email.setError(null);
-        et_email.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        et_email.setImeOptions(EditorInfo.IME_ACTION_GO);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll_buttonContainer.getLayoutParams();
         params.gravity = Gravity.RIGHT;
