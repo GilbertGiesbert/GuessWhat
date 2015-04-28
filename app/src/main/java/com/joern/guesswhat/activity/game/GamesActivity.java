@@ -21,7 +21,6 @@ public class GamesActivity extends NavigationDrawerActivity implements View.OnCl
     private enum State{
         GAMES_TO_PLAY, GAMES_CREATED
     }
-
     private State state;
 
     private static final String LOG_TAG = GamesActivity.class.getSimpleName();

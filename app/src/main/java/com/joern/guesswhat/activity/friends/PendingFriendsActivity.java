@@ -76,7 +76,14 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
         Log.d(LOG_TAG, "onResume()");
         super.onResume();
 
-        toggle(listAdapter.getFriendshipRequestType());
+        FriendshipRequestType type = listAdapter.getFriendshipRequestType();
+
+        listAdapter.setFriendshipRequestType(type);
+        listAdapter.reload();
+        boolean isEmptyList = listAdapter.getCount() <= 0;
+
+        refreshButtonUnderscore(type);
+        refreshEmptyListHint(type, isEmptyList);
     }
 
     @Override
@@ -98,55 +105,73 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
     @Override
     public void onClick(View v) {
 
+        FriendshipRequestType type;
+        boolean isEmptyList;
+
         switch (v.getId()){
 
             case R.id.bt_received:
-                toggle(FriendshipRequestType.RECEIVED);
+
+                type = FriendshipRequestType.RECEIVED;
+
+                listAdapter.setFriendshipRequestType(type);
+                listAdapter.reload();
+                isEmptyList = listAdapter.getCount() <= 0;
+
+                refreshButtonUnderscore(type);
+                refreshEmptyListHint(type, isEmptyList);
                 break;
 
             case R.id.bt_sent:
-                toggle(FriendshipRequestType.SENT);
+
+                type = FriendshipRequestType.SENT;
+
+                listAdapter.setFriendshipRequestType(type);
+                listAdapter.reload();
+                isEmptyList = listAdapter.getCount() <= 0;
+
+                refreshButtonUnderscore(type);
+                refreshEmptyListHint(type, isEmptyList);
                 break;
         }
     }
 
-    private void toggle(FriendshipRequestType type){
-
-        listAdapter.setFriendshipRequestType(type);
-
+    private void refreshButtonUnderscore(FriendshipRequestType type){
         if(FriendshipRequestType.RECEIVED.equals(type)){
-
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
-            listAdapter.reload();
-
-            if(listAdapter.getCount() > 0){
-                tv_hintNoPendingRequests.setVisibility(View.GONE);
-
-            }else{
-                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
-                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsReceived));
-            }
-
         }else{
-
             v_underscoreSent.setVisibility(View.VISIBLE);
             v_underscoreReceived.setVisibility(View.GONE);
-            listAdapter.reload();
+        }
+    }
 
-            if(listAdapter.getCount() > 0){
-                tv_hintNoPendingRequests.setVisibility(View.GONE);
+    private void refreshEmptyListHint(FriendshipRequestType type, boolean isEmptyList){
 
-            }else{
-                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
-                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
-            }
+
+        if(isEmptyList){
+            String emptyListHint = FriendshipRequestType.RECEIVED.equals(type) ?
+                    getResources().getString(R.string.pendingFriends_tv_hintNoRequestsReceived) :
+                    getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent);
+            tv_hintNoPendingRequests.setText(emptyListHint);
+            tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+        }else{
+            tv_hintNoPendingRequests.setText("");
+            tv_hintNoPendingRequests.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onDialogClose() {
         Log.d(LOG_TAG, "onDialogClose()");
-        toggle(listAdapter.getFriendshipRequestType());
+
+        FriendshipRequestType type = listAdapter.getFriendshipRequestType();
+
+        listAdapter.setFriendshipRequestType(type);
+        listAdapter.reload();
+        boolean isEmptyList = listAdapter.getCount() <= 0;
+
+        refreshButtonUnderscore(type);
+        refreshEmptyListHint(type, isEmptyList);
     }
 }

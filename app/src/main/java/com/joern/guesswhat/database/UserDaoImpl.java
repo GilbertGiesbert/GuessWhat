@@ -137,6 +137,8 @@ public class UserDaoImpl implements UserDao{
 
         String selectQueryAcceptedFriends =
                 "SELECT "+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_ID+","+
+                DB.USERS.TABLE_NAME+"."+DB.USERS.COL_STABLE_ALIAS+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_NAME+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_EMAIL+","+
                 DB.USERS.TABLE_NAME+"."+DB.USERS.COL_PASSWORD_HASH+
