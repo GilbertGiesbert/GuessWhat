@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.joern.guesswhat.constants.DB;
 import com.joern.guesswhat.model.FriendshipState;
@@ -46,7 +47,7 @@ public class UserDaoImpl implements UserDao{
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + DB.USERS.TABLE_NAME + " WHERE "
-                + DB.USERS.COL_NAME + " = '" + name + "'";
+                + DB.USERS.COL_NAME + " = '" + name + "' COLLATE NOCASE";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -54,9 +55,15 @@ public class UserDaoImpl implements UserDao{
 
             int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
             String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
+            // name was read with collate nocase
+            // so set name to original db value
+            name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
             String email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
             int passwordHash = c.getInt(c.getColumnIndex(DB.USERS.COL_PASSWORD_HASH));
             userToReturn = new User(id, stableAlias, name, email, passwordHash);
+
+        }else{
+            Log.d(LOG_TAG, "no user for name="+name);
         }
 
         c.close();
@@ -70,7 +77,7 @@ public class UserDaoImpl implements UserDao{
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + DB.USERS.TABLE_NAME + " WHERE "
-                + DB.USERS.COL_EMAIL + " = '" + email + "'";
+                + DB.USERS.COL_EMAIL + " = '" + email + "' COLLATE NOCASE";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -79,8 +86,14 @@ public class UserDaoImpl implements UserDao{
             int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
             String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
             String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
+            // email was read with collate nocase
+            // so set email to original db value
+            email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
             int passwordHash = c.getInt(c.getColumnIndex(DB.USERS.COL_PASSWORD_HASH));
             userToReturn = new User(id, stableAlias, name, email, passwordHash);
+
+        }else{
+            Log.d(LOG_TAG, "no user for email="+email);
         }
 
         c.close();

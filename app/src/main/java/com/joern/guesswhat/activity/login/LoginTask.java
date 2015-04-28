@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.joern.guesswhat.R;
 import com.joern.guesswhat.database.UserDao;
 import com.joern.guesswhat.database.UserDaoImpl;
 import com.joern.guesswhat.model.User;
@@ -71,7 +72,7 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
         LoginTaskResult result = new LoginTaskResult(TaskType.LOGIN);
 
         if(params == null || params.length < 2){
-            result.setErrorMessage("Internal error");
+            result.setErrorMessage(context.getString(R.string._internalError));
 
         }else{
 
@@ -82,7 +83,7 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
             User user = userDao.readUser(userName);
 
             if(user == null) {
-                result.setErrorMessage("No such user!");
+                result.setErrorMessage(context.getString(R.string.login_errorFailedLogin));
             }else{
 
                 Integer passwordHash = PasswordFactory.buildPasswordHash(password, user);
@@ -90,7 +91,7 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
                     result.setIsSuccessful(true);
                     result.setUser(user);
                 }else{
-                    result.setErrorMessage("Wrong password!");
+                    result.setErrorMessage(context.getString(R.string.login_errorFailedLogin));
                 }
             }
         }
@@ -105,7 +106,7 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
         LoginTaskResult result = new LoginTaskResult(TaskType.REGISTRATION);
 
         if(params == null || params.length < 3){
-            result.setErrorMessage("Internal error");
+            result.setErrorMessage(context.getString(R.string._internalError));
 
         }else{
 
@@ -117,7 +118,7 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
 
             Integer passwordHash = PasswordFactory.buildPasswordHash(password, userName, email);
             if(passwordHash == null){
-                result.setErrorMessage("Failed to register.");
+                result.setErrorMessage(context.getString(R.string._internalError));
             }else{
 
                 boolean userCreated = userDao.createUser(userName, email, passwordHash);
@@ -130,13 +131,13 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
                 }else{
 
                     if(userDao.readUser(userName) != null){
-                        result.setErrorMessage("User name already assigned.");
+                        result.setErrorMessage(context.getString(R.string.login_userNameTaken));
 
                     }else if(userDao.getUserByMail(email) != null){
-                        result.setErrorMessage("Email already assigned.");
+                        result.setErrorMessage(context.getString(R.string.login_emailTaken));
 
                     }else{
-                        result.setErrorMessage("Failed to register.");
+                        result.setErrorMessage(context.getString(R.string._internalError));
                     }
                 }
             }

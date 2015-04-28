@@ -25,9 +25,13 @@ public class PasswordFactory {
             return null;
         }
 
-        password += getSalt(userName, userEmail);
+        String lowName = userName.toLowerCase();
+        String lowMail = userEmail.toLowerCase();
+        String lowPswd = password.toLowerCase();
 
-        return password.hashCode();
+        lowPswd += getSalt(lowName, lowMail);
+
+        return lowPswd.hashCode();
     }
 
     private static String getSalt(String userName, String userEmail) {

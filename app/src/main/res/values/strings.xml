@@ -9,6 +9,7 @@
     <string name="_change">Change</string>
     <string name="_choose">Choose</string>
     <string name="_discard">Discard</string>
+    <string name="_internalError">Internal error</string>
     <string name="_ok">OK</string>
     <string name="_refresh">Refresh</string>
     <string name="_reject">Reject</string>
@@ -31,6 +32,7 @@
     <string name="createGame_gameHints">Helping hints</string>
     <string name="createGame_gamePicture">Picture of the game</string>
     <string name="createGame_gameSolution">Solution to the game</string>
+    <string name="createGame_gameType">Game type</string>
 
     <string name="friends_bt_addFriend">Add new friend</string>
     <string name="friends_bt_pendingRequests">Show pending requests</string>
@@ -65,6 +67,9 @@
     <string name="login_bt_createAccount">Create account</string>
     <string name="login_bt_recoverPassword">Recover password</string>
     <string name="login_title">Welcome</string>
+    <string name="login_errorFailedLogin">Wrong password or user name!</string>
+    <string name="login_userNameTaken">User name already assigned.</string>
+    <string name="login_emailTaken">Email already assigned.</string>
 
     <string name="main_title">Home</string>
 
@@ -87,5 +92,6 @@
     <string name="pendingFriends_dialog_acceptorMessage">" is requesting your friendship."</string>
 
     <string name="settings_title">Settings</string>
+
 
 </resources>

@@ -18,6 +18,34 @@
         />
 
     <TextView
+        android:text="@string/createGame_gameType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <RadioButton
+            android:id="@+id/rb_private"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Private"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_public"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Public"
+            />
+    </RadioGroup>
+
+    <TextView
         android:text="@string/createGame_gameSolution"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
