@@ -42,24 +42,23 @@ public class GamesActivity extends NavigationDrawerActivity implements View.OnCl
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-        if(sessionUser != null){
+        if(sessionUser == null) return;
 
-            state = State.GAMES_TO_PLAY;
+        state = State.GAMES_TO_PLAY;
 
-            Button bt_play = (Button) findViewById(R.id.bt_play);
-            Button bt_create = (Button) findViewById(R.id.bt_create);
+        Button bt_play = (Button) findViewById(R.id.bt_play);
+        Button bt_create = (Button) findViewById(R.id.bt_create);
 
-            bt_play.setOnClickListener(this);
-            bt_create.setOnClickListener(this);
+        bt_play.setOnClickListener(this);
+        bt_create.setOnClickListener(this);
 
-            v_underscorePlay = findViewById(R.id.v_underscorePlay);
-            v_underscoreCreate = findViewById(R.id.v_underscoreCreate);
+        v_underscorePlay = findViewById(R.id.v_underscorePlay);
+        v_underscoreCreate = findViewById(R.id.v_underscoreCreate);
 
-            tv_hintEmptyList = (TextView) findViewById(R.id.tv_hintEmptyList);
+        tv_hintEmptyList = (TextView) findViewById(R.id.tv_hintEmptyList);
 
-            refreshButtonUnderscore();
-            refreshEmptyListHint();
-        }
+        refreshButtonUnderscore();
+        refreshEmptyListHint();
     }
 
     @Override

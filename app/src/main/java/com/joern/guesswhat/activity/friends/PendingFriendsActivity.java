@@ -1,7 +1,6 @@
 package com.joern.guesswhat.activity.friends;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.database.FriendshipDao;
 import com.joern.guesswhat.database.FriendshipDaoImpl;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by joern on 14.04.2015.
  */
-public class PendingFriendsActivity extends ActionBarActivity implements View.OnClickListener, PendingFriendsDialog.Listener {
+public class PendingFriendsActivity extends NavigationDrawerActivity implements View.OnClickListener, PendingFriendsDialog.Listener {
 
     private static final String LOG_TAG = PendingFriendsActivity.class.getSimpleName();
 
@@ -33,11 +33,16 @@ public class PendingFriendsActivity extends ActionBarActivity implements View.On
     private PendingFriendshipsAdapter listAdapter;
 
     @Override
+    protected int getMainContentLayoutId() {
+        return R.layout.pendingfriends_activity;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.pendingfriends_activity);
+        if(sessionUser == null) return;
 
         listAdapter = new PendingFriendshipsAdapter(this, FriendshipRequestType.RECEIVED);
 

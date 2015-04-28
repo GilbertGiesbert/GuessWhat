@@ -55,7 +55,7 @@ public class UserDaoImpl implements UserDao{
 
             int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
             String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
-            // name was read with collate nocase
+            // name was read with COLLATE NOCASE
             // so set name to original db value
             name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
             String email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
@@ -86,7 +86,7 @@ public class UserDaoImpl implements UserDao{
             int id = c.getInt(c.getColumnIndex(DB.USERS.COL_ID));
             String stableAlias = c.getString(c.getColumnIndex(DB.USERS.COL_STABLE_ALIAS));
             String name = c.getString(c.getColumnIndex(DB.USERS.COL_NAME));
-            // email was read with collate nocase
+            // email was read with COLLATE NOCASE
             // so set email to original db value
             email = c.getString(c.getColumnIndex(DB.USERS.COL_EMAIL));
             int passwordHash = c.getInt(c.getColumnIndex(DB.USERS.COL_PASSWORD_HASH));

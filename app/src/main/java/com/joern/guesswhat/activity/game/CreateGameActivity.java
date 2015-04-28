@@ -23,7 +23,7 @@ public class CreateGameActivity extends NavigationDrawerActivity {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-
+        if(sessionUser == null) return;
 
     }
 }
