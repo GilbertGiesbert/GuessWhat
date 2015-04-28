@@ -49,10 +49,10 @@ public class AboutActivity extends NavigationDrawerActivity {
             String smiley = getSmiley(UNICODE_SMILEY_HAPPY);
 
             // double text size for smiley
-            SpannableStringBuilder sb = new SpannableStringBuilder(smiley);
+            SpannableStringBuilder ssb = new SpannableStringBuilder(smiley);
             RelativeSizeSpan span = new RelativeSizeSpan(2);
-            sb.setSpan(span, 0, smiley.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tv_version.append(sb);
+            ssb.setSpan(span, 0, smiley.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_version.append(ssb);
         }
     }
 
