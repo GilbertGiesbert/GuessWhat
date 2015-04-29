@@ -11,6 +11,14 @@ public class User {
     private String email;
     private int passwordHash;
 
+    /**
+     *
+     * @param id
+     * @param stableAlias
+     * @param name
+     * @param email
+     * @param passwordHash
+     */
     public User(int id, String stableAlias, String name, String email, int passwordHash) {
         this.id = id;
         this.stableAlias = stableAlias;

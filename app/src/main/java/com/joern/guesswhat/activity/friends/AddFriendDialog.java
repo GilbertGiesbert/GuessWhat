@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.FriendshipDao;
-import com.joern.guesswhat.database.FriendshipDaoImpl;
+import com.joern.guesswhat.persistence.database.FriendshipDao;
+import com.joern.guesswhat.persistence.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.User;
 
 /**

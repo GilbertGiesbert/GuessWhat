@@ -1,4 +1,4 @@
-package com.joern.guesswhat.database;
+package com.joern.guesswhat.persistence.database;
 
 import com.joern.guesswhat.model.Game;
 

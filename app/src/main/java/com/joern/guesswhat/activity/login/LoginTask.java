@@ -6,8 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.joern.guesswhat.R;
-import com.joern.guesswhat.database.UserDao;
-import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.persistence.database.UserDao;
+import com.joern.guesswhat.persistence.database.UserDaoImpl;
 import com.joern.guesswhat.model.User;
 
 /**

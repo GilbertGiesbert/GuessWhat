@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
-import com.joern.guesswhat.database.FriendshipDao;
-import com.joern.guesswhat.database.FriendshipDaoImpl;
+import com.joern.guesswhat.persistence.database.FriendshipDao;
+import com.joern.guesswhat.persistence.database.FriendshipDaoImpl;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipRequestType;
 import com.joern.guesswhat.model.FriendshipState;

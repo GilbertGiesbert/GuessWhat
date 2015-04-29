@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.database.UserDao;
-import com.joern.guesswhat.database.UserDaoImpl;
+import com.joern.guesswhat.persistence.database.UserDao;
+import com.joern.guesswhat.persistence.database.UserDaoImpl;
 import com.joern.guesswhat.model.User;
 
 import java.util.ArrayList;
