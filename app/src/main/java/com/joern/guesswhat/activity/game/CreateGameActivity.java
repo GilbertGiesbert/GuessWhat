@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.UriHelper;
 import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
 import com.joern.guesswhat.common.ImageLoader;
 
@@ -28,7 +30,7 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
     private static final String LOG_TAG = CreateGameActivity.class.getSimpleName();
 
     // arbitrary
-    private static final int PICK_FILE_RESULT_CODE = 333;
+    private static final int PICK_FILE_REQUEST_CODE = 333;
 
     private ImageView iv_gamePicture;
 
@@ -48,8 +50,8 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
         bt_choosePicture.setOnClickListener(this);
 
 
-        ImageView v = (ImageView) findViewById(R.id.iv_gamePicture);
-        v.addOnLayoutChangeListener(this);
+        iv_gamePicture = (ImageView) findViewById(R.id.iv_gamePicture);
+        iv_gamePicture.addOnLayoutChangeListener(this);
     }
 
     private int w = 0;
@@ -87,8 +89,8 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
             case R.id.bt_choosePicture:
 
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("file/*");
-                startActivityForResult(intent,PICK_FILE_RESULT_CODE);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "gwh54hg4t"), PICK_FILE_REQUEST_CODE);
                 break;
         }
     }
@@ -97,7 +99,7 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Log.d(LOG_TAG, "onActivityResult()");
 //
-//        if(requestCode  == PICK_FILE_RESULT_CODE && resultCode == RESULT_OK){
+//        if(requestCode  == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK){
 //
 //            String imagePath = data.getData().getPath();
 //            Log.d(LOG_TAG, "imagePath:"+imagePath);
@@ -118,27 +120,42 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_TAG, "onActivityResult()");
 
-        if(requestCode  == PICK_FILE_RESULT_CODE && resultCode == RESULT_OK){
+        if(requestCode  == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK){
 
             Uri imageUri = data.getData();
             Log.d(LOG_TAG, "imageUri:"+imageUri);
 
-            String imagePath = imageUri.getPath();
+            String imagePath = UriHelper.getPath(this, imageUri);
             Log.d(LOG_TAG, "imagePath:"+imagePath);
 
             File imageFile = new  File(imagePath);
 
             if(imageFile.exists()){
 
-                Bitmap bitmap  = ImageLoader.loadFromFile(imagePath, 400, 200);
+                Bitmap bitmap  = ImageLoader.loadFromFile(imageFile.getAbsolutePath(), 400, 200);
                 iv_gamePicture.setImageBitmap(bitmap);
             }
-
-
 
         }else{
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+
+    public String getPath3(Uri contentUri) {
+
+        // can post image
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(contentUri, proj, // Which columns to
+                // return
+                null, // WHERE clause; which rows to return (all rows)
+                null, // WHERE clause selection arguments (none)
+                null); // Order-by clause (ascending by name)
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
+
     }
 
 
@@ -174,4 +191,7 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
         }
         return null;
     }
+
+
+
 }
