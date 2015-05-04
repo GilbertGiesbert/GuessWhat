@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -16,11 +19,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.joern.guesswhat.R;
-import com.joern.guesswhat.UriHelper;
 import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
-import com.joern.guesswhat.common.ImageLoader;
+import com.joern.guesswhat.constants.RequestCode;
 
-import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by joern on 27.04.2015.
@@ -28,9 +32,6 @@ import java.io.File;
 public class CreateGameActivity extends NavigationDrawerActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final String LOG_TAG = CreateGameActivity.class.getSimpleName();
-
-    // arbitrary
-    private static final int PICK_FILE_REQUEST_CODE = 333;
 
     private ImageView iv_gamePicture;
 
@@ -88,9 +89,16 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
 
             case R.id.bt_choosePicture:
 
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                int sdk = Build.VERSION.SDK_INT;
+                Log.d(LOG_TAG, "sdk:"+sdk);
+                final boolean isKitKat = sdk >= Build.VERSION_CODES.KITKAT;
+
+
+
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, "gwh54hg4t"), PICK_FILE_REQUEST_CODE);
+                startActivityForResult(intent, RequestCode.PICK_IMAGE);
                 break;
         }
     }
@@ -99,7 +107,7 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Log.d(LOG_TAG, "onActivityResult()");
 //
-//        if(requestCode  == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK){
+//        if(requestCode  == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK){
 //
 //            String imagePath = data.getData().getPath();
 //            Log.d(LOG_TAG, "imagePath:"+imagePath);
@@ -120,20 +128,23 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_TAG, "onActivityResult()");
 
-        if(requestCode  == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK){
+        if(requestCode  == RequestCode.PICK_IMAGE && resultCode == RESULT_OK && data != null){
 
             Uri imageUri = data.getData();
             Log.d(LOG_TAG, "imageUri:"+imageUri);
 
-            String imagePath = UriHelper.getPath(this, imageUri);
-            Log.d(LOG_TAG, "imagePath:"+imagePath);
+            try {
+                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(imageUri, "r");
+                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                Bitmap bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                parcelFileDescriptor.close();
 
-            File imageFile = new  File(imagePath);
-
-            if(imageFile.exists()){
-
-                Bitmap bitmap  = ImageLoader.loadFromFile(imageFile.getAbsolutePath(), 400, 200);
                 iv_gamePicture.setImageBitmap(bitmap);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }else{
