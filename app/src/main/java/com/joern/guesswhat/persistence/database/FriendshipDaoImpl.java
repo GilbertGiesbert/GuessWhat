@@ -63,6 +63,17 @@ public class FriendshipDaoImpl implements FriendshipDao {
     @Override
     public List<Friendship> getFriendships(User user, FriendshipRequestType type, FriendshipState... states){
 
+//        select * from users
+//        join (select * from friends where friends.req=2) as f1
+//        on users.id=f1.acc
+//
+//        union
+//
+//        select * from users
+//        join (select * from friends where friends.acc=2) as f2
+//        on users.id=f2.req
+
+
         String colUserMail = FriendshipRequestType.RECEIVED.equals(type) ? DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR : DB.FRIENDSHIPS.COL_EMAIL_REQUESTER;
         String colFriendMail = FriendshipRequestType.SENT.equals(type) ? DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR : DB.FRIENDSHIPS.COL_EMAIL_REQUESTER;
 
