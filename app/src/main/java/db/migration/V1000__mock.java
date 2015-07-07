@@ -33,8 +33,8 @@ public class V1000__mock implements JdbcMigration{
             try {saveMockUsers(connection);}
             catch(Exception ex) {Log.e(LOG_TAG, "problems adding mock users", ex);}
 
-            try {addMockFriendships(connection);}
-            catch(Exception ex) {Log.e(LOG_TAG, "problems adding mock friends", ex);}
+//            try {addMockFriendships(connection);}
+//            catch(Exception ex) {Log.e(LOG_TAG, "problems adding mock friends", ex);}
         }
     }
 
@@ -52,13 +52,13 @@ public class V1000__mock implements JdbcMigration{
 
         int id = 0;
         HashMap<Integer, User>  users = new HashMap<>();
-        for(String n: names){
+        for(String name: names){
             for(int i = 0; i < 10; i++){
 
-                String name = n+id;
-                String mail = n.substring(0, 1)+"@"+id+".com";
-                Integer pswdHash = PasswordFactory.buildPasswordHash(n.substring(0, 1), name, mail);
-                users.put(id, new User(id, null, name, mail, pswdHash));
+                String mail = name+"@"+i+".com";
+                String password = "123";
+                Integer pswdHash = PasswordFactory.buildPasswordHash(password, name, mail);
+                users.put(id, new User(id, name, mail));
                 id++;
             }
         }
@@ -72,8 +72,8 @@ public class V1000__mock implements JdbcMigration{
 //            INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
 //            VALUES (1, 'Paul', 32, 'California', 20000.00 );
 
-            String query = "INSERT INTO " + DB.USERS.TABLE_NAME + " ("+DB.USERS.COL_NAME+","+DB.USERS.COL_EMAIL+","+DB.USERS.COL_PASSWORD_HASH+") "+
-                            "VALUES ('"+user.getName()+"','"+user.getEmail()+"',"+user.getPasswordHash()+");";
+            String query = "INSERT INTO " + DB.TABLE_USERS.NAME + " ("+ DB.TABLE_USERS.COL_NAME+","+ DB.TABLE_USERS.COL_EMAIL+") "+
+                            "VALUES ('"+user.getName()+"','"+user.getEmail()+");";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.execute();
@@ -88,7 +88,7 @@ public class V1000__mock implements JdbcMigration{
         for(User user: mockUsers.values()){
             if(user.getId() != popular.getId()){
 
-                String query = "INSERT INTO " + DB.FRIENDSHIPS.TABLE_NAME + " ("+DB.FRIENDSHIPS.COL_EMAIL_REQUESTER+","+DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR+","+DB.FRIENDSHIPS.COL_STATE+") "+
+                String query = "INSERT INTO " + DB.TABLE_FRIENDSHIPS.NAME + " ("+ DB.TABLE_FRIENDSHIPS.COL_USER_ID +","+ DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID +","+ DB.TABLE_FRIENDSHIPS.COL_STATE+") "+
                         "VALUES ('"+popular.getEmail()+"','"+user.getEmail()+"',"+ FriendshipState.ACTIVE.getValue()+");";
 
                 PreparedStatement statement = connection.prepareStatement(query);

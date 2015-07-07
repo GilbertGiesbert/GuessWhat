@@ -1,39 +1,23 @@
 package com.joern.guesswhat.activity.friends;
 
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
-import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.persistence.database.FriendshipDao;
-import com.joern.guesswhat.persistence.database.FriendshipDaoImpl;
-import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipRequestType;
-import com.joern.guesswhat.model.FriendshipState;
-import com.joern.guesswhat.model.User;
-
-import java.util.List;
 
 /**
  * Created by joern on 14.04.2015.
  */
-public class FriendsActivity extends NavigationDrawerActivity implements View.OnClickListener {
+public class FriendsActivity extends NavigationDrawerActivity {
 
     private static final String LOG_TAG = FriendsActivity.class.getSimpleName();
 
-    private FriendlistAdapter listAdapter;
-
-    private TextView tv_emptyListHint;
+    private MenuItem mi_addFriend;
 
     @Override
     protected int getMainContentLayoutId() {
@@ -45,80 +29,37 @@ public class FriendsActivity extends NavigationDrawerActivity implements View.On
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-        Button bt_addFriend = (Button) findViewById(R.id.bt_addFriend);
-        Button bt_pendingFriendRequests = (Button) findViewById(R.id.bt_pendingFriendRequests);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.vp_friends);
+        viewPager.setAdapter(new FriendsPagerAdapter(getSupportFragmentManager()));
+    }
 
-        bt_addFriend.setOnClickListener(this);
-        bt_pendingFriendRequests.setOnClickListener(this);
 
-        listAdapter = new FriendlistAdapter(this);
-        ListView list = (ListView) findViewById(R.id.lv_friendList);
-        list.setAdapter(listAdapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(LOG_TAG, "onCreateOptionsMenu()");
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.friends_menu, menu);
 
-                String friend = listAdapter.getItem(position).getName();
+        mi_addFriend = menu.findItem(R.id.mi_addFriend);
 
-                Toast.makeText(FriendsActivity.this, friend, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        tv_emptyListHint = (TextView) findViewById(R.id.tv_emptyListHint);
+        return true;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        listAdapter.reload();
-        refreshNewRequestsHint();
-        refreshEmptyListHint();
-    }
-
-    @Override
-    public void onClick(View v) {
-        Log.d(LOG_TAG, "onCreate()");
-
-        Log.d(LOG_TAG, "v="+getResources().getResourceEntryName(v.getId()));
-
-        switch (v.getId()){
-
-            case R.id.bt_addFriend:
-
-                DialogFragment newFragment = new AddFriendDialog();
-                newFragment.show(getFragmentManager(), AddFriendDialog.class.getSimpleName());
-
-                break;
-
-            case R.id.bt_pendingFriendRequests:
-            case R.id.ib_newRequestsHint:
-
-                startActivity(new Intent(this, PendingFriendsActivity.class));
-
-                break;
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.mi_addFriend) {
+            DialogFragment newFragment = new AddFriendDialog();
+            newFragment.show(getFragmentManager(), AddFriendDialog.class.getSimpleName());
+            return true;
         }
-    }
 
-    private void refreshNewRequestsHint() {
 
-        ImageButton ib_newRequestsHint = (ImageButton) findViewById(R.id.ib_newRequestsHint);
-        ib_newRequestsHint.setOnClickListener(this);
-
-        User sessionUser = SessionHelper.getSessionUser(this);
-        FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> fList = dao.getFriendships(sessionUser, FriendshipRequestType.RECEIVED, FriendshipState.REQUEST_SEND);
-
-        if(fList.isEmpty()){
-            ib_newRequestsHint.setVisibility(View.GONE);
-        }
-    }
-
-    private void refreshEmptyListHint(){
-        if(listAdapter.getCount() > 0){
-            tv_emptyListHint.setVisibility(View.GONE);
-        }else{
-            tv_emptyListHint.setVisibility(View.VISIBLE);
-        }
+        return super.onOptionsItemSelected(item);
     }
 }

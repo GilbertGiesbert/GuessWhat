@@ -2,8 +2,6 @@ package com.joern.guesswhat.persistence.database;
 
 import com.joern.guesswhat.model.User;
 
-import java.util.List;
-
 /**
  * Created by joern on 13.04.2015.
  */
@@ -14,6 +12,6 @@ public interface UserDao {
     public boolean updateUser(User user);
     public boolean deleteUser(User user);
 
-    public User getUserByMail(String name);
-    public List<User> getFriendships(User user);
+    public boolean checkPswd(User user, int passwordHash);
+    public boolean updatePswd(User user, int oldPswdHash, int newPswdHash);
 }

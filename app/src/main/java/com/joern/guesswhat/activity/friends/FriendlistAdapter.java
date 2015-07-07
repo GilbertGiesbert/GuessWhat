@@ -108,8 +108,8 @@ public class FriendlistAdapter extends BaseAdapter{
 
         User sessionUser = SessionHelper.getSessionUser(context);
         UserDao dao = new UserDaoImpl(context);
-        List<User> fList = dao.getFriendships(sessionUser);
+//        List<User> fList = dao.getFriendships(sessionUser);
 
-        friendList.addAll(fList);
+//        friendList.addAll(fList);
     }
 }

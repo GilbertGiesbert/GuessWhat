@@ -2,35 +2,12 @@ package com.joern.guesswhat.model;
 
 public enum FriendshipState {
 
-    // request has been sent but receiver has not yet seen it
-    // needed to flag 'new' requests received
-    REQUEST_SEND(1),
+    REQUEST_SENT(1),
 
-    // request has arrived at/ been seen by receiver
-    // and is now pending acceptance
     REQUEST_RECEIVED(2),
+    REQUEST_RECEIVED_PENDING(3),
 
-    // request has been accepted by receiver
-    // friendship is now active
-    ACTIVE(3),
-
-    // request has been rejected by receiver
-    REQUEST_REJECTED(4),
-
-    // request has been cancelled by requester
-    REQUEST_CANCELLED(5),
-
-    // friendship has been terminated by one friend
-    TERMINATED(6);
-
-    //  --- removed ---
-    // try to sent invite
-    // - if server does not answer, don't list invite
-    // - if server says requested friend does not exist, don't list invite either
-    // -----------------
-    // request has been invalidated by system
-    // e.g. because of friend's mail does not exist in system
-    //INVALID(7);
+    ACTIVE(4);
 
     private int value;
 

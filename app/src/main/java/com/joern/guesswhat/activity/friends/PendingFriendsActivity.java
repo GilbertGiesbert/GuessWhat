@@ -11,14 +11,10 @@ import android.widget.TextView;
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.persistence.database.FriendshipDao;
-import com.joern.guesswhat.persistence.database.FriendshipDaoImpl;
-import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipRequestType;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
-
-import java.util.List;
+import com.joern.guesswhat.persistence.database.FriendshipDao;
+import com.joern.guesswhat.persistence.database.FriendshipDaoImpl;
 
 /**
  * Created by joern on 14.04.2015.
@@ -44,7 +40,7 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
 
         if(sessionUser == null) return;
 
-        listAdapter = new PendingFriendshipsAdapter(this, FriendshipRequestType.RECEIVED);
+        listAdapter = new PendingFriendshipsAdapter(this, FriendshipState.REQUEST_RECEIVED);
 
         ListView list = (ListView) findViewById(R.id.lv_pendingRequsts);
         list.setAdapter(listAdapter);
@@ -54,7 +50,6 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
 
                 PendingFriendsDialog dialog = new PendingFriendsDialog();
                 dialog.setFriendship(listAdapter.getItem(position));
-                dialog.setFriendshipRequestType(listAdapter.getFriendshipRequestType());
                 dialog.show(getFragmentManager(), PendingFriendsDialog.class.getSimpleName());
             }
         });
@@ -76,14 +71,12 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
         Log.d(LOG_TAG, "onResume()");
         super.onResume();
 
-        FriendshipRequestType type = listAdapter.getFriendshipRequestType();
-
-        listAdapter.setFriendshipRequestType(type);
         listAdapter.reload();
         boolean isEmptyList = listAdapter.getCount() <= 0;
 
-        refreshButtonUnderscore(type);
-        refreshEmptyListHint(type, isEmptyList);
+        FriendshipState state = listAdapter.getState();
+        refreshButtonUnderscore(state);
+        refreshEmptyListHint(state, isEmptyList);
     }
 
     @Override
@@ -91,12 +84,12 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
 
         User sessionUser = SessionHelper.getSessionUser(this);
         FriendshipDao dao = new FriendshipDaoImpl(this);
-        List<Friendship> newOnes = dao.getFriendships(sessionUser, FriendshipRequestType.RECEIVED, FriendshipState.REQUEST_SEND);
+//        List<Friendship> newOnes = dao.getFriendships(sessionUser, FriendshipRequestType.RECEIVED, FriendshipState.REQUEST_SENT);
 
-        for(Friendship f: newOnes){
-            f.setFriendshipState(FriendshipState.REQUEST_RECEIVED);
-            dao.updateFriendship(f);
-        }
+//        for(Friendship f: newOnes){
+//            f.setFriendshipState(FriendshipState.REQUEST_RECEIVED);
+//            dao.updateFriendship(f);
+//        }
 
         super.onStop();
     }
@@ -105,56 +98,67 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
     @Override
     public void onClick(View v) {
 
-        FriendshipRequestType type;
+        FriendshipState state;
         boolean isEmptyList;
 
         switch (v.getId()){
 
             case R.id.bt_received:
 
-                type = FriendshipRequestType.RECEIVED;
+                state = FriendshipState.REQUEST_RECEIVED;
 
-                listAdapter.setFriendshipRequestType(type);
+                listAdapter.setState(state);
                 listAdapter.reload();
                 isEmptyList = listAdapter.getCount() <= 0;
 
-                refreshButtonUnderscore(type);
-                refreshEmptyListHint(type, isEmptyList);
+                refreshButtonUnderscore(state);
+                refreshEmptyListHint(state, isEmptyList);
                 break;
 
             case R.id.bt_sent:
 
-                type = FriendshipRequestType.SENT;
+                state = FriendshipState.REQUEST_SENT;
 
-                listAdapter.setFriendshipRequestType(type);
+                listAdapter.setState(state);
                 listAdapter.reload();
                 isEmptyList = listAdapter.getCount() <= 0;
 
-                refreshButtonUnderscore(type);
-                refreshEmptyListHint(type, isEmptyList);
+                refreshButtonUnderscore(state);
+                refreshEmptyListHint(state, isEmptyList);
                 break;
         }
     }
 
-    private void refreshButtonUnderscore(FriendshipRequestType type){
-        if(FriendshipRequestType.RECEIVED.equals(type)){
+    private void refreshButtonUnderscore(FriendshipState state){
+
+        if(FriendshipState.REQUEST_RECEIVED.equals(state)){
             v_underscoreSent.setVisibility(View.GONE);
             v_underscoreReceived.setVisibility(View.VISIBLE);
-        }else{
+
+        }if(FriendshipState.REQUEST_SENT.equals(state)){
             v_underscoreSent.setVisibility(View.VISIBLE);
             v_underscoreReceived.setVisibility(View.GONE);
         }
     }
 
-    private void refreshEmptyListHint(FriendshipRequestType type, boolean isEmptyList){
+    private void refreshEmptyListHint(FriendshipState state, boolean isEmptyList){
 
 
         if(isEmptyList){
-            String emptyListHint = FriendshipRequestType.RECEIVED.equals(type) ?
-                    getResources().getString(R.string.pendingFriends_tv_hintNoRequestsReceived) :
-                    getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent);
-            tv_hintNoPendingRequests.setText(emptyListHint);
-            tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+
+            if(FriendshipState.REQUEST_RECEIVED.equals(state)){
+                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsReceived));
+                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+            }else if(FriendshipState.REQUEST_SENT.equals(state)){
+                tv_hintNoPendingRequests.setText(getResources().getString(R.string.pendingFriends_tv_hintNoRequestsSent));
+                tv_hintNoPendingRequests.setVisibility(View.VISIBLE);
+            }
+
+            else{
+                tv_hintNoPendingRequests.setText("");
+                tv_hintNoPendingRequests.setVisibility(View.GONE);
+            }
+
         }else{
             tv_hintNoPendingRequests.setText("");
             tv_hintNoPendingRequests.setVisibility(View.GONE);
@@ -165,13 +169,11 @@ public class PendingFriendsActivity extends NavigationDrawerActivity implements 
     public void onDialogClose() {
         Log.d(LOG_TAG, "onDialogClose()");
 
-        FriendshipRequestType type = listAdapter.getFriendshipRequestType();
-
-        listAdapter.setFriendshipRequestType(type);
         listAdapter.reload();
         boolean isEmptyList = listAdapter.getCount() <= 0;
 
-        refreshButtonUnderscore(type);
-        refreshEmptyListHint(type, isEmptyList);
+        FriendshipState state = listAdapter.getState();
+        refreshButtonUnderscore(state);
+        refreshEmptyListHint(state, isEmptyList);
     }
 }

@@ -63,7 +63,7 @@ public class AddFriendDialog extends DialogFragment {
 
             }else{
                 FriendshipDao dao = new FriendshipDaoImpl(getActivity());
-                dao.createFriendship(sessionUser.getEmail(), friendMail);
+//                dao.createFriendship(sessionUser.getEmail(), friendMail);
 
                 Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_requestSent) + friendMail, Toast.LENGTH_SHORT).show();
             }

@@ -6,25 +6,19 @@ package com.joern.guesswhat.model;
 public class User {
 
     private int id;
-    private String stableAlias;
     private String name;
     private String email;
-    private int passwordHash;
 
     /**
      *
      * @param id
-     * @param stableAlias
      * @param name
      * @param email
-     * @param passwordHash
      */
-    public User(int id, String stableAlias, String name, String email, int passwordHash) {
+    public User(int id, String name, String email) {
         this.id = id;
-        this.stableAlias = stableAlias;
         this.name = name;
         this.email = email;
-        this.passwordHash = passwordHash;
     }
 
     public int getId() {
@@ -33,14 +27,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getStableAlias() {
-        return stableAlias;
-    }
-
-    public void setStableAlias(String stableAlias) {
-        this.stableAlias = stableAlias;
     }
 
     public String getName() {
@@ -57,13 +43,5 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public int getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(int passwordHash) {
-        this.passwordHash = passwordHash;
     }
 }

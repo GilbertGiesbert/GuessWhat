@@ -87,7 +87,8 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
             }else{
 
                 Integer passwordHash = PasswordFactory.buildPasswordHash(password, user);
-                if (user.getPasswordHash() == passwordHash) {
+                boolean pswdOk = userDao.checkPswd(user, passwordHash);
+                if (pswdOk) {
                     result.setIsSuccessful(true);
                     result.setUser(user);
                 }else{
@@ -132,9 +133,6 @@ public class LoginTask extends AsyncTask<String, String, LoginTaskResult>{
 
                     if(userDao.readUser(userName) != null){
                         result.setErrorMessage(context.getString(R.string.login_userNameTaken));
-
-                    }else if(userDao.getUserByMail(email) != null){
-                        result.setErrorMessage(context.getString(R.string.login_emailTaken));
 
                     }else{
                         result.setErrorMessage(context.getString(R.string._internalError));

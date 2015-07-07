@@ -11,6 +11,7 @@
     <string name="_discard">Discard</string>
     <string name="_internalError">Internal error</string>
     <string name="_ok">OK</string>
+    <string name="_pending">Pending</string>
     <string name="_refresh">Refresh</string>
     <string name="_reject">Reject</string>
     <string name="_save">Save</string>
@@ -34,7 +35,7 @@
     <string name="createGame_gameSolution">Solution to the game</string>
     <string name="createGame_gameType">Game type</string>
 
-    <string name="friends_bt_addFriend">Add new friend</string>
+    <string name="friends_addFriend">Add new friend</string>
     <string name="friends_bt_pendingRequests">Show pending requests</string>
     <string name="friends_ib_hintPendingRequests">Pending requests available</string>
     <string name="friends_title">Friends</string>

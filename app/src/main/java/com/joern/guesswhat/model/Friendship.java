@@ -5,30 +5,24 @@ package com.joern.guesswhat.model;
  */
 public class Friendship {
 
-    private String eMailRequester;
-    private String eMailAcceptor;
+    private int id;
+    private User user;
+    private User friend;
     private FriendshipState friendshipState;
 
-    public Friendship(String eMailRequester, String eMailAcceptor, FriendshipState friendshipState) {
-        this.eMailRequester = eMailRequester;
-        this.eMailAcceptor = eMailAcceptor;
+    public Friendship(int id, User friend, FriendshipState friendshipState, User user) {
+        this.id = id;
+        this.user = user;
+        this.friend = friend;
         this.friendshipState = friendshipState;
     }
 
-    public String getEMailRequester() {
-        return eMailRequester;
+    public User getFriend() {
+        return friend;
     }
 
-    public void setEMailRequester(String eMailRequester) {
-        this.eMailRequester = eMailRequester;
-    }
-
-    public String geteMailAcceptor() {
-        return eMailAcceptor;
-    }
-
-    public void setEMailAcceptor(String eMailAcceptor) {
-        this.eMailAcceptor = eMailAcceptor;
+    public void setFriend(User friend) {
+        this.friend = friend;
     }
 
     public FriendshipState getFriendshipState() {
@@ -37,5 +31,21 @@ public class Friendship {
 
     public void setFriendshipState(FriendshipState friendshipState) {
         this.friendshipState = friendshipState;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.joern.guesswhat.constants.DB;
 import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipRequestType;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
 
@@ -29,16 +28,33 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
 
     @Override
-    public boolean createFriendship(String eMailRequester, String eMailAcceptor) {
+    public boolean createFriendship(User user, User friend) {
+
+        // TODO: check if fs was already requested by friend
+        // if so then accept
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DB.FRIENDSHIPS.COL_EMAIL_REQUESTER, eMailRequester);
-        values.put(DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR, eMailAcceptor);
-        values.put(DB.FRIENDSHIPS.COL_STATE, FriendshipState.REQUEST_SEND.getValue());
+        values.put(DB.TABLE_FRIENDSHIPS.COL_USER_ID, user.getId());
+        values.put(DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID, friend.getId());
+        values.put(DB.TABLE_FRIENDSHIPS.COL_STATE, FriendshipState.REQUEST_SENT.getValue());
 
-        return -1 != db.insert(DB.FRIENDSHIPS.TABLE_NAME, null, values);
+        boolean createdFriendship = -1 != db.insert(DB.TABLE_FRIENDSHIPS.NAME, null, values);
+        if(createdFriendship){
+
+            // create friend's friendship
+
+            values = new ContentValues();
+            values.put(DB.TABLE_FRIENDSHIPS.COL_USER_ID, friend.getId());
+            values.put(DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID, user.getId());
+            values.put(DB.TABLE_FRIENDSHIPS.COL_STATE, FriendshipState.REQUEST_RECEIVED.getValue());
+
+            db.insert(DB.TABLE_FRIENDSHIPS.NAME, null, values);
+
+            createdFriendship = -1 != db.insert(DB.TABLE_FRIENDSHIPS.NAME, null, values);
+        }
+        return createdFriendship;
     }
 
     @Override
@@ -47,9 +63,11 @@ public class FriendshipDaoImpl implements FriendshipDao {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DB.FRIENDSHIPS.COL_STATE, friendship.getFriendshipState().getValue());
+        values.put(DB.TABLE_FRIENDSHIPS.COL_USER_ID, friendship.getUser().getId());
+        values.put(DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID, friendship.getFriend().getId());
+        values.put(DB.TABLE_FRIENDSHIPS.COL_STATE, friendship.getFriendshipState().getValue());
 
-        return 0 < db.update(DB.FRIENDSHIPS.TABLE_NAME, values, DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = ? AND " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
+        return 0 < db.update(DB.TABLE_FRIENDSHIPS.NAME, values, DB.TABLE_FRIENDSHIPS.COL_ID + " = ?", new String[]{"" + friendship.getId()});
     }
 
     @Override
@@ -57,72 +75,63 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        return 0 < db.delete(DB.FRIENDSHIPS.TABLE_NAME, DB.FRIENDSHIPS.COL_EMAIL_REQUESTER + " = ? AND " + DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR + " = ?", new String[]{friendship.getEMailRequester(), friendship.geteMailAcceptor()});
+        boolean deletedFriendship = 0 < db.delete(DB.TABLE_FRIENDSHIPS.NAME, DB.TABLE_FRIENDSHIPS.COL_ID + " = ?", new String[]{""+friendship.getId()});
+        if(deletedFriendship){
+            // delete friend's friendship
+            deletedFriendship = 0 < db.delete(DB.TABLE_FRIENDSHIPS.NAME, DB.TABLE_FRIENDSHIPS.COL_USER_ID + " = ? AND "+ DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID + " = ?", new String[]{""+friendship.getFriend().getId(),""+friendship.getUser().getId()});
+        }
+        return deletedFriendship;
     }
 
     @Override
-    public List<Friendship> getFriendships(User user, FriendshipRequestType type, FriendshipState... states){
-
-//        select * from users
-//        join (select * from friends where friends.req=2) as f1
-//        on users.id=f1.acc
-//
-//        union
-//
-//        select * from users
-//        join (select * from friends where friends.acc=2) as f2
-//        on users.id=f2.req
-
-
-        String colUserMail = FriendshipRequestType.RECEIVED.equals(type) ? DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR : DB.FRIENDSHIPS.COL_EMAIL_REQUESTER;
-        String colFriendMail = FriendshipRequestType.SENT.equals(type) ? DB.FRIENDSHIPS.COL_EMAIL_ACCEPTOR : DB.FRIENDSHIPS.COL_EMAIL_REQUESTER;
-
-        StringBuilder columns = new StringBuilder();
-
-        for(int i = 0; i < states.length; i++){
-
-            if(i==0 && states.length > 1){
-                columns.append("(");
-            }
-
-            columns.append(DB.FRIENDSHIPS.COL_STATE);
-            columns.append(" = ");
-            columns.append(states[i].getValue());
-
-            if(states.length > 1){
-                boolean isLastLoop = i == states.length-1;
-                if(isLastLoop){
-                    columns.append(")");
-                }else{
-                    columns.append(" OR ");
-                }
-            }
-        }
-
-        String selectQuery =
-                "SELECT  * FROM " + DB.FRIENDSHIPS.TABLE_NAME +
-                " WHERE " + colUserMail + " = '" + user.getEmail() + "'" +
-                " AND " + columns
-                ;
+    public List<Friendship> getFriendships(User user, FriendshipState state){
 
         List<Friendship> friendships = new ArrayList<>();
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor c = db.rawQuery(selectQuery, null);
+        String whereClause = DB.TABLE_FRIENDSHIPS.COL_USER_ID + " = ? AND "+user.getId()+" = ?";
+        String[] whereArgs = new String[]{""+user.getId(),""+state.getValue()};
+
+        Cursor c = db.query(DB.TABLE_FRIENDSHIPS.NAME, null, whereClause, whereArgs, null, null, null);
 
         if(c.moveToFirst()){
 
             do{
-                String friendMail = c.getString(c.getColumnIndex(colFriendMail));
-                int state = c.getInt(c.getColumnIndex(DB.FRIENDSHIPS.COL_STATE));
-                FriendshipState friendshipState = FriendshipState.valueOf(state);
+                int id = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_ID));
+                int friendId = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID));
 
-                if(FriendshipRequestType.SENT.equals(type)){
-                    friendships.add(new Friendship(user.getEmail(), friendMail, friendshipState));
-                }else{
-                    friendships.add(new Friendship(friendMail, user.getEmail(), friendshipState));
-                }
+//                Friendship fs = new Friendship(id, user, )
+
+
+            } while (c.moveToNext());
+        }
+
+        c.close();
+
+        return friendships;
+    }
+
+    @Override
+    public List<Friendship> getNewFriendships(User user){
+
+        List<Friendship> friendships = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String whereClause = DB.TABLE_FRIENDSHIPS.COL_USER_ID + " = ? AND "+user.getId()+" = ?";
+        String[] whereArgs = new String[]{""+user.getId(),""+FriendshipState.REQUEST_RECEIVED.getValue()};
+
+        Cursor c = db.query(DB.TABLE_FRIENDSHIPS.NAME, null, whereClause, whereArgs, null, null, null);
+
+        if(c.moveToFirst()){
+
+            do{
+                int id = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_ID));
+                int friendId = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_USER_ID));
+
+//                Friendship fs = new Friendship(id, user, )
+
 
             } while (c.moveToNext());
         }
