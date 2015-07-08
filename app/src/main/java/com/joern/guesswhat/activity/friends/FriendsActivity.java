@@ -17,7 +17,9 @@ public class FriendsActivity extends NavigationDrawerActivity {
 
     private static final String LOG_TAG = FriendsActivity.class.getSimpleName();
 
-    private MenuItem mi_addFriend;
+    private ViewPager vp_friends;
+    private FriendsPagerAdapter pagerAdapter;
+
 
     @Override
     protected int getMainContentLayoutId() {
@@ -29,8 +31,9 @@ public class FriendsActivity extends NavigationDrawerActivity {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
+        vp_friends = (ViewPager) findViewById(R.id.vp_friends);
 
-        FriendsPagerAdapter pagerAdapter = new FriendsPagerAdapter(getSupportFragmentManager(), this);
+        pagerAdapter = new FriendsPagerAdapter(getSupportFragmentManager(), this);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.vp_friends);
         viewPager.setAdapter(pagerAdapter);
@@ -43,9 +46,6 @@ public class FriendsActivity extends NavigationDrawerActivity {
         Log.d(LOG_TAG, "onCreateOptionsMenu()");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.friends_menu, menu);
-
-        mi_addFriend = menu.findItem(R.id.mi_addFriend);
-
         return true;
     }
 
@@ -57,7 +57,14 @@ public class FriendsActivity extends NavigationDrawerActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.mi_addFriend) {
+        if (id == R.id.mi_refresh) {
+
+            FriendsTab tab = getCurrentTab();
+            tab.reloadList();
+        }
+
+
+        else if (id == R.id.mi_addFriend) {
             DialogFragment newFragment = new AddFriendDialog();
             newFragment.show(getFragmentManager(), AddFriendDialog.class.getSimpleName());
             return true;
@@ -65,5 +72,12 @@ public class FriendsActivity extends NavigationDrawerActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private FriendsTab getCurrentTab(){
+
+        int position = vp_friends.getCurrentItem();
+        FriendsTab tab = (FriendsTab)getSupportFragmentManager().getFragments().get(position);
+        return tab;
     }
 }

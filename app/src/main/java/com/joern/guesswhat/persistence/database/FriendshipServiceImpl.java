@@ -13,27 +13,29 @@ import java.util.List;
  */
 public class FriendshipServiceImpl implements FriendshipService {
 
-    FriendshipDao dao;
+    private UserDao userDao;
+    private FriendshipDao friendshipDao;
 
     public FriendshipServiceImpl(Context context){
-        dao = new FriendshipDaoImpl(context);
+        userDao = new UserDaoImpl(context);
+        friendshipDao = new FriendshipDaoImpl(context);
     }
 
     @Override
     public Friendship getFriendship(User user, User friend) {
-        return dao.readFriendship(user, friend);
+        return friendshipDao.readFriendship(user, friend);
     }
 
     @Override
     public boolean requestFriendship(User user, User friend) {
 
         // create friendship for user
-        boolean success = dao.createFriendship(user, friend, FriendshipState.REQUEST);
+        boolean success = friendshipDao.createFriendship(user, friend, FriendshipState.REQUEST);
 
         if(success){
 
             // create corresponding friendship for friend
-            success = dao.createFriendship(friend, user, FriendshipState.INVITE);
+            success = friendshipDao.createFriendship(friend, user, FriendshipState.INVITE);
         }
 
         return success;
@@ -43,16 +45,16 @@ public class FriendshipServiceImpl implements FriendshipService {
     public boolean acceptFriendship(Friendship friendship) {
 
         // accept user's friendship
-        Friendship fsUser = dao.readFriendship(friendship.getUser(), friendship.getFriend());
+        Friendship fsUser = friendshipDao.readFriendship(friendship.getUser(), friendship.getFriend());
         fsUser.setFriendshipState(FriendshipState.ACTIVE);
-        boolean success = dao.updateFriendship(fsUser);
+        boolean success = friendshipDao.updateFriendship(fsUser);
 
         if(success){
 
             // accept corresponding friend's friendship
-            Friendship fsFriend = dao.readFriendship(friendship.getFriend(), friendship.getUser());
+            Friendship fsFriend = friendshipDao.readFriendship(friendship.getFriend(), friendship.getUser());
             fsFriend.setFriendshipState(FriendshipState.ACTIVE);
-            success = dao.updateFriendship(fsFriend);
+            success = friendshipDao.updateFriendship(fsFriend);
         }
 
         return success;
@@ -62,14 +64,14 @@ public class FriendshipServiceImpl implements FriendshipService {
     public boolean deleteFriendship(Friendship friendship) {
 
         // delete user's friendship
-        Friendship fsUser = dao.readFriendship(friendship.getUser(), friendship.getFriend());
-        boolean success = dao.deleteFriendship(fsUser);
+        Friendship fsUser = friendshipDao.readFriendship(friendship.getUser(), friendship.getFriend());
+        boolean success = friendshipDao.deleteFriendship(fsUser);
 
         if(success){
 
             // delete corresponding friend's friendship
-            Friendship fsFriend = dao.readFriendship(friendship.getFriend(), friendship.getUser());
-            success = dao.deleteFriendship(fsFriend);
+            Friendship fsFriend = friendshipDao.readFriendship(friendship.getFriend(), friendship.getUser());
+            success = friendshipDao.deleteFriendship(fsFriend);
         }
 
         return success;
@@ -77,16 +79,16 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     public List<Friendship> getFriendshipsActive(User user) {
-        return dao.getFriendships(user, FriendshipState.ACTIVE);
+        return userDao.getFriendships(user, FriendshipState.ACTIVE);
     }
 
     @Override
     public List<Friendship> getFriendshipInvites(User user) {
-        return dao.getFriendships(user, FriendshipState.INVITE);
+        return userDao.getFriendships(user, FriendshipState.INVITE);
     }
 
     @Override
     public List<Friendship> getFriendshipRequests(User user) {
-        return dao.getFriendships(user, FriendshipState.REQUEST);
+        return userDao.getFriendships(user, FriendshipState.REQUEST);
     }
 }

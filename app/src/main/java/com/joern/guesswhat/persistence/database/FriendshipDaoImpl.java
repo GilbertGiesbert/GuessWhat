@@ -48,16 +48,17 @@ public class FriendshipDaoImpl implements FriendshipDao {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(DB.TABLE_FRIENDSHIPS.NAME, null, whereClause, whereArgs, null, null, null);
 
+        Friendship fs = null;
+
         if(c.moveToFirst()){
 
             int id = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_ID));
             int state = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_STATE));
 
-            return new Friendship(id, user, friend, FriendshipState.valueOf(state));
-
-        }else{
-            return null;
+            fs = new Friendship(id, user, friend, FriendshipState.valueOf(state));
         }
+        c.close();
+        return fs;
     }
 
     @Override
@@ -79,34 +80,5 @@ public class FriendshipDaoImpl implements FriendshipDao {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         return 0 < db.delete(DB.TABLE_FRIENDSHIPS.NAME, DB.TABLE_FRIENDSHIPS.COL_ID + " = ?", new String[]{""+friendship.getId()});
-    }
-
-    @Override
-    public List<Friendship> getFriendships(User user, FriendshipState state){
-
-        List<Friendship> friendships = new ArrayList<>();
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String whereClause = DB.TABLE_FRIENDSHIPS.COL_USER_ID + " = ? AND "+DB.TABLE_FRIENDSHIPS.COL_STATE+" = ?";
-        String[] whereArgs = new String[]{""+user.getId(),""+state.getValue()};
-
-        Cursor c = db.query(DB.TABLE_FRIENDSHIPS.NAME, null, whereClause, whereArgs, null, null, null);
-
-        if(c.moveToFirst()){
-
-            do{
-                int id = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_ID));
-                int friendId = c.getInt(c.getColumnIndex(DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID));
-
-//                Friendship fs = new Friendship(id, user, )
-
-
-            } while (c.moveToNext());
-        }
-
-        c.close();
-
-        return friendships;
     }
 }

@@ -24,13 +24,14 @@ import java.util.List;
 /**
  * Created by joern on 14.04.2015.
  */
-public class FriendlistAdapter extends BaseAdapter{
+public class FriendListAdapter extends BaseAdapter{
 
-    private static final String LOG_TAG = FriendlistAdapter.class.getSimpleName();
+    private static final String LOG_TAG = FriendListAdapter.class.getSimpleName();
 
     private Context context;
     private LayoutInflater inflater;
 
+    private FriendsTabType type;
     private List<Friendship> friendList;
 
     private class ViewHolder{
@@ -39,10 +40,12 @@ public class FriendlistAdapter extends BaseAdapter{
         public TextView tv_eMail;
     }
 
-    public FriendlistAdapter(Context context){
+    public FriendListAdapter(Context context, FriendsTabType type){
 
         this.context = context;
         this.inflater = LayoutInflater.from(context);
+
+        this.type = type;
         this.friendList = new ArrayList<>();
     }
 
@@ -103,7 +106,7 @@ public class FriendlistAdapter extends BaseAdapter{
     }
 
 
-    public void  reload(FriendsTabType type){
+    public void  reload(){
 
         friendList.clear();
 

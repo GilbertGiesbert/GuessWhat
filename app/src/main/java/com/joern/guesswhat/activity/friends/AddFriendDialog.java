@@ -55,8 +55,9 @@ public class AddFriendDialog extends DialogFragment {
 
         if(sessionUser != null){
 
-            if(sessionUser.getName().equalsIgnoreCase(friendName)){
-                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingFriend), Toast.LENGTH_SHORT).show();
+            if(sessionUser.getName().equalsIgnoreCase(friendName)) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_noSelfFriendship), Toast.LENGTH_SHORT).show();
+            }else{
 
                 User friend = new UserDaoImpl(getActivity()).readUser(friendName);
                 if(friend == null) {
@@ -89,7 +90,7 @@ public class AddFriendDialog extends DialogFragment {
                     }
 
                     // invite already exists
-                    if(FriendshipState.INVITE.equals(friendship.getFriendshipState())) {
+                    else if(FriendshipState.INVITE.equals(friendship.getFriendshipState())) {
                         boolean friendshipAccepted = service.acceptFriendship(friendship);
                         if(friendshipAccepted){
                             Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingInvite) + friendName, Toast.LENGTH_SHORT).show();
