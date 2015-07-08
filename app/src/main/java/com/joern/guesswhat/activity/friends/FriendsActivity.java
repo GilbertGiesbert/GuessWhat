@@ -29,8 +29,12 @@ public class FriendsActivity extends NavigationDrawerActivity {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
+
+        FriendsPagerAdapter pagerAdapter = new FriendsPagerAdapter(getSupportFragmentManager(), this);
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.vp_friends);
-        viewPager.setAdapter(new FriendsPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(1);
     }
 
 

@@ -27,10 +27,11 @@ public class FriendlistAdapter extends BaseAdapter{
 
     private static final String LOG_TAG = FriendlistAdapter.class.getSimpleName();
 
-    private List<User> friendList;
-
     private Context context;
     private LayoutInflater inflater;
+
+    private FriendsTabType type;
+    private List<User> friendList;
 
     private class ViewHolder{
         public ImageView iv_profilePicture;
@@ -38,11 +39,13 @@ public class FriendlistAdapter extends BaseAdapter{
         public TextView tv_eMail;
     }
 
-    public FriendlistAdapter(Context context){
+    public FriendlistAdapter(Context context, FriendsTabType type){
 
         this.context = context;
-        this.friendList = new ArrayList<>();
         this.inflater = LayoutInflater.from(context);
+
+        this.type = type;
+        this.friendList = new ArrayList<>();
     }
 
     @Override

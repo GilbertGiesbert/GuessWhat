@@ -14,23 +14,21 @@ import com.joern.guesswhat.R;
  */
 public class FriendsTab extends Fragment {
 
-    private String test = "bla";
-    public void setTest(String test){
-        this.test = test;
-    }
+    private FriendsTabType type;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Get the view from fragmenttab1.xml
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.friends_tab, container, false);
 
-        TextView tv = (TextView) view.findViewById(R.id.tv_tab);
-        tv.setText("- "+test);
+        TextView tv = (TextView) view.findViewById(R.id.tv_subheading);
+        tv.setText(type.getSubheading(getActivity()));
 
         return view;
     }
 
-
-
+    public void init(FriendsTabType type){
+        this.type = type;
+    }
 }

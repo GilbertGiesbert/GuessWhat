@@ -47,6 +47,13 @@
     <string name="friends_dialog_requestSent">"Send friend request to "</string>
     <string name="friends_hintEmptyList">Your friend list is empty.</string>
 
+    <string name="friends_tab_invites_title">Invites</string>
+    <string name="friends_tab_friends_title">Friends</string>
+    <string name="friends_tab_requests_title">Requests</string>
+    <string name="friends_tab_invites_subheading">People asking for your friendship.</string>
+    <string name="friends_tab_friends_subheading">Your current friend list.</string>
+    <string name="friends_tab_requests_subheading">Friendships you have requested.</string>
+
     <string name="games_title">Games</string>
     <string name="games_createGame">Create game</string>
     <string name="games_bt_play">play</string>
