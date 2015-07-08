@@ -11,10 +11,10 @@ import java.util.List;
  */
 public interface FriendshipDao {
 
-    public boolean createFriendship(User user, User friend);
+    public boolean createFriendship(User user, User friend, FriendshipState state);
+    public Friendship readFriendship(User user, User friend);
     public boolean updateFriendship(Friendship friendship);
     public boolean deleteFriendship(Friendship friendship);
 
     public List<Friendship> getFriendships(User user, FriendshipState state);
-    public List<Friendship> getNewFriendships(User user);
 }

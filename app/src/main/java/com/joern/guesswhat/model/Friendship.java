@@ -10,7 +10,7 @@ public class Friendship {
     private User friend;
     private FriendshipState friendshipState;
 
-    public Friendship(int id, User friend, FriendshipState friendshipState, User user) {
+    public Friendship(int id, User user, User friend, FriendshipState friendshipState) {
         this.id = id;
         this.user = user;
         this.friend = friend;

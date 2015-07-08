@@ -11,9 +11,12 @@ import android.widget.Toast;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.persistence.database.FriendshipDao;
-import com.joern.guesswhat.persistence.database.FriendshipDaoImpl;
+import com.joern.guesswhat.model.Friendship;
+import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
+import com.joern.guesswhat.persistence.database.FriendshipService;
+import com.joern.guesswhat.persistence.database.FriendshipServiceImpl;
+import com.joern.guesswhat.persistence.database.UserDaoImpl;
 
 /**
  * Created by joern on 14.04.2015.
@@ -46,42 +49,56 @@ public class AddFriendDialog extends DialogFragment {
         return builder.create();
     }
 
-    private void handleFriendRequest(String friendMail){
+    private void handleFriendRequest(String friendName){
 
         User sessionUser = SessionHelper.getSessionUser(getActivity());
 
-        if(sessionUser != null && !sessionUser.getEmail().equals(friendMail)){
+        if(sessionUser != null){
 
-            if(isExistingFriend(friendMail)){
-                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingFriend) + friendMail, Toast.LENGTH_SHORT).show();
+            if(sessionUser.getName().equalsIgnoreCase(friendName)){
+                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingFriend), Toast.LENGTH_SHORT).show();
 
-            }else if(isExistingFriendRequestReceived(friendMail)) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingRequestReceived) + friendMail, Toast.LENGTH_SHORT).show();
+                User friend = new UserDaoImpl(getActivity()).readUser(friendName);
+                if(friend == null) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_nonExistingFriend) + friendName, Toast.LENGTH_SHORT).show();
 
-            }else if(isExistingFriendRequestSent(friendMail)) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingRequestSent) + friendMail, Toast.LENGTH_SHORT).show();
+                }else{
 
-            }else{
-                FriendshipDao dao = new FriendshipDaoImpl(getActivity());
-//                dao.createFriendship(sessionUser.getEmail(), friendMail);
+                    FriendshipService service = new FriendshipServiceImpl(getActivity());
+                    Friendship friendship = service.getFriendship(sessionUser, friend);
 
-                Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_requestSent) + friendMail, Toast.LENGTH_SHORT).show();
+
+                    // sent request
+                    if(friendship == null){
+                        boolean requestSuccessful = service.requestFriendship(sessionUser, friend);
+                        if(requestSuccessful){
+                            Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_requestSent) + friendName, Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_requestFailed) + friendName, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    // friendship already exists
+                    else if(FriendshipState.ACTIVE.equals(friendship.getFriendshipState())) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingFriend) + friendName, Toast.LENGTH_SHORT).show();
+                    }
+
+                    // friendship already requested
+                    else if(FriendshipState.REQUEST.equals(friendship.getFriendshipState())) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingRequest) + friendName, Toast.LENGTH_SHORT).show();
+                    }
+
+                    // invite already exists
+                    if(FriendshipState.INVITE.equals(friendship.getFriendshipState())) {
+                        boolean friendshipAccepted = service.acceptFriendship(friendship);
+                        if(friendshipAccepted){
+                            Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_existingInvite) + friendName, Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity(), getResources().getString(R.string.friends_dialog_requestFailed) + friendName, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
             }
         }
-    }
-
-    private boolean isExistingFriend(String friendMail) {
-        //TODO
-        return false;
-    }
-
-    private boolean isExistingFriendRequestReceived(String friendMail) {
-        //TODO
-        return false;
-    }
-
-    private boolean isExistingFriendRequestSent(String friendMail) {
-        //TODO
-        return false;
     }
 }

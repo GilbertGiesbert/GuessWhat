@@ -41,10 +41,13 @@
     <string name="friends_title">Friends</string>
     <string name="friends_dialog_title">New friend</string>
     <string name="friends_dialog_hint">Enter your friend\'s e-mail</string>
+    <string name="friends_dialog_noSelfFriendship">"No self-friendships!"</string>
     <string name="friends_dialog_existingFriend">"You are already friends with "</string>
-    <string name="friends_dialog_existingRequestReceived">"You are now friends with "</string>
-    <string name="friends_dialog_existingRequestSent">"You already sent a request to "</string>
-    <string name="friends_dialog_requestSent">"Send friend request to "</string>
+    <string name="friends_dialog_nonExistingFriend">"Database found no user named "</string>
+    <string name="friends_dialog_existingInvite">"You are now friends with "</string>
+    <string name="friends_dialog_existingRequest">"You already sent a request to "</string>
+    <string name="friends_dialog_requestSent">"Sent friend request to "</string>
+    <string name="friends_dialog_requestFailed">"Failed to send friend request to "</string>
     <string name="friends_hintEmptyList">Your friend list is empty.</string>
 
     <string name="friends_tab_invites_title">Invites</string>

@@ -13,9 +13,10 @@ import android.widget.TextView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
-import com.joern.guesswhat.persistence.database.UserDao;
-import com.joern.guesswhat.persistence.database.UserDaoImpl;
+import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.User;
+import com.joern.guesswhat.persistence.database.FriendshipService;
+import com.joern.guesswhat.persistence.database.FriendshipServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +31,7 @@ public class FriendlistAdapter extends BaseAdapter{
     private Context context;
     private LayoutInflater inflater;
 
-    private FriendsTabType type;
-    private List<User> friendList;
+    private List<Friendship> friendList;
 
     private class ViewHolder{
         public ImageView iv_profilePicture;
@@ -39,12 +39,10 @@ public class FriendlistAdapter extends BaseAdapter{
         public TextView tv_eMail;
     }
 
-    public FriendlistAdapter(Context context, FriendsTabType type){
+    public FriendlistAdapter(Context context){
 
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-
-        this.type = type;
         this.friendList = new ArrayList<>();
     }
 
@@ -54,7 +52,7 @@ public class FriendlistAdapter extends BaseAdapter{
     }
 
     @Override
-    public User getItem(int position) {
+    public Friendship getItem(int position) {
         return friendList.get(position);
     }
 
@@ -82,7 +80,7 @@ public class FriendlistAdapter extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        User friend = friendList.get(position);
+        User friend = friendList.get(position).getFriend();
         Log.d(LOG_TAG, "Friend: "+friend.getName()+", Pos: "+position);
 
         Drawable profilePicture = getProfilePicture(position);
@@ -105,14 +103,23 @@ public class FriendlistAdapter extends BaseAdapter{
     }
 
 
-    public void  reload(){
+    public void  reload(FriendsTabType type){
 
         friendList.clear();
 
         User sessionUser = SessionHelper.getSessionUser(context);
-        UserDao dao = new UserDaoImpl(context);
-//        List<User> fList = dao.getFriendships(sessionUser);
+        FriendshipService fsService = new FriendshipServiceImpl(context);
 
-//        friendList.addAll(fList);
+        switch (type){
+            case INVITES:
+                friendList.addAll(fsService.getFriendshipInvites(sessionUser));
+                break;
+            case FRIENDS:
+                friendList.addAll(fsService.getFriendshipsActive(sessionUser));
+                break;
+            case REQUESTS:
+                friendList.addAll(fsService.getFriendshipRequests(sessionUser));
+                break;
+        }
     }
 }

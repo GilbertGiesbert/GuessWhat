@@ -2,12 +2,9 @@ package com.joern.guesswhat.model;
 
 public enum FriendshipState {
 
-    REQUEST_SENT(1),
-
-    REQUEST_RECEIVED(2),
-    REQUEST_RECEIVED_PENDING(3),
-
-    ACTIVE(4);
+    INVITE(1),
+    ACTIVE(2),
+    REQUEST(3);
 
     private int value;
 
