@@ -9,16 +9,22 @@ import com.joern.guesswhat.R;
  */
 public enum FriendsTabType {
 
-    INVITES(R.string.friends_tab_invites_title, R.string.friends_tab_invites_subheading),
-    FRIENDS(R.string.friends_tab_friends_title, R.string.friends_tab_friends_subheading),
-    REQUESTS(R.string.friends_tab_requests_title, R.string.friends_tab_requests_subheading);
+    INVITES(0, R.string.friends_tab_invites_title, R.string.friends_tab_invites_subheading),
+    FRIENDS(1, R.string.friends_tab_friends_title, R.string.friends_tab_friends_subheading),
+    REQUESTS(2, R.string.friends_tab_requests_title, R.string.friends_tab_requests_subheading);
 
+    private int position;
     private int nameResource;
     private int subheadingResource;
 
-    private FriendsTabType(int nameResource, int subheadingResource) {
+    private FriendsTabType(int position, int nameResource, int subheadingResource) {
+        this.position = position;
         this.nameResource = nameResource;
         this.subheadingResource = subheadingResource;
+    }
+
+    public int getPosition(){
+        return position;
     }
 
     public String getName(Context context){
@@ -27,5 +33,15 @@ public enum FriendsTabType {
 
     public String getSubheading(Context context){
         return context.getResources().getString(subheadingResource);
+    }
+
+    public static FriendsTabType valueOf(int position){
+
+        for(FriendsTabType type: FriendsTabType.values()){
+            if(type.getPosition() == position){
+                return type;
+            }
+        }
+        return null;
     }
 }

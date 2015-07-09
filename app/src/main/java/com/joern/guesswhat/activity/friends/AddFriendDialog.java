@@ -36,8 +36,8 @@ public class AddFriendDialog extends DialogFragment {
 
             public void onClick(DialogInterface dialog, int id) {
 
-                String friendMail = ((EditText) AddFriendDialog.this.getDialog().findViewById(R.id.et_friendMail)).getText().toString();
-                handleFriendRequest(friendMail);
+                String friendName = ((EditText) AddFriendDialog.this.getDialog().findViewById(R.id.et_friend)).getText().toString();
+                handleFriendRequest(friendName);
             }
         })
         .setNegativeButton(R.string._cancel, new DialogInterface.OnClickListener() {

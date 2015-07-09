@@ -1,21 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="15dp"
     >
 
     <TextView
-        android:id="@+id/tv_subheading"
+        android:id="@+id/tv_dialogPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingBottom="15dp"
         />
-
-    <ListView
-        android:id="@+id/lv_friendlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
 
 </LinearLayout>

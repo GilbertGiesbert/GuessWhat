@@ -124,5 +124,6 @@ public class FriendListAdapter extends BaseAdapter{
                 friendList.addAll(fsService.getFriendshipRequests(sessionUser));
                 break;
         }
+        notifyDataSetChanged();
     }
 }

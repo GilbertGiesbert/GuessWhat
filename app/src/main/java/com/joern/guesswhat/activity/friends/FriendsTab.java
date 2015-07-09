@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joern.guesswhat.R;
+import com.joern.guesswhat.model.Friendship;
 
 /**
  * Created by joern on 07.07.2015.
@@ -17,25 +19,35 @@ public class FriendsTab extends Fragment {
 
     private static final String INSTANCE_STATE_TYPE = "INSTANCE_STATE_TYPE";
 
-    private FriendsTabType type;
+    private FriendsTabType tabType;
     private FriendListAdapter listAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(type == null){
-            type = FriendsTabType.valueOf(savedInstanceState.getString(INSTANCE_STATE_TYPE));
+        if(tabType == null){
+            tabType = FriendsTabType.valueOf(savedInstanceState.getString(INSTANCE_STATE_TYPE));
         }
 
         View view = inflater.inflate(R.layout.friends_tab, container, false);
 
         TextView tv = (TextView) view.findViewById(R.id.tv_subheading);
-        tv.setText(type.getSubheading(getActivity()));
+        tv.setText(tabType.getSubheading(getActivity()));
 
-        listAdapter = new FriendListAdapter(getActivity(), type);
+        listAdapter = new FriendListAdapter(getActivity(), tabType);
 
         ListView lv_friendList = (ListView) view.findViewById(R.id.lv_friendlist);
         lv_friendList.setAdapter(listAdapter);
+        lv_friendList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Friendship friendship = listAdapter.getItem(position);
+                FriendsDialog dialog = new FriendsDialog();
+                dialog.init(tabType, friendship);
+                dialog.show(getActivity().getFragmentManager(), FriendsDialog.class.getSimpleName());
+            }
+        });
 
         return view;
     }
@@ -51,18 +63,14 @@ public class FriendsTab extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(INSTANCE_STATE_TYPE, "" + type);
+        outState.putString(INSTANCE_STATE_TYPE, "" + tabType);
     }
 
-    public void init(FriendsTabType type){
-        this.type = type;
+    public void init(FriendsTabType tabType){
+        this.tabType = tabType;
     }
 
     public void reloadList() {
         listAdapter.reload();
-    }
-
-    public FriendsTabType getType(){
-        return type;
     }
 }

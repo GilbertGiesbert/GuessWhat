@@ -8,6 +8,7 @@
     <string name="_cancel">Cancel</string>
     <string name="_change">Change</string>
     <string name="_choose">Choose</string>
+    <string name="_delete">Delete</string>
     <string name="_discard">Discard</string>
     <string name="_internalError">Internal error</string>
     <string name="_ok">OK</string>
@@ -40,7 +41,7 @@
     <string name="friends_ib_hintPendingRequests">Pending requests available</string>
     <string name="friends_title">Friends</string>
     <string name="friends_dialog_title">New friend</string>
-    <string name="friends_dialog_hint">Enter your friend\'s e-mail</string>
+    <string name="friends_dialog_prompt">Enter your friend\'s name</string>
     <string name="friends_dialog_noSelfFriendship">"No self-friendships!"</string>
     <string name="friends_dialog_existingFriend">"You are already friends with "</string>
     <string name="friends_dialog_nonExistingFriend">"Database found no user named "</string>
@@ -56,6 +57,17 @@
     <string name="friends_tab_invites_subheading">People asking for your friendship.</string>
     <string name="friends_tab_friends_subheading">Your current friend list.</string>
     <string name="friends_tab_requests_subheading">Friendships you have requested.</string>
+
+
+
+    <string name="friends_dialog_invite_title">Invite</string>
+    <string name="friends_dialog_invite_prompt">Accept or reject invite from </string>
+
+    <string name="friends_dialog_friend_title">Friendship</string>
+    <string name="friends_dialog_friend_prompt">Delete friendship with </string>
+
+    <string name="friends_dialog_request_title">Request</string>
+    <string name="friends_dialog_request_prompt">Discard request for friendship to </string>
 
     <string name="games_title">Games</string>
     <string name="games_createGame">Create game</string>

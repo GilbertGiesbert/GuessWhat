@@ -13,13 +13,12 @@ import com.joern.guesswhat.activity.navigation.NavigationDrawerActivity;
 /**
  * Created by joern on 14.04.2015.
  */
-public class FriendsActivity extends NavigationDrawerActivity {
+public class FriendsActivity extends NavigationDrawerActivity implements FriendsDialogListener{
 
     private static final String LOG_TAG = FriendsActivity.class.getSimpleName();
 
+    private FriendsTabAdapter tabAdapter;
     private ViewPager vp_friends;
-    private FriendsPagerAdapter pagerAdapter;
-
 
     @Override
     protected int getMainContentLayoutId() {
@@ -31,15 +30,12 @@ public class FriendsActivity extends NavigationDrawerActivity {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
+        tabAdapter = new FriendsTabAdapter(getSupportFragmentManager(), this);
+
         vp_friends = (ViewPager) findViewById(R.id.vp_friends);
-
-        pagerAdapter = new FriendsPagerAdapter(getSupportFragmentManager(), this);
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.vp_friends);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(1);
+        vp_friends.setAdapter(tabAdapter);
+        vp_friends.setCurrentItem(1);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,8 +57,8 @@ public class FriendsActivity extends NavigationDrawerActivity {
 
             FriendsTab tab = getCurrentTab();
             tab.reloadList();
+            return true;
         }
-
 
         else if (id == R.id.mi_addFriend) {
             DialogFragment newFragment = new AddFriendDialog();
@@ -70,14 +66,29 @@ public class FriendsActivity extends NavigationDrawerActivity {
             return true;
         }
 
-
         return super.onOptionsItemSelected(item);
     }
 
     private FriendsTab getCurrentTab(){
-
         int position = vp_friends.getCurrentItem();
-        FriendsTab tab = (FriendsTab)getSupportFragmentManager().getFragments().get(position);
-        return tab;
+        return tabAdapter.getTab(position);
+    }
+
+    @Override
+    public void onFriendAccepted() {
+        FriendsTab tab = getCurrentTab();
+        tab.reloadList();
+
+        // active friendships tab
+        tab = tabAdapter.getTab(FriendsTabType.FRIENDS.getPosition());
+        if(tab != null){
+            tab.reloadList();
+        }
+    }
+
+    @Override
+    public void onFriendDeleted() {
+        FriendsTab tab = getCurrentTab();
+        tab.reloadList();
     }
 }
