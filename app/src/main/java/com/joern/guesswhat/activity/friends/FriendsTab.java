@@ -23,6 +23,11 @@ public class FriendsTab extends Fragment {
     private FriendListAdapter listAdapter;
 
 
+    public void init(FriendsTabType tabType){
+        this.tabType = tabType;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -32,8 +37,8 @@ public class FriendsTab extends Fragment {
 
         View view = inflater.inflate(R.layout.friends_tab, container, false);
 
-        TextView tv = (TextView) view.findViewById(R.id.tv_subheading);
-        tv.setText(tabType.getSubheading(getActivity()));
+        TextView tv = (TextView) view.findViewById(R.id.tv_subtitle);
+        tv.setText(tabType.getSubtitle(getActivity()));
 
         listAdapter = new FriendListAdapter(getActivity(), tabType);
 
@@ -64,10 +69,6 @@ public class FriendsTab extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(INSTANCE_STATE_TYPE, "" + tabType);
-    }
-
-    public void init(FriendsTabType tabType){
-        this.tabType = tabType;
     }
 
     public void reloadList() {

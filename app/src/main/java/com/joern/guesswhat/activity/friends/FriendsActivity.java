@@ -80,7 +80,7 @@ public class FriendsActivity extends NavigationDrawerActivity implements Friends
         tab.reloadList();
 
         // active friendships tab
-        tab = tabAdapter.getTab(FriendsTabType.FRIENDS.getPosition());
+        tab = tabAdapter.getTab(FriendsTabType.FRIENDS.getTabPosition());
         if(tab != null){
             tab.reloadList();
         }

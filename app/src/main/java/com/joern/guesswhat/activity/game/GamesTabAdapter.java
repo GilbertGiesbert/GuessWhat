@@ -1,4 +1,4 @@
-package com.joern.guesswhat.activity.friends;
+package com.joern.guesswhat.activity.game;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -7,36 +7,40 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.joern.guesswhat.activity.friends.FriendsTab;
+import com.joern.guesswhat.activity.friends.FriendsTabType;
+
 /**
- * Created by joern on 07.07.2015.
+ * Created by joern on 09.07.2015.
  */
-public class FriendsTabAdapter extends FragmentPagerAdapter {
+public class GamesTabAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private SparseArray<FriendsTab> tabMap;
+    private SparseArray<GamesTab> tabMap;
 
-    public FriendsTabAdapter(FragmentManager fm, Context context) {
+    public GamesTabAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
         this.tabMap = new SparseArray<>();
     }
 
+
     @Override
     public Fragment getItem(int position) {
 
-        FriendsTab tab = new FriendsTab();
-        tab.init(FriendsTabType.valueOf(position));
+        GamesTab tab = new GamesTab();
+        tab.init(GamesTabType.valueOf(position));
         return tab;
     }
 
     @Override
     public int getCount() {
-        return FriendsTabType.values().length;
+        return GamesTabType.values().length;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        FriendsTabType type = FriendsTabType.valueOf(position);
+        GamesTabType type = GamesTabType.valueOf(position);
         if(type != null){
             return type.getTitle(context);
         }else{
@@ -44,9 +48,10 @@ public class FriendsTabAdapter extends FragmentPagerAdapter {
         }
     }
 
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        FriendsTab tab = (FriendsTab) super.instantiateItem(container, position);
+        GamesTab tab = (GamesTab) super.instantiateItem(container, position);
         tabMap.put(position, tab);
         return tab;
     }
@@ -57,7 +62,7 @@ public class FriendsTabAdapter extends FragmentPagerAdapter {
         super.destroyItem(container, position, object);
     }
 
-    public FriendsTab getTab(int position){
+    public GamesTab getTab(int position){
         return tabMap.get(position);
     }
 }

@@ -1,23 +1,23 @@
-package com.joern.guesswhat.activity.friends;
+package com.joern.guesswhat.activity.game;
 
 import android.content.Context;
 
 import com.joern.guesswhat.R;
 
 /**
- * Created by joern on 08.07.2015.
+ * Created by joern on 09.07.2015.
  */
-public enum FriendsTabType {
+public enum GamesTabType {
 
-    INVITES(0, R.string.friends_tab_invites_title, R.string.friends_tab_invites_subtitle),
-    FRIENDS(1, R.string.friends_tab_friends_title, R.string.friends_tab_friends_subtitle),
-    REQUESTS(2, R.string.friends_tab_requests_title, R.string.friends_tab_requests_subtitle);
+    REVIEW(0, R.string.games_tab_review_title, R.string.games_tab_review_subtitle),
+    PLAY(1, R.string.games_tab_play_title, R.string.games_tab_play_subtitle),
+    CREATE(2, R.string.games_tab_create_title, R.string.games_tab_create_subtitle);
 
     private int tabPosition;
     private int titleResource;
     private int subtitleResource;
 
-    private FriendsTabType(int tabPosition, int titleResource, int subtitleResource) {
+    private GamesTabType(int tabPosition, int titleResource, int subtitleResource) {
         this.tabPosition = tabPosition;
         this.titleResource = titleResource;
         this.subtitleResource = subtitleResource;
@@ -35,9 +35,9 @@ public enum FriendsTabType {
         return context.getResources().getString(subtitleResource);
     }
 
-    public static FriendsTabType valueOf(int position){
+    public static GamesTabType valueOf(int position){
 
-        for(FriendsTabType type: FriendsTabType.values()){
+        for(GamesTabType type: GamesTabType.values()){
             if(type.getTabPosition() == position){
                 return type;
             }

@@ -6,12 +6,12 @@
     <item android:id="@+id/mi_refresh"
         android:title="@string/_refresh"
         android:icon="@mipmap/refresh"
-        android:orderInCategory="100"
+        android:orderInCategory="99"
         app:showAsAction="ifRoom"
         />
 
     <item android:id="@+id/mi_createGame"
-        android:title="@string/games_createGame"
+        android:title="@string/games_mi_createGame"
         android:icon="@mipmap/plus"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"

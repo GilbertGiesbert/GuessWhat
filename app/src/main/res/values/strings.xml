@@ -54,9 +54,9 @@
     <string name="friends_tab_invites_title">Invites</string>
     <string name="friends_tab_friends_title">Friends</string>
     <string name="friends_tab_requests_title">Requests</string>
-    <string name="friends_tab_invites_subheading">People asking for your friendship.</string>
-    <string name="friends_tab_friends_subheading">Your current friend list.</string>
-    <string name="friends_tab_requests_subheading">Friendships you have requested.</string>
+    <string name="friends_tab_invites_subtitle">People asking for your friendship.</string>
+    <string name="friends_tab_friends_subtitle">Your current friend list.</string>
+    <string name="friends_tab_requests_subtitle">Friendships you have requested.</string>
 
 
 
@@ -70,11 +70,15 @@
     <string name="friends_dialog_request_prompt">Discard request for friendship to </string>
 
     <string name="games_title">Games</string>
-    <string name="games_createGame">Create game</string>
-    <string name="games_bt_play">play</string>
-    <string name="games_bt_create">Create</string>
-    <string name="games_hintNoGamesToPlay">You have no games to play.</string>
-    <string name="games_hintNoGamesCreated">You have no games created.</string>
+
+    <string name="games_mi_createGame">Create Game</string>
+
+    <string name="games_tab_review_title">Review</string>
+    <string name="games_tab_play_title">Play</string>
+    <string name="games_tab_create_title">Create</string>
+    <string name="games_tab_review_subtitle">Games you have finished.</string>
+    <string name="games_tab_play_subtitle">Games to play.</string>
+    <string name="games_tab_create_subtitle">Games you have created.</string>
 
     <string name="help_title">Help</string>
 

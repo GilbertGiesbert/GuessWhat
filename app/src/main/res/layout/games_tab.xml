@@ -14,7 +14,7 @@
         />
 
     <ListView
-        android:id="@+id/lv_friendlist"
+        android:id="@+id/lv_gamelist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
