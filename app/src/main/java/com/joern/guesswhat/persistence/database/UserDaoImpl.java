@@ -69,6 +69,8 @@ public class UserDaoImpl implements UserDao{
     @Override
     public User readUser(String name) {
 
+        if(name == null) return null;
+
         User user = null;
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
