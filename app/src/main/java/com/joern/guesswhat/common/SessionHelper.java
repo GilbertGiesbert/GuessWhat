@@ -3,8 +3,8 @@ package com.joern.guesswhat.common;
 import android.content.Context;
 
 import com.joern.guesswhat.constants.PreferenceType;
-import com.joern.guesswhat.persistence.database.UserDao;
-import com.joern.guesswhat.persistence.database.UserDaoImpl;
+import com.joern.guesswhat.storage.local.UserDao;
+import com.joern.guesswhat.storage.local.UserDaoImpl;
 import com.joern.guesswhat.model.User;
 
 /**

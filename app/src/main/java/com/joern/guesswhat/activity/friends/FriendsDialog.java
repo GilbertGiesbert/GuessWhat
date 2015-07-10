@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.joern.guesswhat.R;
 import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.persistence.database.FriendshipService;
-import com.joern.guesswhat.persistence.database.FriendshipServiceImpl;
+import com.joern.guesswhat.storage.local.FriendshipService;
+import com.joern.guesswhat.storage.local.FriendshipServiceImpl;
 
 /**
  * Created by joern on 14.04.2015.

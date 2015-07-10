@@ -1,4 +1,4 @@
-package com.joern.guesswhat.persistence.database;
+package com.joern.guesswhat.storage.local;
 
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipState;

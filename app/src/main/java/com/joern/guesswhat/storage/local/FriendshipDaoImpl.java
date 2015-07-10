@@ -1,4 +1,4 @@
-package com.joern.guesswhat.persistence.database;
+package com.joern.guesswhat.storage.local;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,9 +9,6 @@ import com.joern.guesswhat.constants.DB;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by joern on 13.04.2015.
