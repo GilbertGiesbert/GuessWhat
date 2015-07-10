@@ -28,8 +28,9 @@ public class AboutActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(sessionUser == null) return;
 
         PackageInfo pInfo = null;
         try {

@@ -1,4 +1,4 @@
-package com.joern.guesswhat.activity.game;
+package com.joern.guesswhat.activity.games;
 
 import android.content.Context;
 

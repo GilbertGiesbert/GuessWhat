@@ -3,7 +3,6 @@ package db.migration;
 
 import android.util.Log;
 
-import com.joern.guesswhat.activity.login.PasswordFactory;
 import com.joern.guesswhat.constants.DB;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
@@ -19,7 +18,7 @@ public class V1000__mock implements JdbcMigration{
 
     private static final String LOG_TAG = V1000__mock.class.getSimpleName();
 
-    private static final boolean USE_MOCK = true;
+    private static final boolean USE_MOCK = false;
     
     private HashMap<Integer, User> mockUsers;
 
@@ -57,7 +56,6 @@ public class V1000__mock implements JdbcMigration{
 
                 String mail = name+"@"+i+".com";
                 String password = "123";
-                Integer pswdHash = PasswordFactory.buildPasswordHash(password, name, mail);
                 users.put(id, new User(id, name, mail));
                 id++;
             }

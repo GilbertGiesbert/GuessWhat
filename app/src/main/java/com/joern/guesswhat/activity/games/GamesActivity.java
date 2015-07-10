@@ -1,4 +1,4 @@
-package com.joern.guesswhat.activity.game;
+package com.joern.guesswhat.activity.games;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,17 +29,16 @@ public class GamesActivity extends NavigationDrawerActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-
+        if(sessionUser == null) return;
 
         tabAdapter = new GamesTabAdapter(getSupportFragmentManager(), this);
 
         vp_games = (ViewPager) findViewById(R.id.vp_games);
         vp_games.setAdapter(tabAdapter);
         vp_games.setCurrentItem(1);
-
     }
 
     @Override

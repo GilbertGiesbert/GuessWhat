@@ -26,9 +26,10 @@ public class FriendsActivity extends NavigationDrawerActivity implements Friends
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
+        if(sessionUser == null) return;
 
         tabAdapter = new FriendsTabAdapter(getSupportFragmentManager(), this);
 

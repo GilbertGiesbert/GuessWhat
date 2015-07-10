@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,7 +35,7 @@ public abstract class NavigationDrawerActivity extends ActionBarActivity {
     protected abstract int getMainContentLayoutId();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 

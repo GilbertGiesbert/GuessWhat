@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joern.guesswhat.R;
-import com.joern.guesswhat.activity.game.GamesActivity;
+import com.joern.guesswhat.activity.games.GamesActivity;
 import com.joern.guesswhat.common.SessionHelper;
 
 /**

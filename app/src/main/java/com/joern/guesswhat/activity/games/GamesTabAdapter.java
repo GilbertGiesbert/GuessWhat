@@ -1,4 +1,4 @@
-package com.joern.guesswhat.activity.game;
+package com.joern.guesswhat.activity.games;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,9 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-
-import com.joern.guesswhat.activity.friends.FriendsTab;
-import com.joern.guesswhat.activity.friends.FriendsTabType;
 
 /**
  * Created by joern on 09.07.2015.

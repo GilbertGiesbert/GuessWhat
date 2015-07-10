@@ -108,17 +108,6 @@
     <string name="navigation_openDrawer">Open navigation drawer</string>
     <string name="navigation_closeDrawer">Close navigation drawer</string>
 
-    <string name="pendingFriends_title">Pending</string>
-    <string name="pendingFriends_bt_received">Received</string>
-    <string name="pendingFriends_bt_sent">Sent</string>
-    <string name="pendingFriends_tv_hintNoRequestsSent">You\'ve sent no friendship requests recently.</string>
-    <string name="pendingFriends_tv_hintNoRequestsReceived">You\'ve received no friendship requests recently.</string>
-    <string name="pendingFriends_requestState_rejected">Rejected</string>
-    <string name="pendingFriends_dialog_title">Request for friendship</string>
-    <string name="pendingFriends_dialog_requesterMessage">"Discard friendship request for "</string>
-    <string name="pendingFriends_dialog_acceptorMessage">" is requesting your friendship."</string>
-
     <string name="settings_title">Settings</string>
-
 
 </resources>

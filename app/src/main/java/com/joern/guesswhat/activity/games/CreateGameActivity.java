@@ -1,4 +1,4 @@
-package com.joern.guesswhat.activity.game;
+package com.joern.guesswhat.activity.games;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -37,10 +37,9 @@ public class CreateGameActivity extends NavigationDrawerActivity implements View
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-
         if(sessionUser == null) return;
 
         Button bt_choosePicture = (Button) findViewById(R.id.bt_choosePicture);

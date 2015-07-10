@@ -7,7 +7,7 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.activity.about.AboutActivity;
 import com.joern.guesswhat.activity.friends.FriendsActivity;
 import com.joern.guesswhat.activity.login.LoginActivity;
-import com.joern.guesswhat.activity.game.GamesActivity;
+import com.joern.guesswhat.activity.games.GamesActivity;
 import com.joern.guesswhat.activity.settings.SettingsActivity;
 
 public enum NavigationDrawerItem {

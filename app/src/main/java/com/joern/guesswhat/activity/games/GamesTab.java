@@ -1,4 +1,4 @@
-package com.joern.guesswhat.activity.game;
+package com.joern.guesswhat.activity.games;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -52,5 +52,4 @@ public class GamesTab extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString(INSTANCE_STATE_TYPE, "" + tabType);
     }
-
 }
