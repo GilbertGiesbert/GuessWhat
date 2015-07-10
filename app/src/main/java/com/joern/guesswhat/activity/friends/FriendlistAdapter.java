@@ -15,8 +15,8 @@ import com.joern.guesswhat.R;
 import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.User;
-import com.joern.guesswhat.persistence.database.FriendshipService;
-import com.joern.guesswhat.persistence.database.FriendshipServiceImpl;
+import com.joern.guesswhat.storage.local.FriendshipService;
+import com.joern.guesswhat.storage.local.FriendshipServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

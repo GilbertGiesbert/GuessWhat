@@ -14,9 +14,9 @@ import com.joern.guesswhat.common.SessionHelper;
 import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
-import com.joern.guesswhat.persistence.database.FriendshipService;
-import com.joern.guesswhat.persistence.database.FriendshipServiceImpl;
-import com.joern.guesswhat.persistence.database.UserDaoImpl;
+import com.joern.guesswhat.storage.local.FriendshipService;
+import com.joern.guesswhat.storage.local.FriendshipServiceImpl;
+import com.joern.guesswhat.storage.local.UserDaoImpl;
 
 /**
  * Created by joern on 14.04.2015.

@@ -1,4 +1,4 @@
-package com.joern.guesswhat.persistence.database;
+package com.joern.guesswhat.storage.local;
 
 import android.content.ContentValues;
 import android.content.Context;
