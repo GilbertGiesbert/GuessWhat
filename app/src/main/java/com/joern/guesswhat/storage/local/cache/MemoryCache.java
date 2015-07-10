@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class MemoryCache {
 
-    private static final String TAG = MemoryCache.class.getSimpleName();
+    private static final String LOG_TAG = MemoryCache.class.getSimpleName();
 
     private long size;//current allocated size
     private long limit;//max memory in bytes
@@ -34,7 +34,7 @@ public class MemoryCache {
 
         //use 25% of available heap size
         limit = Runtime.getRuntime().maxMemory() / 4;
-        Log.d(TAG, "MemoryCache will use up to " + limit / 1024. / 1024. + "MB");
+        Log.d(LOG_TAG, "MemoryCache will use up to " + limit / 1024. / 1024. + "MB");
 
         cache = Collections.synchronizedMap(
                 new LinkedHashMap<String, Bitmap>(10, 1.5f, true));//Last argument true for LRU ordering
@@ -75,7 +75,7 @@ public class MemoryCache {
 
     private void checkSize() {
 
-        Log.d(TAG, "cache size="+size+" length="+cache.size());
+        Log.d(LOG_TAG, "cache size="+size+" length="+cache.size());
 
         if(size > limit){
 
@@ -90,7 +90,7 @@ public class MemoryCache {
                 if(size<=limit)
                     break;
             }
-            Log.d(TAG, "Cleaned cache. New size "+cache.size());
+            Log.d(LOG_TAG, "Cleaned cache. New size "+cache.size());
         }
     }
 
