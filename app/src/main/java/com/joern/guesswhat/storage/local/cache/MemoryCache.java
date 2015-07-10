@@ -19,7 +19,16 @@ public class MemoryCache {
     private long limit;//max memory in bytes
     private Map<String, Bitmap> cache;
 
-    public MemoryCache(){
+    private static MemoryCache singletonInstance;
+
+    public static synchronized MemoryCache getInstance(){
+        if(MemoryCache.singletonInstance == null){
+            MemoryCache.singletonInstance = new MemoryCache();
+        }
+        return MemoryCache.singletonInstance;
+    }
+
+    private MemoryCache(){
 
         size = 0;
 

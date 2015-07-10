@@ -29,6 +29,8 @@ import java.util.concurrent.Executors;
  */
 public class ImageLoader {
 
+    private final int stub_id = R.drawable.navigation_profile_background;
+
     private MemoryCache memoryCache;
     private FileCache fileCache;
     private Map<ImageView, String> imageViews;
@@ -42,11 +44,10 @@ public class ImageLoader {
         executorService = Executors.newFixedThreadPool(5);
     }
 
-    final int stub_id = R.drawable.navigation_profile_background;
-    public void DisplayImage(String url, ImageView imageView)
-    {
+    public void displayImage(String url, ImageView imageView){
+
         imageViews.put(imageView, url);
-        Bitmap bitmap=memoryCache.get(url);
+        Bitmap bitmap = memoryCache.get(url);
         if(bitmap!=null)
             imageView.setImageBitmap(bitmap);
         else
@@ -62,8 +63,8 @@ public class ImageLoader {
         executorService.submit(new PhotosLoader(p));
     }
 
-    private Bitmap getBitmap(String url)
-    {
+    private Bitmap getBitmap(String url){
+
         File f=fileCache.getFile(url);
 
         //from SD cache
