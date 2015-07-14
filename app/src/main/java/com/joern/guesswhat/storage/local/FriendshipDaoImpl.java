@@ -10,6 +10,10 @@ import com.joern.guesswhat.model.Friendship;
 import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by joern on 13.04.2015.
  */
@@ -76,6 +80,62 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        return 0 < db.delete(DB.TABLE_FRIENDSHIPS.NAME, DB.TABLE_FRIENDSHIPS.COL_ID + " = ?", new String[]{""+friendship.getId()});
+        return 0 < db.delete(DB.TABLE_FRIENDSHIPS.NAME, DB.TABLE_FRIENDSHIPS.COL_ID + " = ?", new String[]{"" + friendship.getId()});
+    }
+
+    @Override
+    public List<Friendship> getFriendships(User user, FriendshipState state){
+
+        List<Friendship> friendships = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String sql =
+
+            "SELECT u."+DB.TABLE_USERS.COL_ID + ", " +
+            "u."+DB.TABLE_USERS.COL_NAME + ", " +
+            "u."+DB.TABLE_USERS.COL_EMAIL + ", " +
+            "f."+DB.TABLE_FRIENDSHIPS.COL_ID + " " +
+
+            "FROM " + DB.TABLE_USERS.NAME + " u " +
+
+            "JOIN (" +
+
+            "SELECT * " +
+            "FROM "+DB.TABLE_FRIENDSHIPS.NAME + " " +
+            "WHERE "+DB.TABLE_FRIENDSHIPS.COL_USER_ID+" = ? " +
+            "AND "+DB.TABLE_FRIENDSHIPS.COL_STATE+" = ?" +
+
+            ") f " +
+
+            "ON u."+DB.TABLE_USERS.COL_ID +" = f."+DB.TABLE_FRIENDSHIPS.COL_FRIEND_ID;
+
+        String[] selectionArgs = new String[]{""+user.getId(), ""+state.getValue()};
+
+        Cursor c = db.rawQuery(sql, selectionArgs);
+
+        if(c.moveToFirst()){
+
+            do{
+
+                // note: c.getColumnIndex(columnName) is not working if columnName contains dot(s)
+
+                List columnNames = Arrays.asList(c.getColumnNames());
+
+                int id = c.getInt(columnNames.indexOf("u." + DB.TABLE_USERS.COL_ID));
+                String name = c.getString(columnNames.indexOf("u." + DB.TABLE_USERS.COL_NAME));
+                String email = c.getString(columnNames.indexOf("u." + DB.TABLE_USERS.COL_EMAIL));
+
+                int friendshipId = c.getInt(columnNames.indexOf("f." + DB.TABLE_FRIENDSHIPS.COL_ID));
+
+                User friend = new User(id, name, email);
+                friendships.add(new Friendship(friendshipId, user, friend, state));
+
+            } while (c.moveToNext());
+        }
+
+        c.close();
+
+        return friendships;
     }
 }
