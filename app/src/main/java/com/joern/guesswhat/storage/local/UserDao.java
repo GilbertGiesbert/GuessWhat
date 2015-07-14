@@ -1,10 +1,6 @@
 package com.joern.guesswhat.storage.local;
 
-import com.joern.guesswhat.model.Friendship;
-import com.joern.guesswhat.model.FriendshipState;
 import com.joern.guesswhat.model.User;
-
-import java.util.List;
 
 /**
  * Created by joern on 13.04.2015.
@@ -19,6 +15,4 @@ public interface UserDao {
 
     public boolean checkPswd(User user, int passwordHash);
     public boolean updatePswd(User user, int oldPswdHash, int newPswdHash);
-
-    public List<Friendship> getFriendships(User user, FriendshipState state);
 }
